@@ -46,12 +46,10 @@ Google/GitHub if you don't have an account):
 1. ☑ **Create a project** — done (project ID below). Confirm the dataset is
    named `production`.
 2. ☑ **Project ID**: `lsjlhtb8` → `NEXT_PUBLIC_SANITY_PROJECT_ID`
-3. ☐ **Read token** — Manage → your project → **API → Tokens → Add API token**,
-   name `read`, permissions **Viewer**. Copy it immediately (shown once).
-   → `SANITY_API_READ_TOKEN`
-4. ☐ **Write token** — same place, name `seed`, permissions **Editor**.
-   Used only for the one-time content seed; can be revoked afterwards.
-   → `SANITY_API_WRITE_TOKEN`
+3. ☑ **Read token** — received; verified working against the live dataset.
+4. ☑ **Write token** — received; the one-time content seed has been run
+   (all singleton + keyed documents upserted). **Revoke this token** in
+   Manage → API → Tokens once Studio editing is confirmed working.
 5. ☐ **CORS origins** — Manage → API → **CORS Origins → Add CORS origin**:
    - `http://localhost:3000` — Allow credentials **ON**
    - the production URL (once known, e.g. `https://mazel-rose.vercel.app`) —
@@ -92,17 +90,23 @@ Google/GitHub if you don't have an account):
 
 ---
 
-## 5. What Claude does once the credentials arrive
+## 5. Deployment status
 
-1. ☐ Create the Vercel project under the chosen team and set all env vars
-   (Sanity IDs/tokens, RSVP provider vars, `NEXT_PUBLIC_SITE_URL`,
-   `NEXT_PUBLIC_NOINDEX`, generated `SANITY_REVALIDATE_SECRET`)
-2. ☐ Deploy to production and verify all routes
-3. ☐ Run `npm run sanity:seed` once to populate the Studio with the current
-   placeholder content (idempotent; images seed empty for Studio upload)
-4. ☐ Verify `/admin` loads, draft preview works, and an end-to-end RSVP test
-   submission lands in the chosen backend
-5. ☐ Hand over webhook values (step 4.1) and confirm publish → live-site
+1. ☑ Sanity seed run against `lsjlhtb8/production` — all documents upserted
+2. ☑ Production build verified with live Sanity credentials (all 22 routes)
+3. ☑ Runtime smoke test passed locally: home + `/admin` return 200, and a
+   valid RSVP submission correctly reaches the Airtable provider (blocked only
+   on the missing `AIRTABLE_API_KEY`)
+4. ☐ **Vercel deploy — via GitHub import (owner action, ~3 min).** Claude's
+   Vercel session tooling cannot upload this repo or manage env vars, so the
+   project is created once by importing the GitHub repo at
+   [vercel.com/new](https://vercel.com/new) under the Iron Eagle Studio team
+   (project name `mazel-rose`, all build settings default) and pasting the
+   env block Claude provides in chat. After this one-time import, every push
+   to `main` auto-deploys.
+5. ☐ Post-deploy verification (Claude): all routes, `/admin`, draft preview,
+   revalidation webhook, end-to-end RSVP into Airtable
+6. ☐ Hand over webhook values (step 4.1) and confirm publish → live-site
    refresh works
 
 ---
