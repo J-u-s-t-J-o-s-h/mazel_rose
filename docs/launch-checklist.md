@@ -154,3 +154,13 @@ editable at `/admin` after the seed:
   automatic fallback if Sanity is ever unreachable or misconfigured.
 - The write token is only needed for seeding — revoke it in Sanity Manage after
   step 5.3 for least privilege.
+
+## Token lifetimes
+
+- **Sanity tokens have no expiration setting** — they live until revoked.
+  The read token must stay valid indefinitely (the live site uses it daily).
+  The write token is revoked manually right after the one-time seed.
+- **Airtable token**: used on every RSVP submission, so it must outlive the
+  RSVP deadline. If the token screen offers an expiration date, set it a
+  couple of months after the wedding; if it expires early, RSVPs fail
+  silently. Revoke it after the wedding once responses are no longer coming in.
