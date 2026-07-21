@@ -73,7 +73,7 @@ type in.
 
 Your RSVP list lives at this link (bookmark this one too):
 
-    https://airtable.com/appj5xF2RpxsgwJD2/shrb6HkA4JwbPY663
+    [PASTE THE PRIVATE AIRTABLE SHARE LINK HERE BEFORE SENDING]
 
 Click it and you'll see a live list of every response. Each row shows
 the guest's name, email, whether they're coming, their meal choice,
