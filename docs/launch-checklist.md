@@ -97,17 +97,17 @@ Google/GitHub if you don't have an account):
 3. ☑ Runtime smoke test passed locally: home + `/admin` return 200, and a
    valid RSVP submission correctly reaches the Airtable provider (blocked only
    on the missing `AIRTABLE_API_KEY`)
-4. ☐ **Vercel deploy — via GitHub import (owner action, ~3 min).** Claude's
-   Vercel session tooling cannot upload this repo or manage env vars, so the
-   project is created once by importing the GitHub repo at
-   [vercel.com/new](https://vercel.com/new) under the Iron Eagle Studio team
-   (project name `mazel-rose`, all build settings default) and pasting the
-   env block Claude provides in chat. After this one-time import, every push
-   to `main` auto-deploys.
-5. ☐ Post-deploy verification (Claude): all routes, `/admin`, draft preview,
-   revalidation webhook, end-to-end RSVP into Airtable
-6. ☐ Hand over webhook values (step 4.1) and confirm publish → live-site
-   refresh works
+4. ☑ **Vercel deploy — LIVE at <https://mazel-rose.vercel.app>** (project
+   `mazel-rose`, Iron Eagle Studio team, imported from GitHub; every push to
+   `main` now auto-deploys)
+5. ☑ Post-deploy verification (2026-07-21): all public routes + `/admin`
+   return 200; `robots.txt` blocks indexing; a signed revalidation request
+   succeeded (secret in Vercel matches the Sanity webhook secret); an
+   end-to-end RSVP submitted through the live API landed in Airtable with all
+   fields correct, then was deleted
+6. ☐ Confirm the Sanity webhook shows as saved + enabled once Sanity's
+   webhook-dashboard incident (Jul 21) clears — delivery itself was unaffected
+   per Sanity status, and the site-side endpoint + secret are proven working
 
 ---
 
