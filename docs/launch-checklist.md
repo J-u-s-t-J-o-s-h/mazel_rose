@@ -25,13 +25,13 @@ Legend: ☐ open · ☑ done
 
 ## 2. Decisions needed from you (no accounts required, just answers)
 
-| # | Decision | Options | Recommendation |
-|---|----------|---------|----------------|
-| D1 | RSVP storage backend | `airtable` / `supabase` / `local` | **Airtable** — easiest for a non-technical owner to view and sort guest responses in a spreadsheet-style UI. `local` is dev-only and silently loses data on Vercel. |
-| D2 | Vercel team to deploy under | Iron Eagle Studio / 123 | **Iron Eagle Studio** (appears to be the active team) |
-| D3 | Domain | free `*.vercel.app` URL / custom domain | If you own or want a custom domain (note: `.rose` is not a real TLD — the site name is branding), say which; otherwise launch on `mazel-rose.vercel.app` and add the domain later. |
-| D4 | Search-engine visibility | keep `NEXT_PUBLIC_NOINDEX=true` / allow indexing | **Keep noindex on** — wedding sites usually stay out of Google. |
-| D5 | Site-wide password gate | on / off | Off to start; can enable any time with `ENABLE_SITE_PASSWORD=true` + a shared password. |
+| # | Decision | Chosen (2026-07-21) |
+|---|----------|---------------------|
+| D1 | RSVP storage backend | ☑ **Airtable** (free plan: 1,000 records/base — ample for RSVPs) |
+| D2 | Vercel team | ☑ **Iron Eagle Studio** |
+| D3 | Domain | ☑ **mazel-rose.vercel.app** for now; custom domain may come later |
+| D4 | Search-engine visibility | ☑ Keep `NEXT_PUBLIC_NOINDEX=true` |
+| D5 | Site-wide password gate | ☐ Off to start; can enable any time with `ENABLE_SITE_PASSWORD=true` + a shared password |
 
 ---
 
@@ -43,11 +43,9 @@ Sanity has no CLI/API path for account creation, so these steps happen in your
 browser at [sanity.io/manage](https://www.sanity.io/manage) (sign up free with
 Google/GitHub if you don't have an account):
 
-1. ☐ **Create a project** — "Create project", any name (e.g. `mazel-rose`),
-   dataset name `production`, visibility *public* (published content only;
-   drafts stay private).
-2. ☐ **Project ID** — shown on the project's main page in Manage
-   (a short string like `ab12cd34`). → `NEXT_PUBLIC_SANITY_PROJECT_ID`
+1. ☑ **Create a project** — done (project ID below). Confirm the dataset is
+   named `production`.
+2. ☑ **Project ID**: `lsjlhtb8` → `NEXT_PUBLIC_SANITY_PROJECT_ID`
 3. ☐ **Read token** — Manage → your project → **API → Tokens → Add API token**,
    name `read`, permissions **Viewer**. Copy it immediately (shown once).
    → `SANITY_API_READ_TOKEN`
