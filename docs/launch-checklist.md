@@ -1,0 +1,158 @@
+# mazel.rose — Launch Checklist
+
+Status as of 2026-07-21. The codebase is feature-complete: typecheck, lint, and
+production build all pass. Everything remaining is provisioning, credentials,
+and real content. This doc lists exactly what is needed, who does it, and where
+each item comes from.
+
+Legend: ☐ open · ☑ done
+
+---
+
+## 1. Already handled — no action needed
+
+- ☑ Codebase builds green (all 22 routes, typecheck + lint clean)
+- ☑ Vercel account access — already connected to Claude's session, so **no
+  Vercel tokens are needed** from you. Claude can create the project, set
+  environment variables, and deploy.
+- ☑ GitHub repo access (`j-u-s-t-j-o-s-h/mazel_rose`)
+- ☑ `SANITY_REVALIDATE_SECRET` and other random secrets — Claude generates
+  these at deploy time and sets them in Vercel. Your only task is pasting the
+  revalidate secret into the Sanity webhook form when Claude hands it to you
+  (step 4).
+
+---
+
+## 2. Decisions needed from you (no accounts required, just answers)
+
+| # | Decision | Options | Recommendation |
+|---|----------|---------|----------------|
+| D1 | RSVP storage backend | `airtable` / `supabase` / `local` | **Airtable** — easiest for a non-technical owner to view and sort guest responses in a spreadsheet-style UI. `local` is dev-only and silently loses data on Vercel. |
+| D2 | Vercel team to deploy under | Iron Eagle Studio / 123 | **Iron Eagle Studio** (appears to be the active team) |
+| D3 | Domain | free `*.vercel.app` URL / custom domain | If you own or want a custom domain (note: `.rose` is not a real TLD — the site name is branding), say which; otherwise launch on `mazel-rose.vercel.app` and add the domain later. |
+| D4 | Search-engine visibility | keep `NEXT_PUBLIC_NOINDEX=true` / allow indexing | **Keep noindex on** — wedding sites usually stay out of Google. |
+| D5 | Site-wide password gate | on / off | Off to start; can enable any time with `ENABLE_SITE_PASSWORD=true` + a shared password. |
+
+---
+
+## 3. Credentials needed from you
+
+### A. Sanity (required — powers the `/admin` editing experience)
+
+Sanity has no CLI/API path for account creation, so these steps happen in your
+browser at [sanity.io/manage](https://www.sanity.io/manage) (sign up free with
+Google/GitHub if you don't have an account):
+
+1. ☐ **Create a project** — "Create project", any name (e.g. `mazel-rose`),
+   dataset name `production`, visibility *public* (published content only;
+   drafts stay private).
+2. ☐ **Project ID** — shown on the project's main page in Manage
+   (a short string like `ab12cd34`). → `NEXT_PUBLIC_SANITY_PROJECT_ID`
+3. ☐ **Read token** — Manage → your project → **API → Tokens → Add API token**,
+   name `read`, permissions **Viewer**. Copy it immediately (shown once).
+   → `SANITY_API_READ_TOKEN`
+4. ☐ **Write token** — same place, name `seed`, permissions **Editor**.
+   Used only for the one-time content seed; can be revoked afterwards.
+   → `SANITY_API_WRITE_TOKEN`
+5. ☐ **CORS origins** — Manage → API → **CORS Origins → Add CORS origin**:
+   - `http://localhost:3000` — Allow credentials **ON**
+   - the production URL (once known, e.g. `https://mazel-rose.vercel.app`) —
+     Allow credentials **ON**
+
+### B. Airtable (if D1 = Airtable)
+
+1. ☐ **Create a base** at [airtable.com](https://airtable.com) with one table
+   named `RSVPs` containing these fields (all "Single line text" except where
+   noted — names must match exactly):
+
+   | Field | Type |
+   |-------|------|
+   | Name | Single line text |
+   | Email | Email |
+   | Phone | Single line text |
+   | Invitation Code | Single line text |
+   | Attendance | Single line text |
+   | Guests | Long text |
+   | Events | Long text |
+   | Meal Choice | Single line text |
+   | Dietary Restrictions | Long text |
+   | Song Request | Single line text |
+   | Message | Long text |
+   | Submitted At | Single line text |
+
+2. ☐ **Personal access token** — [airtable.com/create/tokens](https://airtable.com/create/tokens),
+   scope `data.records:write` (+ `data.records:read`), access limited to that
+   base. → `AIRTABLE_API_KEY`
+3. ☐ **Base ID** — open the base and copy the `appXXXXXXXXXXXXXX` segment from
+   the URL, or find it at [airtable.com/api](https://airtable.com/api).
+   → `AIRTABLE_BASE_ID`
+4. `AIRTABLE_TABLE_NAME` = `RSVPs` (already the default in `.env.example`).
+
+### C. Supabase (only if D1 = Supabase instead)
+
+1. ☐ Create a project at [supabase.com/dashboard](https://supabase.com/dashboard)
+2. ☐ **Project URL** and **service_role key** — Project Settings → API.
+   → `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+3. ☐ Create the `rsvps` table (Claude will supply the exact SQL for the
+   submission shape when this option is chosen).
+
+---
+
+## 4. Your two dashboard tasks after Claude deploys
+
+1. ☐ **Revalidation webhook** — Sanity Manage → API → **Webhooks → Create
+   webhook**. Claude will hand you the exact values (URL
+   `https://YOUR_DOMAIN/api/revalidate`, dataset `production`, trigger on
+   create/update/delete, the document-type filter from the README, projection
+   `{_type,_id}`, HTTP POST, and the generated secret).
+2. ☐ **Invite the website owner** — Sanity Manage → Project → **Members →
+   Invite**, role **Editor**. Then share the `/admin` URL and
+   [`docs/website-owner-guide.md`](./website-owner-guide.md).
+
+---
+
+## 5. What Claude does once the credentials arrive
+
+1. ☐ Create the Vercel project under the chosen team and set all env vars
+   (Sanity IDs/tokens, RSVP provider vars, `NEXT_PUBLIC_SITE_URL`,
+   `NEXT_PUBLIC_NOINDEX`, generated `SANITY_REVALIDATE_SECRET`)
+2. ☐ Deploy to production and verify all routes
+3. ☐ Run `npm run sanity:seed` once to populate the Studio with the current
+   placeholder content (idempotent; images seed empty for Studio upload)
+4. ☐ Verify `/admin` loads, draft preview works, and an end-to-end RSVP test
+   submission lands in the chosen backend
+5. ☐ Hand over webhook values (step 4.1) and confirm publish → live-site
+   refresh works
+
+---
+
+## 6. Real content punch list (after seed — edited in Studio, no code)
+
+There are 68 placeholder markers across the fallback content. All of it becomes
+editable at `/admin` after the seed:
+
+- ☐ Couple names + monogram initials (currently "Mazel & Rose")
+- ☐ Wedding date/time (currently Oct 18, 2027) and RSVP deadline
+- ☐ Venue name, address, map link (currently "The Willow Estate", Aiken SC)
+- ☐ Contact email (currently `hello@mazel.rose`)
+- ☐ Schedule events (times, venues, dress codes)
+- ☐ Travel: airports, hotels/room blocks, directions
+- ☐ Registry links (currently placeholder retailers)
+- ☐ Wedding party members + portrait photos
+- ☐ Gallery photos (currently Unsplash placeholders; upload originals)
+- ☐ Things To Do activities
+- ☐ FAQs
+- ☐ RSVP form settings: meal options, event list, open/closed state
+
+---
+
+## Known quirks (for whoever works on this next)
+
+- **Leave `RSVP_SECRET` blank.** The API route rejects submissions lacking an
+  `x-rsvp-secret` header when this is set, but the RSVP form never sends that
+  header — enabling it breaks all RSVPs. The honeypot field and per-IP rate
+  limiting already provide spam protection. (Fixable in code later if desired.)
+- `content/*.ts` stays in the repo after launch as the seed source and as an
+  automatic fallback if Sanity is ever unreachable or misconfigured.
+- The write token is only needed for seeding — revoke it in Sanity Manage after
+  step 5.3 for least privilege.
