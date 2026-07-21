@@ -57,33 +57,16 @@ Google/GitHub if you don't have an account):
    - the production URL (once known, e.g. `https://mazel-rose.vercel.app`) —
      Allow credentials **ON**
 
-### B. Airtable (if D1 = Airtable)
+### B. Airtable
 
-1. ☐ **Create a base** at [airtable.com](https://airtable.com) with one table
-   named `RSVPs` containing these fields (all "Single line text" except where
-   noted — names must match exactly):
-
-   | Field | Type |
-   |-------|------|
-   | Name | Single line text |
-   | Email | Email |
-   | Phone | Single line text |
-   | Invitation Code | Single line text |
-   | Attendance | Single line text |
-   | Guests | Long text |
-   | Events | Long text |
-   | Meal Choice | Single line text |
-   | Dietary Restrictions | Long text |
-   | Song Request | Single line text |
-   | Message | Long text |
-   | Submitted At | Single line text |
-
+1. ☑ **Base + table created** — base "Wedding RSVPs", table `RSVPs` with all
+   12 fields, write-tested end to end (test record created and deleted).
 2. ☐ **Personal access token** — [airtable.com/create/tokens](https://airtable.com/create/tokens),
-   scope `data.records:write` (+ `data.records:read`), access limited to that
-   base. → `AIRTABLE_API_KEY`
-3. ☐ **Base ID** — open the base and copy the `appXXXXXXXXXXXXXX` segment from
-   the URL, or find it at [airtable.com/api](https://airtable.com/api).
-   → `AIRTABLE_BASE_ID`
+   scope `data.records:write` (+ `data.records:read`), access limited to the
+   "Wedding RSVPs" base. → `AIRTABLE_API_KEY`. (The deployed site calls the
+   Airtable API directly, so it needs its own token — Claude's session access
+   doesn't transfer.) If offered an expiration date, set ~Dec 2027.
+3. ☑ **Base ID**: `appj5xF2RpxsgwJD2` → `AIRTABLE_BASE_ID`
 4. `AIRTABLE_TABLE_NAME` = `RSVPs` (already the default in `.env.example`).
 
 ### C. Supabase (only if D1 = Supabase instead)
