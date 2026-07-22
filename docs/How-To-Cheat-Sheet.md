@@ -2,10 +2,10 @@
 
 The one link you need (bookmark it!):
 
-    https://mazel-rose.vercel.app/admin
+    https://mazelrose.life/admin
 
 That link opens your website's **editing room**. Guests never see this
-part. They see the pretty site at mazel-rose.vercel.app. You see forms you can
+part. They see the pretty site at mazelrose.life. You see forms you can
 type in.
 
 

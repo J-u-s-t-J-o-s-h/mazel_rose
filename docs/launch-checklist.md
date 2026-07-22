@@ -29,7 +29,7 @@ Legend: ☐ open · ☑ done
 |---|----------|---------------------|
 | D1 | RSVP storage backend | ☑ **Airtable** (free plan: 1,000 records/base — ample for RSVPs) |
 | D2 | Vercel team | ☑ **Iron Eagle Studio** |
-| D3 | Domain | ☑ **mazel-rose.vercel.app** for now; custom domain may come later |
+| D3 | Domain | ☑ Custom domain **mazelrose.life** (bare/apex as primary; `www` redirects to it). Registered at Porkbun, connected to Vercel via A `216.150.1.1` + www CNAME. `mazel-rose.vercel.app` still resolves. |
 | D4 | Search-engine visibility | ☑ Keep `NEXT_PUBLIC_NOINDEX=true` |
 | D5 | Site-wide password gate | ☐ Off to start; can enable any time with `ENABLE_SITE_PASSWORD=true` + a shared password |
 
@@ -50,10 +50,12 @@ Google/GitHub if you don't have an account):
 4. ☑ **Write token** — received; the one-time content seed has been run
    (all singleton + keyed documents upserted). **Revoke this token** in
    Manage → API → Tokens once Studio editing is confirmed working.
-5. ☐ **CORS origins** — Manage → API → **CORS Origins → Add CORS origin**:
-   - `http://localhost:3000` — Allow credentials **ON**
-   - the production URL (once known, e.g. `https://mazel-rose.vercel.app`) —
-     Allow credentials **ON**
+5. ☐ **CORS origins** — Manage → API → **CORS Origins → Add CORS origin**
+   (all with Allow credentials **ON**):
+   - `http://localhost:3000`
+   - `https://mazelrose.life`
+   - `https://www.mazelrose.life`
+   - `https://mazel-rose.vercel.app`
 
 ### B. Airtable
 
@@ -108,6 +110,19 @@ Google/GitHub if you don't have an account):
 6. ☐ Confirm the Sanity webhook shows as saved + enabled once Sanity's
    webhook-dashboard incident (Jul 21) clears — delivery itself was unaffected
    per Sanity status, and the site-side endpoint + secret are proven working
+7. ☑ **Custom domain live** at <https://mazelrose.life> (bare domain primary,
+   `www` redirects to it). HTTPS auto-issued by Vercel; routes, `/admin`,
+   signed revalidation, and the RSVP API all verified on the domain.
+
+### Domain follow-ups (owner dashboard tasks)
+
+- ☐ **Vercel:** set `mazelrose.life` as the primary domain (www → apex redirect)
+- ☐ **Vercel env:** `NEXT_PUBLIC_SITE_URL=https://mazelrose.life`, then redeploy
+- ☐ **Sanity CORS:** add `https://mazelrose.life` + `https://www.mazelrose.life`
+- ☐ **Sanity webhook (optional):** point URL at `https://mazelrose.life/api/revalidate`
+  (the `.vercel.app` URL keeps working, so this is cosmetic)
+- Note: the domain has **Zoho email** (MX/SPF/DKIM/DMARC at Porkbun) — never
+  delete those records when touching DNS.
 
 ---
 
