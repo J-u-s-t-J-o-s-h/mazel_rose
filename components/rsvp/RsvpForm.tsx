@@ -300,11 +300,15 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
               <legend className="mb-3 text-xs uppercase tracking-[0.16em] text-charcoal/70">
                 Events you will attend <span className="text-burgundy">*</span>
               </legend>
-              {errors.events?.message || errors.events?.root?.message ? (
-                <p className="mb-3 text-sm text-burgundy" role="alert">
-                  {errors.events?.message || errors.events?.root?.message}
-                </p>
-              ) : null}
+              {(() => {
+                const eventsError =
+                  errors.events?.message ?? errors.events?.root?.message;
+                return typeof eventsError === "string" && eventsError ? (
+                  <p className="mb-3 text-sm text-burgundy" role="alert">
+                    {eventsError}
+                  </p>
+                ) : null;
+              })()}
               <div className="grid gap-3 sm:grid-cols-2">
                 {eventOptions.map((option) => (
                   <label
@@ -314,9 +318,7 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
                     <input
                       type="checkbox"
                       className="h-4 w-4 accent-burgundy"
-                      {...register(
-                        `events.${option.key as "ceremony" | "reception" | "welcome" | "brunch"}`,
-                      )}
+                      {...register(`events.${option.key}` as `events.${string}`)}
                     />
                     <span className="text-sm text-wine-black">
                       {option.label}
