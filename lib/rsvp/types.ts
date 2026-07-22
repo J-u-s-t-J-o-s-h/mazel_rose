@@ -1,20 +1,11 @@
 export type RsvpAttendance = "attending" | "declined";
 
-export type RsvpMealChoice =
-  | "beef"
-  | "chicken"
-  | "fish"
-  | "vegetarian"
-  | "vegan"
-  | "kids"
-  | "undecided";
+// Meal choices and event keys are configured by the owner in Sanity Studio,
+// so these are open string/boolean maps rather than fixed unions — the form
+// must not break when an option is renamed or added.
+export type RsvpMealChoice = string;
 
-export type RsvpEventAttendance = {
-  ceremony: boolean;
-  reception: boolean;
-  welcome?: boolean;
-  brunch?: boolean;
-};
+export type RsvpEventAttendance = Record<string, boolean>;
 
 export type RsvpGuest = {
   name: string;

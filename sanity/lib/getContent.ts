@@ -217,7 +217,13 @@ export async function getFaqsPage() {
 }
 
 export async function getRsvpFormSettings() {
-  const data = await safeFetch<Record<string, unknown>>(RSVP_FORM_SETTINGS_QUERY);
+  // stega=false: these values drive form controls (meal/event option values
+  // are submitted verbatim), so they must never carry stega watermark
+  // characters. Click-to-edit overlays aren't meaningful on form inputs anyway.
+  const data = await safeFetch<Record<string, unknown>>(
+    RSVP_FORM_SETTINGS_QUERY,
+    false,
+  );
   return {
     heading: String(data?.heading || "RSVP"),
     scriptIntro: String(data?.scriptIntro || "Répondez"),
