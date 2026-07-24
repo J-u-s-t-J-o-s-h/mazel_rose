@@ -16,6 +16,64 @@
   --background: var(--ivory);
   --foreground: var(--charcoal);
   --paper-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+
+  /* Default (Classic) type. Themes below remap these to alternate faces. */
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-manrope);
+  --font-script: var(--font-greatvibes);
+}
+
+/*
+ * Theme presets. Each remaps the shared color slots (and, where it suits the
+ * mood, the serif/script faces). Because @theme inline resolves these vars at
+ * use-time, one attribute on <html> restyles the whole site. The color *roles*
+ * stay constant — peacock = deep hero color, burgundy = primary accent/buttons,
+ * ivory = light ground, champagne = light-on-dark accent, charcoal = body text
+ * — so contrast and hierarchy hold across every preset.
+ */
+:root[data-theme="midnight"] {
+  --peacock: #1b3a5b;
+  --burgundy: #7d3350;
+  --cinnamon: #b9793a;
+  --sterling: #9fa8b8;
+  --sage: #7d94a3;
+  --ivory: #f4f1ea;
+  --parchment: #e6ddcd;
+  --champagne: #e3ca8c;
+  --brass: #c49a54;
+  --wine-black: #141b28;
+  --charcoal: #2a2c33;
+  --font-serif: var(--font-playfair);
+}
+
+:root[data-theme="sage"] {
+  --peacock: #4a5d43;
+  --burgundy: #97536a;
+  --cinnamon: #bd7f52;
+  --sterling: #c3b0bb;
+  --sage: #93a482;
+  --ivory: #f6f2ea;
+  --parchment: #eae0d2;
+  --champagne: #e6d4b2;
+  --brass: #a9865a;
+  --wine-black: #2c2a25;
+  --charcoal: #363029;
+  --font-serif: var(--font-ebgaramond);
+  --font-script: var(--font-pinyon);
+}
+
+:root[data-theme="coastal"] {
+  --peacock: #395d6e;
+  --burgundy: #9e5235;
+  --cinnamon: #c17a49;
+  --sterling: #aab6bd;
+  --sage: #8fa593;
+  --ivory: #f4f1ea;
+  --parchment: #e6ded0;
+  --champagne: #ddca9f;
+  --brass: #a9855a;
+  --wine-black: #202830;
+  --charcoal: #303236;
 }
 
 @theme inline {

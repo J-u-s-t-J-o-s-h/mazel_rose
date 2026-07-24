@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import {
   Cormorant_Garamond,
+  EB_Garamond,
   Great_Vibes,
   Manrope,
+  Pinyon_Script,
+  Playfair_Display,
 } from "next/font/google";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { SiteShell } from "@/components/layout/SiteShell";
@@ -19,25 +22,61 @@ import {
 } from "@/sanity/lib/getContent";
 import "./globals.css";
 
-const serif = Cormorant_Garamond({
+// Fonts for the theme presets. Each is assigned a uniquely named CSS variable;
+// globals.css maps --font-serif / --font-sans / --font-script to the right one
+// per `data-theme`, so switching a theme swaps the type without new loads.
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-serif",
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const sans = Manrope({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-manrope",
   display: "swap",
 });
 
-const script = Great_Vibes({
+const greatVibes = Great_Vibes({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-script",
+  variable: "--font-greatvibes",
   display: "swap",
 });
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-ebgaramond",
+  display: "swap",
+});
+
+const pinyon = Pinyon_Script({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-pinyon",
+  display: "swap",
+});
+
+const fontVariables = [
+  cormorant.variable,
+  manrope.variable,
+  greatVibes.variable,
+  playfair.variable,
+  ebGaramond.variable,
+  pinyon.variable,
+].join(" ");
+
+// Valid theme presets. A stega watermark or unknown value falls back to classic.
+const THEME_KEYS = ["classic", "midnight", "sage", "coastal"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const [site, allowIndexing, socialImageUrl] = await Promise.all([
@@ -65,6 +104,12 @@ export default async function RootLayout({
   const isDraft = (await draftMode()).isEnabled;
   const jsonLd = weddingEventJsonLd(site);
 
+  // Strip any stega watermark characters, then validate against the presets.
+  const rawTheme = String(site.theme ?? "")
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+  const themeKey = THEME_KEYS.includes(rawTheme) ? rawTheme : "classic";
+
   let SanityLive: React.ComponentType | null = null;
   if (isSanityConfigured()) {
     ({ SanityLive } = await import("@/sanity/lib/live"));
@@ -73,7 +118,8 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${serif.variable} ${sans.variable} ${script.variable} h-full antialiased`}
+      data-theme={themeKey}
+      className={`${fontVariables} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-ivory font-sans text-charcoal">
         <script

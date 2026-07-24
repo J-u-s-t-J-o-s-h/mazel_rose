@@ -35,6 +35,7 @@ export const siteConfig: SiteConfig = {
   contactEmail: "hello@mazel.rose",
   tagline: "Romantic. Rich. Timeless.",
   closingStatement: "With love, we look forward to celebrating with you.",
+  theme: "classic",
   navigation: [
     { label: "Home", href: "/" },
     { label: "Schedule", href: "/schedule" },
