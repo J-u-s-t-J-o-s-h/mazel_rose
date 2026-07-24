@@ -60,6 +60,7 @@ async function main() {
 
   await upsert(SINGLETON_IDS.weddingDetails, {
     _type: "weddingDetails",
+    theme: siteConfig.theme,
     partnerOneName: siteConfig.coupleNames.partnerOne,
     partnerTwoName: siteConfig.coupleNames.partnerTwo,
     coupleDisplayName: siteConfig.coupleNames.display,

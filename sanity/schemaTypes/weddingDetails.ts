@@ -6,6 +6,23 @@ export const weddingDetails = defineType({
   type: "document",
   fields: [
     defineField({
+      name: "theme",
+      title: "Site theme (colors & fonts)",
+      type: "string",
+      description:
+        "Pick a designer preset. This restyles the whole website — colors and fonts — in one click. Publish to apply.",
+      options: {
+        list: [
+          { title: "Peacock & Burgundy (classic)", value: "classic" },
+          { title: "Midnight & Gold", value: "midnight" },
+          { title: "Sage & Blush", value: "sage" },
+          { title: "Dusty Blue & Terracotta", value: "coastal" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "classic",
+    }),
+    defineField({
       name: "partnerOneName",
       title: "First partner's name",
       type: "string",

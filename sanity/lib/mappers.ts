@@ -66,6 +66,7 @@ export function mapWeddingDetails(doc: Record<string, unknown> | null): SiteConf
         doc.socialDescription || fallbackSite.social.description,
       ),
     },
+    theme: String(doc.theme || fallbackSite.theme || "classic"),
   };
 }
 

@@ -39,6 +39,8 @@ export type SiteConfig = {
     title: string;
     description: string;
   };
+  /** Theme preset key: classic | midnight | sage | coastal. */
+  theme: string;
 } & PlaceholderFlag;
 
 export type ScheduleEvent = {
