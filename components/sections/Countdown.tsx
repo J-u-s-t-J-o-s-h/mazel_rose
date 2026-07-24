@@ -24,11 +24,11 @@ function getTimeLeft(targetMs: number): TimeLeft | null {
 
 export function Countdown() {
   const site = useSite();
+  // Count down to the same wedding date shown in the hero (Sanity Wedding
+  // Details). Editing the date in Studio updates both the hero and this clock —
+  // no build-time env var to keep in sync.
   const targetMs = useMemo(
-    () =>
-      new Date(
-        process.env.NEXT_PUBLIC_WEDDING_DATE || site.weddingDateIso,
-      ).getTime(),
+    () => new Date(site.weddingDateIso).getTime(),
     [site.weddingDateIso],
   );
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
