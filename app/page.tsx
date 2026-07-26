@@ -25,6 +25,11 @@ export async function generateMetadata() {
   });
 }
 
+// Content is edited in Sanity Studio; revalidate on a short interval so
+// published changes reliably appear on the live site (all domains) within
+// ~30s. SanityLive still updates already-open pages in real time.
+export const revalidate = 30;
+
 export default async function HomePage() {
   const [home, events, gallery] = await Promise.all([
     getHomePage(),
