@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import type { GalleryImage } from "@/types/content";
 import { GalleryLightbox } from "@/components/gallery/GalleryLightbox";
+import { useIsPreview } from "@/components/providers/PreviewModeProvider";
 import { cn } from "@/lib/utils";
 
 export function GalleryGrid({
@@ -16,6 +17,8 @@ export function GalleryGrid({
 }) {
   const [index, setIndex] = useState<number | null>(null);
   const reduceMotion = useReducedMotion();
+  const isPreview = useIsPreview();
+  const staticState = reduceMotion || isPreview;
 
   const onPrev = useCallback(() => {
     setIndex((current) => {
@@ -42,8 +45,8 @@ export function GalleryGrid({
             className={cn(
               "group mb-4 block w-full break-inside-avoid overflow-hidden border border-ivory/10 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-champagne",
             )}
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={staticState ? false : { opacity: 0, y: 18 }}
+            whileInView={staticState ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.55, delay: imageIndex * 0.03 }}
           >

@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useIsPreview } from "@/components/providers/PreviewModeProvider";
 
 type FadeInProps = {
   children: React.ReactNode;
@@ -19,8 +20,11 @@ export function FadeIn({
   once = true,
 }: FadeInProps) {
   const reduceMotion = useReducedMotion();
+  const isPreview = useIsPreview();
 
-  if (reduceMotion) {
+  // Render final state (no scroll gating) for reduced-motion users and inside
+  // the Studio preview, where whileInView can leave content stuck hidden.
+  if (reduceMotion || isPreview) {
     return <div className={className}>{children}</div>;
   }
 
