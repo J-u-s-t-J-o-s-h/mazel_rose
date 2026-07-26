@@ -11,6 +11,7 @@ import {
 import { VisualEditing } from "next-sanity/visual-editing";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { SiteProvider } from "@/components/providers/SiteProvider";
+import { PreviewModeProvider } from "@/components/providers/PreviewModeProvider";
 import { DisableDraftMode } from "@/components/preview/DisableDraftMode";
 import { DraftModeBanner } from "@/components/preview/DraftModeBanner";
 import { createPageMetadata, weddingEventJsonLd } from "@/lib/metadata";
@@ -127,15 +128,17 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <SiteProvider value={site}>
-          {isDraft ? <DraftModeBanner /> : null}
-          <SiteShell>{children}</SiteShell>
-          {SanityLive ? <SanityLive /> : null}
-          {isDraft ? (
-            <>
-              <VisualEditing />
-              <DisableDraftMode />
-            </>
-          ) : null}
+          <PreviewModeProvider value={isDraft}>
+            {isDraft ? <DraftModeBanner /> : null}
+            <SiteShell>{children}</SiteShell>
+            {SanityLive ? <SanityLive /> : null}
+            {isDraft ? (
+              <>
+                <VisualEditing />
+                <DisableDraftMode />
+              </>
+            ) : null}
+          </PreviewModeProvider>
         </SiteProvider>
       </body>
     </html>

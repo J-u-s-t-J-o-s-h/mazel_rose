@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useIsPreview } from "@/components/providers/PreviewModeProvider";
 import { cn } from "@/lib/utils";
 
 type DecorativeDividerProps = {
@@ -20,6 +21,8 @@ export function DecorativeDivider({
   tone = "brass",
 }: DecorativeDividerProps) {
   const reduceMotion = useReducedMotion();
+  const isPreview = useIsPreview();
+  const staticState = reduceMotion || isPreview;
 
   return (
     <div
@@ -28,8 +31,8 @@ export function DecorativeDivider({
     >
       <motion.span
         className={cn("h-px w-16 sm:w-24", tones[tone])}
-        initial={reduceMotion ? false : { scaleX: 0 }}
-        whileInView={reduceMotion ? undefined : { scaleX: 1 }}
+        initial={staticState ? false : { scaleX: 0 }}
+        whileInView={staticState ? undefined : { scaleX: 1 }}
         viewport={{ once: true, amount: 0.6 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
         style={{ originX: 1 }}
@@ -37,8 +40,8 @@ export function DecorativeDivider({
       <span className={cn("h-1.5 w-1.5 rotate-45", tones[tone])} />
       <motion.span
         className={cn("h-px w-16 sm:w-24", tones[tone])}
-        initial={reduceMotion ? false : { scaleX: 0 }}
-        whileInView={reduceMotion ? undefined : { scaleX: 1 }}
+        initial={staticState ? false : { scaleX: 0 }}
+        whileInView={staticState ? undefined : { scaleX: 1 }}
         viewport={{ once: true, amount: 0.6 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
         style={{ originX: 0 }}
