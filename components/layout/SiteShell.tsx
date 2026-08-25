@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ElfsightBackgroundMusic } from "@/components/layout/ElfsightBackgroundMusic";
+import { EnterExperience } from "@/components/layout/EnterExperience";
 import { PageTransition } from "@/components/motion/PageTransition";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
@@ -30,6 +32,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <PageTransition>{children}</PageTransition>
       </main>
       <Footer />
+      {!isGate ? (
+        <>
+          <ElfsightBackgroundMusic />
+          <EnterExperience />
+        </>
+      ) : null}
     </>
   );
 }
