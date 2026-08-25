@@ -1,8 +1,9 @@
 import { defineField, defineType } from "sanity";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
 import {
-  altTextField,
-  displayOrderField,
   featuredField,
+  imageWithAltField,
+  listOrderFields,
   showOnWebsiteField,
 } from "./objects";
 
@@ -11,6 +12,7 @@ export const activity = defineType({
   title: "Things To Do Recommendation",
   type: "document",
   fields: [
+    ...listOrderFields("activity"),
     defineField({
       name: "name",
       title: "Name",
@@ -34,14 +36,10 @@ export const activity = defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    defineField({
+    imageWithAltField({
       name: "image",
       title: "Image",
-      type: "image",
-      options: { hotspot: true },
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add an image before publishing for best results."),
+      warning: "Add an image before publishing for best results.",
     }),
     defineField({
       name: "description",
@@ -86,9 +84,9 @@ export const activity = defineType({
     }),
     featuredField,
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

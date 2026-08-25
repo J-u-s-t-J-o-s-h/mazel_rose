@@ -1,8 +1,9 @@
 import { defineField, defineType } from "sanity";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
 import {
-  altTextField,
-  displayOrderField,
   featuredField,
+  imageWithAltField,
+  listOrderFields,
   showOnWebsiteField,
 } from "./objects";
 
@@ -11,21 +12,18 @@ export const hotel = defineType({
   title: "Hotel",
   type: "document",
   fields: [
+    ...listOrderFields("hotel"),
     defineField({
       name: "name",
       title: "Hotel name",
       type: "string",
       validation: (rule) => rule.required(),
     }),
-    defineField({
+    imageWithAltField({
       name: "image",
       title: "Hotel photograph",
-      type: "image",
-      options: { hotspot: true },
-      description: "Recommended horizontal image, at least 1600 × 1000 pixels.",
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add a hotel photo before publishing for best results."),
+      description: "Recommended horizontal image, at least 1600 × 1000 pixels. JPEG or PNG works best.",
+      warning: "Add a hotel photo before publishing for best results.",
     }),
     defineField({
       name: "address",
@@ -81,9 +79,9 @@ export const hotel = defineType({
     }),
     featuredField,
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

@@ -1,11 +1,13 @@
 import { defineField, defineType } from "sanity";
-import { displayOrderField, showOnWebsiteField } from "./objects";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
+import { listOrderFields, showOnWebsiteField } from "./objects";
 
 export const airport = defineType({
   name: "airport",
   title: "Airport",
   type: "document",
   fields: [
+    ...listOrderFields("airport"),
     defineField({
       name: "name",
       title: "Airport name",
@@ -54,9 +56,9 @@ export const airport = defineType({
       validation: (rule) => rule.uri({ scheme: ["http", "https"] }),
     }),
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

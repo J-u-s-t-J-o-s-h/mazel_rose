@@ -46,7 +46,7 @@ All 12 notes were still **open**. Check them off here as you handle them.
 - [x] **Cocktail Hour — title** (`scheduleEvent.cocktail` / `title`) — 17 Aug 2026  
       Can you make it so I can drag/drop the boxes in the order I want them?
 
-- [ ] **After-Party — title** (`scheduleEvent.after-party` / `title`) — 17 Aug 2026  
+- [x] **After-Party — title** (`scheduleEvent.after-party` / `title`) — 17 Aug 2026  
       Also add option to add/delete event boxes
 
 ---

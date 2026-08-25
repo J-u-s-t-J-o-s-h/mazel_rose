@@ -1,8 +1,9 @@
 import { defineField, defineType } from "sanity";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
 import {
-  altTextField,
-  displayOrderField,
   featuredField,
+  imageWithAltField,
+  listOrderFields,
   showOnWebsiteField,
 } from "./objects";
 
@@ -11,6 +12,7 @@ export const registryLink = defineType({
   title: "Registry Link",
   type: "document",
   fields: [
+    ...listOrderFields("registryLink"),
     defineField({
       name: "name",
       title: "Registry name",
@@ -32,12 +34,9 @@ export const registryLink = defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    defineField({
+    imageWithAltField({
       name: "image",
       title: "Image or logo",
-      type: "image",
-      options: { hotspot: true },
-      fields: [altTextField],
     }),
     defineField({
       name: "description",
@@ -61,9 +60,9 @@ export const registryLink = defineType({
     }),
     featuredField,
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

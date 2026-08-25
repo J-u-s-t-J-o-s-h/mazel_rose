@@ -8,6 +8,7 @@ import { apiVersion, dataset, projectId, studioUrl } from "@/sanity/env";
 import { schemaTypes, SINGLETON_TYPES } from "@/sanity/schemaTypes";
 import { structure } from "@/sanity/structure";
 import { resolve } from "@/sanity/presentation/resolve";
+import { hideCardAction } from "@/sanity/actions/hideCardAction";
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
 
 const previewOrigin =
@@ -45,13 +46,14 @@ export default defineConfig({
       ),
   },
   document: {
-    actions: (input, context) =>
-      SINGLETON_TYPES.includes(
+    actions: (input, context) => {
+      const isSingleton = SINGLETON_TYPES.includes(
         context.schemaType as (typeof SINGLETON_TYPES)[number],
-      )
-        ? input.filter(
-            ({ action }) => action && singletonActions.has(action),
-          )
-        : input,
+      );
+      const actions = isSingleton
+        ? input.filter(({ action }) => action && singletonActions.has(action))
+        : input;
+      return isSingleton ? actions : [hideCardAction, ...actions];
+    },
   },
 });

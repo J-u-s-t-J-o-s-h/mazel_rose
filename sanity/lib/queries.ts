@@ -55,11 +55,11 @@ export const TRAVEL_OVERVIEW_QUERY = defineQuery(`
 `);
 
 export const AIRPORTS_QUERY = defineQuery(`
-  *[_type == "airport" && showOnWebsite != false] | order(displayOrder asc)
+  *[_type == "airport" && showOnWebsite != false] | order(orderRank asc, displayOrder asc)
 `);
 
 export const HOTELS_QUERY = defineQuery(`
-  *[_type == "hotel" && showOnWebsite != false] | order(displayOrder asc) {
+  *[_type == "hotel" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
     ...,
     image{${imageFields}}
   }
@@ -73,14 +73,14 @@ export const REGISTRY_INTRO_QUERY = defineQuery(`
 `);
 
 export const REGISTRY_LINKS_QUERY = defineQuery(`
-  *[_type == "registryLink" && showOnWebsite != false] | order(displayOrder asc) {
+  *[_type == "registryLink" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
     ...,
     image{${imageFields}}
   }
 `);
 
 export const WEDDING_PARTY_QUERY = defineQuery(`
-  *[_type == "weddingPartyMember" && showOnWebsite != false] | order(displayOrder asc) {
+  *[_type == "weddingPartyMember" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
     ...,
     photo{${imageFields}}
   }
@@ -89,12 +89,19 @@ export const WEDDING_PARTY_QUERY = defineQuery(`
 export const GALLERY_SETTINGS_QUERY = defineQuery(`
   *[_type == "gallerySettings" && _id == "gallerySettings"][0]{
     ...,
-    featureImage{${imageFields}}
+    featureImage{${imageFields}},
+    photos[]{
+      _key,
+      caption,
+      photographerCredit,
+      category,
+      image{${imageFields}}
+    }
   }
 `);
 
 export const GALLERY_PHOTOS_QUERY = defineQuery(`
-  *[_type == "galleryPhoto" && showOnWebsite != false] | order(displayOrder asc) {
+  *[_type == "galleryPhoto" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
     _id,
     caption,
     photographerCredit,
@@ -113,7 +120,7 @@ export const LOCAL_GUIDE_INTRO_QUERY = defineQuery(`
 `);
 
 export const ACTIVITIES_QUERY = defineQuery(`
-  *[_type == "activity" && showOnWebsite != false] | order(displayOrder asc) {
+  *[_type == "activity" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
     ...,
     image{${imageFields}}
   }
@@ -124,7 +131,7 @@ export const FAQ_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQ_ITEMS_QUERY = defineQuery(`
-  *[_type == "faqItem" && showOnWebsite != false] | order(displayOrder asc)
+  *[_type == "faqItem" && showOnWebsite != false] | order(orderRank asc, displayOrder asc)
 `);
 
 export const RSVP_FORM_SETTINGS_QUERY = defineQuery(`

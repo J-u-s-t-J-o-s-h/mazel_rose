@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { altTextField } from "./objects";
+import { imageWithAltField } from "./objects";
 
 export const localGuideIntro = defineType({
   name: "localGuideIntro",
@@ -24,12 +24,9 @@ export const localGuideIntro = defineType({
       rows: 4,
       validation: (rule) => rule.required().max(800),
     }),
-    defineField({
+    imageWithAltField({
       name: "featureImage",
       title: "Feature image",
-      type: "image",
-      options: { hotspot: true },
-      fields: [altTextField],
     }),
     defineField({
       name: "personalNote",

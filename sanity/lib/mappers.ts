@@ -310,22 +310,27 @@ export function mapGalleryPhotos(
   fallback: GalleryImage[],
 ): GalleryImage[] {
   if (!docs?.length) return fallback;
+  return mapGalleryPhotoItems(docs);
+}
+
+export function mapGalleryPhotoItems(
+  docs: Array<Record<string, unknown>> | null,
+): GalleryImage[] {
+  if (!docs?.length) return [];
   const mapped = docs.map((doc, index) => {
     const image = doc.image as SanityImage;
-    const fallbackImage = fallback[index] || fallback[0];
     const src = resolveImageUrl(image, 1600);
     if (!src) return null;
     return {
-      id: String(doc._id),
+      id: String(doc._key || doc._id || index),
       src,
-      alt: image?.alt || fallbackImage?.alt || String(doc.caption || "Gallery photo"),
-      caption: doc.caption ? String(doc.caption) : fallbackImage?.caption,
-      width: fallbackImage?.width || 1600,
-      height: fallbackImage?.height || (index % 2 === 0 ? 1067 : 1600),
+      alt: image?.alt || String(doc.caption || "Gallery photo"),
+      caption: doc.caption ? String(doc.caption) : undefined,
+      width: 1600,
+      height: index % 2 === 0 ? 1067 : 1600,
     };
   });
-  const photos = mapped.filter(Boolean) as GalleryImage[];
-  return photos;
+  return mapped.filter(Boolean) as GalleryImage[];
 }
 
 export function mapActivities(

@@ -1,8 +1,9 @@
 import { defineField, defineType } from "sanity";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
 import {
-  altTextField,
-  displayOrderField,
   featuredField,
+  imageWithAltField,
+  listOrderFields,
   showOnWebsiteField,
 } from "./objects";
 
@@ -11,6 +12,7 @@ export const weddingPartyMember = defineType({
   title: "Wedding Party Member",
   type: "document",
   fields: [
+    ...listOrderFields("weddingPartyMember"),
     defineField({
       name: "name",
       title: "Name",
@@ -23,15 +25,11 @@ export const weddingPartyMember = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     }),
-    defineField({
+    imageWithAltField({
       name: "photo",
       title: "Photograph",
-      type: "image",
-      options: { hotspot: true },
-      description: "Recommended vertical image, at least 1200 × 1600 pixels.",
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add a portrait before publishing for best results."),
+      description: "Recommended vertical image, at least 1200 × 1600 pixels. JPEG or PNG works best.",
+      warning: "Add a portrait before publishing for best results.",
     }),
     defineField({
       name: "relationship",
@@ -66,9 +64,9 @@ export const weddingPartyMember = defineType({
     }),
     featuredField,
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

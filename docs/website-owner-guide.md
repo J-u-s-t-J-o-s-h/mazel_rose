@@ -19,56 +19,36 @@ These details appear in the header, footer, countdown, invitation text, and sear
 
 ## Replacing images
 
-1. Open the page or item that contains the image (for example **Home Page** or a **Gallery** photo).
-2. Click the image field.
-3. Choose **Replace** (or upload a new photo).
-4. Adjust the crop/hotspot if shown so faces and important details stay centered.
-5. Add a short image description for accessibility.
+1. Open the page or item that contains the image (for example **Home Page** or **Gallery**).
+2. Use the **Choose file** button on the photo field (JPEG or PNG). Large camera files are resized automatically.
+3. Wait until you see “Photo attached.”
+4. Adjust the crop/hotspot if shown so faces stay centered.
+5. Add a short image description if asked.
 6. Click **Publish**.
 
 Tips:
 
 - Hero images look best as wide photos (about 2400 × 1400 or larger).
 - Wedding-party portraits look best as tall photos (about 1200 × 1600 or larger).
-- For the gallery, upload the highest-quality originals you have.
+- On iPhone, use JPEG. In Camera settings, set Formats to Most Compatible if uploads fail.
+- A photo is not on the live site until you click **Publish**.
 
-## Adding schedule events
+## Adding, reordering, and removing cards
 
-1. Open **Schedule**.
-2. Click the button to create a new event.
-3. Fill in title, date, times, venue, address, and description.
-4. Drag events in the Schedule list to set the order on the website. That order is saved automatically.
-5. Use **Show this on the website** to hide an event without deleting it.
-6. Publish the event content (title, times, and so on). Reordering the list is saved as you drop it.
+Schedule, hotels, airports, wedding party, registry links, Things To Do, and FAQs are card lists:
 
-## Updating hotels
-
-1. Open **Travel → Hotels**.
-2. Edit an existing hotel or create a new one.
-3. Add booking link, group code, deadline, amenities, and photo.
-4. Publish.
-
-## Updating registry links
-
-1. Open **Registry → Registry Links**.
-2. Edit the store name, description, and external link.
-3. Publish.
-
-## Managing wedding-party members
-
-1. Open **Wedding Party**.
-2. Add or edit a person.
-3. Upload a portrait, write a short biography, and optional fun fact.
-4. Use **Display order** to rearrange the list.
-5. Publish.
+1. Open the list (for example **Schedule** or **Travel → Hotels**).
+2. Drag a card to change its order on the website. The new order saves when you drop it.
+3. Click **+** to add a new card, fill it in, then **Publish**.
+4. To hide a card without deleting it, open it and click **Hide this card on the website**, or turn off **Show this card on the website**.
+5. To delete a card for good, open it and use **Delete** in the top-right menu.
 
 ## Uploading gallery photos
 
-1. Open **Gallery → Photos**.
-2. Create a new photo entry for each image.
-3. Upload the image, add a caption, and set display order.
-4. To temporarily remove a photo from the site, turn off **Show this on the website**.
-5. Publish.
+1. Open **Gallery**.
+2. In the **Photos** grid, click **Add item** to create a card, or open an existing card.
+3. Upload the JPEG/PNG, add a caption, then **Publish** the Gallery document.
+4. Drag cards in the grid to reorder them. Use a card’s menu to remove it.
 
 ## Editing FAQs
 
@@ -94,7 +74,7 @@ If you opened a preview link in a normal browser tab, use **Exit Preview** to re
 
 ## Hiding content without deleting it
 
-Turn off **Show this on the website**.
+Turn off **Show this card on the website**, or use **Hide this card on the website**.
 
 This is useful for:
 

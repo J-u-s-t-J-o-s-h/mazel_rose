@@ -1,8 +1,9 @@
 import { defineField, defineType } from "sanity";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
 import {
-  altTextField,
-  displayOrderField,
   featuredField,
+  imageWithAltField,
+  listOrderFields,
   showOnWebsiteField,
 } from "./objects";
 
@@ -11,16 +12,13 @@ export const galleryPhoto = defineType({
   title: "Gallery Photo",
   type: "document",
   fields: [
-    defineField({
+    ...listOrderFields("galleryPhoto"),
+    imageWithAltField({
       name: "image",
       title: "Photo",
-      type: "image",
-      options: { hotspot: true },
       description:
-        "Use the highest-quality original available. Avoid screenshots or social-media downloads.",
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add a photo before publishing for best results."),
+        "Use the highest-quality JPEG or PNG original available. Avoid screenshots or social-media downloads.",
+      warning: "Add a photo before publishing for best results.",
     }),
     defineField({
       name: "caption",
@@ -40,9 +38,9 @@ export const galleryPhoto = defineType({
     }),
     featuredField,
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

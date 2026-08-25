@@ -1,9 +1,9 @@
-import { defineField, defineType } from "sanity";
-import { altTextField } from "./objects";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import { imageWithAltField } from "./objects";
 
 export const gallerySettings = defineType({
   name: "gallerySettings",
-  title: "Gallery Settings",
+  title: "Gallery",
   type: "document",
   fields: [
     defineField({
@@ -25,11 +25,53 @@ export const gallerySettings = defineType({
       validation: (rule) => rule.required().max(600),
     }),
     defineField({
+      name: "photos",
+      title: "Photos",
+      type: "array",
+      description:
+        "Drag cards to reorder. Open a card to replace its photo. Use the card menu to remove it from the website.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "galleryPhotoItem",
+          title: "Photo",
+          fields: [
+            imageWithAltField({
+              name: "image",
+              title: "Photo",
+              warning: "Add a photo before publishing for best results.",
+            }),
+            defineField({
+              name: "caption",
+              title: "Caption",
+              type: "string",
+              validation: (rule) => rule.max(120),
+            }),
+            defineField({
+              name: "photographerCredit",
+              title: "Photographer credit (optional)",
+              type: "string",
+            }),
+            defineField({
+              name: "category",
+              title: "Category (optional)",
+              type: "string",
+            }),
+          ],
+          preview: {
+            select: { title: "caption", media: "image" },
+            prepare: ({ title, media }) => ({
+              title: title || "Gallery photo",
+              media,
+            }),
+          },
+        }),
+      ],
+      options: { layout: "grid" },
+    }),
+    imageWithAltField({
       name: "featureImage",
       title: "Feature image",
-      type: "image",
-      options: { hotspot: true },
-      fields: [altTextField],
     }),
     defineField({
       name: "showCaptions",
@@ -39,6 +81,6 @@ export const gallerySettings = defineType({
     }),
   ],
   preview: {
-    prepare: () => ({ title: "Gallery Settings" }),
+    prepare: () => ({ title: "Gallery" }),
   },
 });

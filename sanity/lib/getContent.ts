@@ -21,6 +21,7 @@ import {
   mapActivities,
   mapAirports,
   mapFaqItems,
+  mapGalleryPhotoItems,
   mapGalleryPhotos,
   mapHomePage,
   mapHotels,
@@ -165,6 +166,10 @@ export async function getGalleryPage() {
     safeFetch<Array<Record<string, unknown>>>(GALLERY_PHOTOS_QUERY),
   ]);
 
+  const settingsPhotos = Array.isArray(settings?.photos)
+    ? (settings.photos as Array<Record<string, unknown>>)
+    : null;
+
   return {
     intro: {
       title: String(settings?.heading || fallbackGalleryIntro.title),
@@ -174,7 +179,9 @@ export async function getGalleryPage() {
       body: String(settings?.introduction || fallbackGalleryIntro.body),
     },
     showCaptions: settings?.showCaptions !== false,
-    images: mapGalleryPhotos(photos, fallbackGallery),
+    images: settingsPhotos
+      ? mapGalleryPhotoItems(settingsPhotos)
+      : mapGalleryPhotos(photos, fallbackGallery),
   };
 }
 

@@ -1,11 +1,13 @@
 import { defineField, defineType } from "sanity";
-import { displayOrderField, showOnWebsiteField } from "./objects";
+import { orderRankOrdering } from "@sanity/orderable-document-list";
+import { listOrderFields, showOnWebsiteField } from "./objects";
 
 export const faqItem = defineType({
   name: "faqItem",
   title: "FAQ",
   type: "document",
   fields: [
+    ...listOrderFields("faqItem"),
     defineField({
       name: "question",
       title: "Question",
@@ -25,9 +27,9 @@ export const faqItem = defineType({
       type: "string",
     }),
     showOnWebsiteField,
-    displayOrderField,
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

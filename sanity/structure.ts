@@ -43,24 +43,18 @@ export const structure: StructureResolver = (S, context) =>
                 "Travel Overview",
                 "travelOverview",
               ),
-              S.listItem()
-                .title("Airports")
-                .child(
-                  S.documentTypeList("airport")
-                    .title("Airports")
-                    .defaultOrdering([
-                      { field: "displayOrder", direction: "asc" },
-                    ]),
-                ),
-              S.listItem()
-                .title("Hotels")
-                .child(
-                  S.documentTypeList("hotel")
-                    .title("Hotels")
-                    .defaultOrdering([
-                      { field: "displayOrder", direction: "asc" },
-                    ]),
-                ),
+              orderableDocumentListDeskItem({
+                type: "airport",
+                title: "Airports",
+                S,
+                context,
+              }),
+              orderableDocumentListDeskItem({
+                type: "hotel",
+                title: "Hotels",
+                S,
+                context,
+              }),
             ]),
         ),
       S.listItem()
@@ -75,47 +69,21 @@ export const structure: StructureResolver = (S, context) =>
                 "Registry Introduction",
                 "registryIntro",
               ),
-              S.listItem()
-                .title("Registry Links")
-                .child(
-                  S.documentTypeList("registryLink")
-                    .title("Registry Links")
-                    .defaultOrdering([
-                      { field: "displayOrder", direction: "asc" },
-                    ]),
-                ),
-            ]),
-        ),
-      S.listItem()
-        .title("Wedding Party")
-        .child(
-          S.documentTypeList("weddingPartyMember")
-            .title("Wedding Party Members")
-            .defaultOrdering([{ field: "displayOrder", direction: "asc" }]),
-        ),
-      S.listItem()
-        .title("Gallery")
-        .child(
-          S.list()
-            .title("Gallery")
-            .items([
-              singleton(
+              orderableDocumentListDeskItem({
+                type: "registryLink",
+                title: "Registry Links",
                 S,
-                SINGLETON_IDS.gallerySettings,
-                "Gallery Settings",
-                "gallerySettings",
-              ),
-              S.listItem()
-                .title("Photos")
-                .child(
-                  S.documentTypeList("galleryPhoto")
-                    .title("Photos")
-                    .defaultOrdering([
-                      { field: "displayOrder", direction: "asc" },
-                    ]),
-                ),
+                context,
+              }),
             ]),
         ),
+      orderableDocumentListDeskItem({
+        type: "weddingPartyMember",
+        title: "Wedding Party",
+        S,
+        context,
+      }),
+      singleton(S, SINGLETON_IDS.gallerySettings, "Gallery", "gallerySettings"),
       S.listItem()
         .title("Things To Do")
         .child(
@@ -128,15 +96,12 @@ export const structure: StructureResolver = (S, context) =>
                 "Local Guide Introduction",
                 "localGuideIntro",
               ),
-              S.listItem()
-                .title("Recommendations")
-                .child(
-                  S.documentTypeList("activity")
-                    .title("Recommendations")
-                    .defaultOrdering([
-                      { field: "displayOrder", direction: "asc" },
-                    ]),
-                ),
+              orderableDocumentListDeskItem({
+                type: "activity",
+                title: "Recommendations",
+                S,
+                context,
+              }),
             ]),
         ),
       S.listItem()
@@ -146,15 +111,12 @@ export const structure: StructureResolver = (S, context) =>
             .title("FAQs")
             .items([
               singleton(S, SINGLETON_IDS.faqPage, "FAQ Page", "faqPage"),
-              S.listItem()
-                .title("Questions and Answers")
-                .child(
-                  S.documentTypeList("faqItem")
-                    .title("Questions and Answers")
-                    .defaultOrdering([
-                      { field: "displayOrder", direction: "asc" },
-                    ]),
-                ),
+              orderableDocumentListDeskItem({
+                type: "faqItem",
+                title: "Questions and Answers",
+                S,
+                context,
+              }),
             ]),
         ),
       S.listItem()

@@ -49,24 +49,24 @@ type in.
 1. Click the section that has the photo (**Home Page** for the big
    photos, **Gallery** for the photo album, **Wedding Party** for
    portraits).
-2. Click the image box, then choose **Upload** (or **Replace** if a
-   photo is already there).
-3. Pick the photo from your computer. Use the best quality original
-   you have, since the website shrinks it automatically.
-4. If a cropping circle appears, drag it so faces are in the middle.
-5. Fill in the short "description" box if there is one (it helps
-   visitors who use screen readers).
-6. Press **Publish**.
+2. Use the **Choose file** button on the photo field and pick a
+   **JPEG or PNG**. Wait until it says the photo is attached.
+3. If a cropping circle appears, drag it so faces are in the middle.
+4. Fill in the short "description" box if there is one.
+5. Press **Publish**. The live site will not change until you publish.
 
 
-## Recipe 3: Add something to a list
-(a schedule event, an FAQ, a registry link, an activity)
+## Recipe 3: Add, reorder, or remove a card
+(a schedule event, hotel, FAQ, registry link, activity, or party member)
 
-1. Click the section (for example **Schedule**).
-2. Look for a **+ button or "Create" button** and click it.
-3. Fill in the boxes.
-4. For **Schedule**, drag the events in the list to the order you want on the website. That order is saved when you drop them.
-5. Press **Publish** for the event details.
+1. Click the section (for example **Schedule** or **Travel → Hotels**).
+2. To add: click the **+** button, fill in the boxes, press **Publish**.
+3. To reorder: drag the cards. The website follows that order.
+4. To hide: open the card and click **Hide this card on the website**.
+5. To delete: open the card and choose **Delete** in the top-right menu.
+
+Gallery photos live in **Gallery**. Add a card in the Photos grid,
+upload a JPEG/PNG, drag to reorder, and **Publish**.
 
 
 ## Recipe 4: See who has RSVP'd

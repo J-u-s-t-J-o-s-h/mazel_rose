@@ -1,4 +1,6 @@
-import { defineField } from "sanity";
+import { defineField, type FieldDefinition } from "sanity";
+import { orderRankField } from "@sanity/orderable-document-list";
+import { CompatibleImageInput } from "@/sanity/components/CompatibleImageInput";
 
 export const ctaFields = [
   defineField({
@@ -32,9 +34,11 @@ export const altTextField = defineField({
 
 export const showOnWebsiteField = defineField({
   name: "showOnWebsite",
-  title: "Show this on the website",
+  title: "Show this card on the website",
   type: "boolean",
   initialValue: true,
+  description:
+    "Turn this off to hide the card from guests without deleting it. To delete it for good, use Delete in the top-right menu.",
 });
 
 export const displayOrderField = defineField({
@@ -45,6 +49,46 @@ export const displayOrderField = defineField({
   initialValue: 0,
   validation: (rule) => rule.integer().min(0),
 });
+
+export function listOrderFields(type: string): FieldDefinition[] {
+  return [
+    orderRankField({ type }),
+    defineField({
+      ...displayOrderField,
+      hidden: true,
+      description:
+        "Fallback only. Drag cards in the list to set the order on the website.",
+    }),
+  ];
+}
+
+export function imageWithAltField(config: {
+  name: string;
+  title: string;
+  description?: string;
+  group?: string;
+  warning?: string;
+  includeAlt?: boolean;
+}) {
+  return defineField({
+    name: config.name,
+    title: config.title,
+    type: "image",
+    group: config.group,
+    description:
+      config.description ||
+      "JPEG or PNG works best. Large camera files are resized so the upload can finish. Click Publish after the photo attaches.",
+    options: {
+      hotspot: true,
+      accept: "image/jpeg,image/png,image/webp,image/gif",
+    },
+    fields: config.includeAlt === false ? [] : [altTextField],
+    components: { input: CompatibleImageInput },
+    validation: config.warning
+      ? (rule) => rule.warning(config.warning)
+      : undefined,
+  });
+}
 
 export const featuredField = defineField({
   name: "featured",

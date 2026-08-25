@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { imageWithAltField } from "./objects";
 
 export const weddingDetails = defineType({
   name: "weddingDetails",
@@ -160,12 +161,11 @@ export const weddingDetails = defineType({
       rows: 3,
       validation: (rule) => rule.required().max(300),
     }),
-    defineField({
+    imageWithAltField({
       name: "socialImage",
       title: "Social sharing image",
-      type: "image",
-      options: { hotspot: true },
-      description: "Recommended 1200 × 630 pixels.",
+      description: "Recommended 1200 × 630 pixels. JPEG or PNG works best.",
+      includeAlt: false,
     }),
     defineField({
       name: "announcementText",

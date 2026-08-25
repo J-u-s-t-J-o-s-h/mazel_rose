@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { altTextField, ctaFields } from "./objects";
+import { ctaFields, imageWithAltField } from "./objects";
 
 export const homePage = defineType({
   name: "homePage",
@@ -45,16 +45,12 @@ export const homePage = defineType({
       group: "hero",
       validation: (rule) => rule.required().max(120),
     }),
-    defineField({
+    imageWithAltField({
       name: "heroImage",
       title: "Hero image",
-      type: "image",
       group: "hero",
-      options: { hotspot: true },
-      description: "Recommended horizontal image, at least 2400 × 1400 pixels.",
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add a hero image before publishing for best results."),
+      description: "Recommended horizontal image, at least 2400 × 1400 pixels. JPEG or PNG works best.",
+      warning: "Add a hero image before publishing for best results.",
     }),
     defineField({
       name: "primaryCta",
@@ -91,13 +87,10 @@ export const homePage = defineType({
       group: "welcome",
       validation: (rule) => rule.required().max(800),
     }),
-    defineField({
+    imageWithAltField({
       name: "welcomeImage",
       title: "Welcome image",
-      type: "image",
       group: "welcome",
-      options: { hotspot: true },
-      fields: [altTextField],
     }),
     defineField({
       name: "storyHeading",
@@ -120,15 +113,11 @@ export const homePage = defineType({
       type: "string",
       group: "story",
     }),
-    defineField({
+    imageWithAltField({
       name: "storyImage",
       title: "Story image",
-      type: "image",
       group: "story",
-      options: { hotspot: true },
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add a story image before publishing for best results."),
+      warning: "Add a story image before publishing for best results.",
     }),
     defineField({
       name: "featureQuote",
@@ -144,15 +133,11 @@ export const homePage = defineType({
       type: "string",
       group: "feature",
     }),
-    defineField({
+    imageWithAltField({
       name: "featureImage",
       title: "Feature image",
-      type: "image",
       group: "feature",
-      options: { hotspot: true },
-      fields: [altTextField],
-      validation: (rule) =>
-        rule.warning("Add a feature image before publishing for best results."),
+      warning: "Add a feature image before publishing for best results.",
     }),
     defineField({
       name: "schedulePreviewTitle",

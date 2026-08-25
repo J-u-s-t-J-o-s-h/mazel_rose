@@ -48,6 +48,14 @@ const client = createClient({
   useCdn: false,
 });
 
+function rankSeries(count: number) {
+  let rank = LexoRank.min();
+  return Array.from({ length: count }, () => {
+    rank = rank.genNext().genNext();
+    return rank.toString();
+  });
+}
+
 async function upsert(
   id: string,
   document: { _type: string } & Record<string, unknown>,
@@ -155,6 +163,11 @@ async function main() {
     heading: galleryIntro.title,
     introduction: galleryIntro.body,
     showCaptions: true,
+    photos: galleryImages.map((image, index) => ({
+      _key: `gallery${index + 1}`,
+      _type: "galleryPhotoItem",
+      caption: image.caption,
+    })),
   });
 
   await upsert(SINGLETON_IDS.localGuideIntro, {
@@ -231,6 +244,7 @@ async function main() {
     });
   }
 
+  const airportRanks = rankSeries(airports.length);
   for (const [index, airport] of airports.entries()) {
     await upsert(`airport.${airport.code}`, {
       _type: "airport",
@@ -241,9 +255,11 @@ async function main() {
       description: airport.notes,
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: airportRanks[index],
     });
   }
 
+  const hotelRanks = rankSeries(hotels.length);
   for (const [index, hotel] of hotels.entries()) {
     await upsert(`hotel.${hotel.id}`, {
       _type: "hotel",
@@ -259,10 +275,11 @@ async function main() {
       featured: index === 0,
       showOnWebsite: true,
       displayOrder: index,
-      // image uploaded separately in Studio
+      orderRank: hotelRanks[index],
     });
   }
 
+  const registryRanks = rankSeries(registryItems.length);
   for (const [index, item] of registryItems.entries()) {
     await upsert(`registryLink.${item.id}`, {
       _type: "registryLink",
@@ -274,9 +291,11 @@ async function main() {
       featured: false,
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: registryRanks[index],
     });
   }
 
+  const partyRanks = rankSeries(weddingParty.length);
   for (const [index, member] of weddingParty.entries()) {
     await upsert(`weddingPartyMember.${member.id}`, {
       _type: "weddingPartyMember",
@@ -289,9 +308,11 @@ async function main() {
       featured: index < 2,
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: partyRanks[index],
     });
   }
 
+  const galleryRanks = rankSeries(galleryImages.length);
   for (const [index, image] of galleryImages.entries()) {
     await upsert(`galleryPhoto.${image.id}`, {
       _type: "galleryPhoto",
@@ -299,9 +320,11 @@ async function main() {
       featured: index < 4,
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: galleryRanks[index],
     });
   }
 
+  const activityRanks = rankSeries(activities.length);
   for (const [index, activity] of activities.entries()) {
     await upsert(`activity.${activity.id}`, {
       _type: "activity",
@@ -317,9 +340,11 @@ async function main() {
       featured: false,
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: activityRanks[index],
     });
   }
 
+  const faqRanks = rankSeries(faqs.length);
   for (const [index, faq] of faqs.entries()) {
     await upsert(`faqItem.${faq.id}`, {
       _type: "faqItem",
@@ -327,6 +352,7 @@ async function main() {
       answer: faq.answer,
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: faqRanks[index],
     });
   }
 
@@ -335,7 +361,7 @@ async function main() {
     "Note: Image fields were left empty so you can upload high-quality originals in Studio (Replace image).",
   );
   console.log(
-    "Until images are uploaded in Sanity, the site continues to use graceful Unsplash fallbacks from local content mappers where needed.",
+    "Until images are uploaded in Studio, photo slots stay empty instead of showing placeholder pictures.",
   );
 }
 

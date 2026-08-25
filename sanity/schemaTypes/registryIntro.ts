@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { altTextField } from "./objects";
+import { imageWithAltField } from "./objects";
 
 export const registryIntro = defineType({
   name: "registryIntro",
@@ -36,12 +36,9 @@ export const registryIntro = defineType({
       type: "text",
       rows: 3,
     }),
-    defineField({
+    imageWithAltField({
       name: "featureImage",
       title: "Feature image",
-      type: "image",
-      options: { hotspot: true },
-      fields: [altTextField],
     }),
   ],
   preview: {

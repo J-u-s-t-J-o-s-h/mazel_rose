@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { altTextField } from "./objects";
+import { imageWithAltField } from "./objects";
 
 export const travelOverview = defineType({
   name: "travelOverview",
@@ -66,12 +66,9 @@ export const travelOverview = defineType({
       type: "string",
       validation: (rule) => rule.email(),
     }),
-    defineField({
+    imageWithAltField({
       name: "featureImage",
       title: "Feature image",
-      type: "image",
-      options: { hotspot: true },
-      fields: [altTextField],
     }),
   ],
   preview: {
