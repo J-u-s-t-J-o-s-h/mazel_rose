@@ -18,14 +18,16 @@ export function PartyProfile({
         reverse && "lg:[&>div:first-child]:order-2",
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden">
-        <Image
-          src={member.image}
-          alt={member.imageAlt}
-          fill
-          sizes="(max-width: 1024px) 100vw, 40vw"
-          className="object-cover"
-        />
+      <div className="relative aspect-[4/5] overflow-hidden bg-parchment">
+        {member.image ? (
+          <Image
+            src={member.image}
+            alt={member.imageAlt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 40vw"
+            className="object-cover"
+          />
+        ) : null}
       </div>
       <div>
         <p className="text-xs uppercase tracking-[0.2em] text-burgundy">

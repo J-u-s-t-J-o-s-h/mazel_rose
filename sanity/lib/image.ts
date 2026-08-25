@@ -1,4 +1,5 @@
 import { createImageUrlBuilder } from "@sanity/image-url";
+import { stegaClean } from "@sanity/client/stega";
 import { dataset, projectId } from "@/sanity/env";
 
 type SanityImageSource = Parameters<
@@ -8,7 +9,11 @@ type SanityImageSource = Parameters<
 const builder = createImageUrlBuilder({ projectId, dataset });
 
 export function urlForImage(source: SanityImageSource) {
-  return builder.image(source).auto("format").fit("max");
+  const image = builder.image(source).auto("format");
+  if (typeof source === "object" && source && "hotspot" in source && source.hotspot) {
+    return image.fit("crop");
+  }
+  return image.fit("max");
 }
 
 export function resolveImageUrl(
@@ -16,9 +21,13 @@ export function resolveImageUrl(
   width = 1600,
 ): string | undefined {
   if (!source) return undefined;
-  if (typeof source === "string") return source;
+  if (typeof source === "string") {
+    const cleaned = stegaClean(source);
+    return cleaned || undefined;
+  }
   try {
-    return urlForImage(source).width(width).url();
+    const url = urlForImage(source).width(width).url();
+    return url ? stegaClean(url) : undefined;
   } catch {
     return undefined;
   }

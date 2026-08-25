@@ -10,15 +10,19 @@ export function OurStory({ story }: { story: HomeContent["story"] }) {
     <section className="bg-parchment px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
         <FadeIn className="relative order-2 lg:order-1">
-          <div className="absolute -left-3 -top-3 h-24 w-24 bg-sterling/40" />
-          <ImageReveal
-            src={story.image}
-            alt={story.imageAlt}
-            width={1000}
-            height={1200}
-            className="relative aspect-[5/6] border border-burgundy/20 shadow-[var(--shadow-soft)]"
-            sizes="(max-width: 1024px) 100vw, 42vw"
-          />
+          {story.image ? (
+            <>
+              <div className="absolute -left-3 -top-3 h-24 w-24 bg-sterling/40" />
+              <ImageReveal
+                src={story.image}
+                alt={story.imageAlt}
+                width={1000}
+                height={1200}
+                className="relative aspect-[5/6] border border-burgundy/20 shadow-[var(--shadow-soft)]"
+                sizes="(max-width: 1024px) 100vw, 42vw"
+              />
+            </>
+          ) : null}
           <BotanicalAccent
             tone="burgundy"
             className="absolute -bottom-4 -right-2 h-20 w-20"

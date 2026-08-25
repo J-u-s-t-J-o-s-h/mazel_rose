@@ -6,14 +6,16 @@ import { formatExternalRel } from "@/lib/utils";
 export function HotelCard({ hotel }: { hotel: Hotel }) {
   return (
     <article className="overflow-hidden border border-sage/40 bg-ivory shadow-[var(--shadow-soft)]">
-      <div className="relative aspect-[16/10]">
-        <Image
-          src={hotel.image}
-          alt={hotel.imageAlt}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover"
-        />
+      <div className="relative aspect-[16/10] bg-parchment">
+        {hotel.image ? (
+          <Image
+            src={hotel.image}
+            alt={hotel.imageAlt}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover"
+          />
+        ) : null}
       </div>
       <div className="p-6">
         <p className="text-xs uppercase tracking-[0.18em] text-cinnamon">

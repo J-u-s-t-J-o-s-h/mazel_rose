@@ -24,24 +24,26 @@ export function GalleryPreview({
           />
         </FadeIn>
 
-        <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-          {previewImages.map((image, index) => (
-            <FadeIn
-              key={image.id}
-              delay={index * 0.06}
-              className={index % 2 === 1 ? "md:mt-10" : undefined}
-            >
-              <ImageReveal
-                src={image.src}
-                alt={image.alt}
-                width={image.width}
-                height={image.height}
-                className="aspect-[3/4] border border-sterling/40"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-            </FadeIn>
-          ))}
-        </div>
+        {previewImages.length ? (
+          <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {previewImages.map((image, index) => (
+              <FadeIn
+                key={image.id}
+                delay={index * 0.06}
+                className={index % 2 === 1 ? "md:mt-10" : undefined}
+              >
+                <ImageReveal
+                  src={image.src}
+                  alt={image.alt}
+                  width={image.width}
+                  height={image.height}
+                  className="aspect-[3/4] border border-sterling/40"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </FadeIn>
+            ))}
+          </div>
+        ) : null}
 
         <FadeIn className="mt-12 text-center">
           <Button href="/gallery" variant="primary">

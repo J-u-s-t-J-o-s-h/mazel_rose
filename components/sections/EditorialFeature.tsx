@@ -25,13 +25,15 @@ export function EditorialFeature({
         style={reduceMotion ? undefined : { y }}
         className="absolute inset-0 scale-110"
       >
-        <Image
-          src={feature.image}
-          alt={feature.imageAlt}
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+        {feature.image ? (
+          <Image
+            src={feature.image}
+            alt={feature.imageAlt}
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        ) : null}
       </motion.div>
       <div className="absolute inset-0 bg-burgundy/55 mix-blend-multiply" />
       <div className="absolute inset-0 bg-peacock/40" />

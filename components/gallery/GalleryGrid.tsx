@@ -34,6 +34,14 @@ export function GalleryGrid({
     });
   }, [images.length]);
 
+  if (!images.length) {
+    return (
+      <p className="border border-ivory/15 bg-wine-black/40 px-6 py-16 text-center font-serif text-lg text-ivory/70">
+        Photos will appear here after they are added in Studio and published.
+      </p>
+    );
+  }
+
   return (
     <>
       <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">

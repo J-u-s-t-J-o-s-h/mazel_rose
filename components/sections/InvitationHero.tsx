@@ -13,14 +13,16 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-wine-black">
-      <Image
-        src={hero.image}
-        alt={hero.imageAlt}
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {hero.image ? (
+        <Image
+          src={hero.image}
+          alt={hero.imageAlt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      ) : null}
       <div className="absolute inset-0 bg-gradient-to-b from-peacock/75 via-wine-black/55 to-wine-black/80" />
       <div className="candlelight pointer-events-none absolute inset-0" />
       <div className="editorial-frame pointer-events-none absolute inset-4 sm:inset-8" />

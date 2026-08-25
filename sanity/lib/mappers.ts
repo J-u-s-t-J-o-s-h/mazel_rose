@@ -119,8 +119,7 @@ export function mapHomePage(doc: Record<string, unknown> | null): HomeContent & 
             fallbackHome.hero.secondaryCta.href,
         ),
       },
-      image:
-        resolveImageUrl(heroImage, 2400) || fallbackHome.hero.image,
+      image: resolveImageUrl(heroImage, 2400) || "",
       imageAlt:
         heroImage?.alt ||
         fallbackHome.hero.imageAlt,
@@ -129,14 +128,13 @@ export function mapHomePage(doc: Record<string, unknown> | null): HomeContent & 
       scriptIntro: String(doc.welcomeScript || fallbackHome.welcome.scriptIntro),
       title: String(doc.welcomeHeading || fallbackHome.welcome.title),
       body: String(doc.welcomeMessage || fallbackHome.welcome.body),
-      image:
-        resolveImageUrl(welcomeImage, 1400) || fallbackHome.welcome.image,
+      image: resolveImageUrl(welcomeImage, 1400) || "",
       imageAlt: welcomeImage?.alt || fallbackHome.welcome.imageAlt,
     },
     story: {
       title: String(doc.storyHeading || fallbackHome.story.title),
       body: String(doc.storyBody || fallbackHome.story.body),
-      image: resolveImageUrl(storyImage, 1600) || fallbackHome.story.image,
+      image: resolveImageUrl(storyImage, 1600) || "",
       imageAlt: storyImage?.alt || fallbackHome.story.imageAlt,
       accentNote: String(doc.storyAccentNote || fallbackHome.story.accentNote),
     },
@@ -155,7 +153,7 @@ export function mapHomePage(doc: Record<string, unknown> | null): HomeContent & 
       attribution: String(
         doc.featureAttribution || fallbackHome.feature.attribution,
       ),
-      image: resolveImageUrl(featureImage, 2400) || fallbackHome.feature.image,
+      image: resolveImageUrl(featureImage, 2400) || "",
       imageAlt: featureImage?.alt || fallbackHome.feature.imageAlt,
     },
     travelPreview: {
@@ -249,7 +247,7 @@ export function mapHotels(
     return {
       id: String(doc._id),
       name: String(doc.name || ""),
-      image: resolveImageUrl(image, 1400) || fallbackHotel?.image || "",
+      image: resolveImageUrl(image, 1400) || "",
       imageAlt:
         image?.alt || fallbackHotel?.imageAlt || String(doc.name || "Hotel"),
       address: String(doc.address || ""),
@@ -294,7 +292,7 @@ export function mapWeddingParty(
       id: String(doc._id),
       name: String(doc.name || ""),
       role: String(doc.role || ""),
-      image: resolveImageUrl(photo, 1200) || fallbackMember?.image || "",
+      image: resolveImageUrl(photo, 1200) || "",
       imageAlt:
         photo?.alt ||
         fallbackMember?.imageAlt ||
@@ -315,7 +313,7 @@ export function mapGalleryPhotos(
   const mapped = docs.map((doc, index) => {
     const image = doc.image as SanityImage;
     const fallbackImage = fallback[index] || fallback[0];
-    const src = resolveImageUrl(image, 1600) || fallbackImage?.src || "";
+    const src = resolveImageUrl(image, 1600);
     if (!src) return null;
     return {
       id: String(doc._id),
@@ -327,7 +325,7 @@ export function mapGalleryPhotos(
     };
   });
   const photos = mapped.filter(Boolean) as GalleryImage[];
-  return photos.length ? photos : fallback;
+  return photos;
 }
 
 export function mapActivities(
@@ -342,7 +340,7 @@ export function mapActivities(
       id: String(doc._id),
       name: String(doc.name || ""),
       category: (doc.category as ActivityCategory) || "attractions",
-      image: resolveImageUrl(image, 1200) || fallbackActivity?.image || "",
+      image: resolveImageUrl(image, 1200) || "",
       imageAlt:
         image?.alt ||
         fallbackActivity?.imageAlt ||

@@ -50,14 +50,16 @@ export function CategoryFilter({ activities }: { activities: Activity[] }) {
             key={item.id}
             className="overflow-hidden border border-sage/40 bg-ivory shadow-[var(--shadow-soft)]"
           >
-            <div className="relative aspect-[16/10]">
-              <Image
-                src={item.image}
-                alt={item.imageAlt}
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover"
-              />
+            <div className="relative aspect-[16/10] bg-parchment">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={item.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover"
+                />
+              ) : null}
             </div>
             <div className="p-5">
               <div className="flex items-center justify-between gap-3">
