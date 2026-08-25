@@ -20,9 +20,6 @@ type ImageRevealProps = {
 export function ImageReveal({
   src,
   alt,
-  width,
-  height,
-  fill,
   priority,
   className,
   imageClassName,
@@ -30,26 +27,20 @@ export function ImageReveal({
 }: ImageRevealProps) {
   const reduceMotion = useReducedMotion();
   const isPreview = useIsPreview();
-  // In the Studio preview iframe the scroll-triggered clip can stay closed,
-  // hiding a freshly uploaded image. Render the final state there (and for
-  // reduced-motion users); keep the reveal for real visitors.
   const staticImage = reduceMotion || isPreview;
 
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <motion.div
-        initial={staticImage ? false : { clipPath: "inset(0 0 100% 0)" }}
-        whileInView={staticImage ? undefined : { clipPath: "inset(0 0 0% 0)" }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="h-full w-full"
+        initial={staticImage ? false : { opacity: 0.15 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0"
       >
         <Image
           src={src}
           alt={alt}
-          width={fill ? undefined : width}
-          height={fill ? undefined : height}
-          fill={fill}
+          fill
           priority={priority}
           sizes={sizes}
           className={cn("object-cover", imageClassName)}
