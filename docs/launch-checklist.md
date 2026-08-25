@@ -154,14 +154,14 @@ editable at `/admin` after the seed:
   limiting already provide spam protection. (Fixable in code later if desired.)
 - `content/*.ts` stays in the repo after launch as the seed source and as an
   automatic fallback if Sanity is ever unreachable or misconfigured.
-- The write token is only needed for seeding — revoke it in Sanity Manage after
-  step 5.3 for least privilege.
+- The write token is required for `/studio` as well as seeding — keep it
+  configured. Do not revoke it after seed if Studio should stay usable.
 
 ## Token lifetimes
 
 - **Sanity tokens have no expiration setting** — they live until revoked.
   The read token must stay valid indefinitely (the live site uses it daily).
-  The write token is revoked manually right after the one-time seed.
+  The write token must stay valid while `/studio` is in use.
 - **Airtable token**: used on every RSVP submission, so it must outlive the
   RSVP deadline. If the token screen offers an expiration date, set it a
   couple of months after the wedding; if it expires early, RSVPs fail

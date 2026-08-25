@@ -8,9 +8,10 @@ import { PageTransition } from "@/components/motion/PageTransition";
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isStudio = pathname?.startsWith("/studio");
   const isGate = pathname === "/gate";
 
-  if (isAdmin) {
+  if (isAdmin || isStudio) {
     return <>{children}</>;
   }
 

@@ -11,6 +11,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "sanity:seed": "node --env-file=.env.local --import tsx scripts/seed-sanity.ts",
+    "studio:bootstrap": "node --env-file=.env.local --import tsx scripts/bootstrap-studio.ts",
     "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {

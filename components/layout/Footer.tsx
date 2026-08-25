@@ -9,7 +9,11 @@ import { useSite } from "@/components/providers/SiteProvider";
 export function Footer() {
   const site = useSite();
   const pathname = usePathname();
-  if (pathname === "/gate" || pathname?.startsWith("/admin")) {
+  if (
+    pathname === "/gate" ||
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/studio")
+  ) {
     return null;
   }
 

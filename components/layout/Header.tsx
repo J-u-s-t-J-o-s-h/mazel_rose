@@ -25,7 +25,11 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (pathname === "/gate" || pathname?.startsWith("/admin")) {
+  if (
+    pathname === "/gate" ||
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/studio")
+  ) {
     return null;
   }
 

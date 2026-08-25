@@ -8,7 +8,6 @@ import {
   Pinyon_Script,
   Playfair_Display,
 } from "next/font/google";
-import { VisualEditing } from "next-sanity/visual-editing";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { SiteProvider } from "@/components/providers/SiteProvider";
 import { PreviewModeProvider } from "@/components/providers/PreviewModeProvider";
@@ -132,12 +131,7 @@ export default async function RootLayout({
             {isDraft ? <DraftModeBanner /> : null}
             <SiteShell>{children}</SiteShell>
             {SanityLive ? <SanityLive /> : null}
-            {isDraft ? (
-              <>
-                <VisualEditing />
-                <DisableDraftMode />
-              </>
-            ) : null}
+            {isDraft ? <DisableDraftMode /> : null}
           </PreviewModeProvider>
         </SiteProvider>
       </body>

@@ -4,27 +4,26 @@ This guide explains how to update the wedding website without touching code.
 
 ## Logging in
 
-1. Go to your website and add `/admin` to the end of the address.  
-   Example: `https://your-site.com/admin`
-2. Sign in with the Sanity account you were invited to.
-3. You will see a sidebar of website sections written in plain English.
+1. Go to your website and add `/studio` to the end of the address.  
+   Example: `https://your-site.com/studio`
+2. Sign in with the email and password you were given.  
+   (The owner can add people under **Team**. Passwords are not stored in the website code.)
+3. You will see a sidebar of website pages written in plain English.
 
 ## Editing wedding details
 
 1. Open **Wedding Details**.
-2. Update names, dates, location, venue, contact email, and footer message.
-3. Click **Publish** when you are happy with the changes.
+2. Choose a section (names, dates, venue, theme, SEO, or announcement).
+3. Update the fields. The real website on the right refreshes after you pause typing. Click **Publish** when it looks right.
 
 These details appear in the header, footer, countdown, invitation text, and search/social previews.
 
 ## Replacing images
 
 1. Open the page or item that contains the image (for example **Home Page** or a **Gallery** photo).
-2. Click the image field.
-3. Choose **Replace** (or upload a new photo).
-4. Adjust the crop/hotspot if shown so faces and important details stay centered.
-5. Add a short image description for accessibility.
-6. Click **Publish**.
+2. Choose a new photo (keep files at 4 MB or smaller in Studio).
+3. Add a short image description for accessibility.
+4. Save draft, check the live page on the right, then publish.
 
 Tips:
 
@@ -35,7 +34,7 @@ Tips:
 ## Adding schedule events
 
 1. Open **Schedule**.
-2. Click the button to create a new event.
+2. Click **Add item**.
 3. Fill in title, date, times, venue, address, and description.
 4. Set **Display order** (lower numbers appear first).
 5. Use **Show this on the website** to hide an event without deleting it.
@@ -76,14 +75,17 @@ Tips:
 2. Edit a question and answer, or create a new one.
 3. Publish.
 
+## Comments
+
+Open any section and use **Comments** to leave a note for the rest of the team. Comments show the author's name and role. They never appear on the public website.
+
 ## Previewing changes
 
-1. In Studio, open the **Presentation** / preview tool (eye icon).
-2. The live website opens beside your editing panel.
-3. Click text on the preview to jump to that field when available.
-4. Draft changes are only visible in preview — guests still see the published site.
+The right side of Studio is the real designed website. Pause typing (or click **Save draft**) and that page refreshes with your unpublished draft.
 
-If you opened a preview link in a normal browser tab, use **Exit Preview** to return to the public view.
+Guests still see the last published version until you click **Publish**.
+
+Use **Open tab** if you want the preview in a full browser window. If you did that, use **Exit preview** to return to the public view.
 
 ## Publishing changes
 
@@ -91,6 +93,10 @@ If you opened a preview link in a normal browser tab, use **Exit Preview** to re
 2. Click **Publish**.
 3. Wait a moment — the public website updates automatically.
 4. You do **not** need to ask anyone to redeploy the site.
+
+## Restoring a previous version
+
+Owners can open **Versions** at the bottom of a section, then **Restore**. That writes the old version back as a draft. Preview it, then publish.
 
 ## Hiding content without deleting it
 
@@ -112,12 +118,12 @@ You *can* edit RSVP form wording and options under **RSVP → RSVP Form Settings
 
 ## What to do if something goes wrong
 
-- If the preview looks wrong, click **Exit Preview** and reopen Presentation.
+- If the preview looks wrong, click **Exit preview** and preview again.
 - If a page looks empty after editing, confirm you clicked **Publish**.
-- If an image looks cropped oddly, reopen it and adjust the hotspot/crop.
-- If you cannot log in, ask the project owner to re-send your Sanity invite.
+- If an image looks cropped oddly, try a different crop or a larger original.
+- **If you cannot log in**, ask the owner to reset access under **Team**, or ask your developer to check [`docs/studio-setup.md`](./studio-setup.md).
 - If the public site still shows old content after a few minutes, contact your developer and mention the revalidation webhook.
 
 ## Recommended habit
 
-Edit → Preview → Publish → Check the live page on your phone.
+Edit → Watch the live page on the right → Publish → Check the live page on your phone.

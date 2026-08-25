@@ -1,11 +1,22 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useIsPresentationTool } from "next-sanity/hooks";
+import { useIsEmbeddedFrame } from "./useIsEmbeddedFrame";
 
 export function DisableDraftMode() {
+  const pathname = usePathname();
   const isPresentationTool = useIsPresentationTool();
+  const embedded = useIsEmbeddedFrame();
 
-  if (isPresentationTool === true) return null;
+  if (
+    isPresentationTool === true ||
+    embedded ||
+    pathname?.startsWith("/studio") ||
+    pathname?.startsWith("/admin")
+  ) {
+    return null;
+  }
 
   return (
     <a
