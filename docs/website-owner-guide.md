@@ -37,9 +37,9 @@ Tips:
 1. Open **Schedule**.
 2. Click the button to create a new event.
 3. Fill in title, date, times, venue, address, and description.
-4. Set **Display order** (lower numbers appear first).
+4. Drag events in the Schedule list to set the order on the website. That order is saved automatically.
 5. Use **Show this on the website** to hide an event without deleting it.
-6. Publish.
+6. Publish the event content (title, times, and so on). Reordering the list is saved as you drop it.
 
 ## Updating hotels
 

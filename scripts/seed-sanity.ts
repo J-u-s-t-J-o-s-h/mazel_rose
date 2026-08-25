@@ -11,6 +11,7 @@
  */
 
 import { createClient } from "@sanity/client";
+import { LexoRank } from "lexorank";
 import { siteConfig } from "../content/site";
 import { homeContent } from "../content/home";
 import { scheduleEvents } from "../content/schedule";
@@ -205,7 +206,9 @@ async function main() {
     helpMessage: `Email ${siteConfig.contactEmail} with questions.`,
   });
 
+  let scheduleRank = LexoRank.min();
   for (const [index, event] of scheduleEvents.entries()) {
+    scheduleRank = scheduleRank.genNext().genNext();
     await upsert(`scheduleEvent.${event.id}`, {
       _type: "scheduleEvent",
       title: event.title,
@@ -224,6 +227,7 @@ async function main() {
       featured: ["ceremony", "reception"].includes(event.id),
       showOnWebsite: true,
       displayOrder: index,
+      orderRank: scheduleRank.toString(),
     });
   }
 

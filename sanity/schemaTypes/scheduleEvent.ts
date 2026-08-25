@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { displayOrderField, featuredField, showOnWebsiteField } from "./objects";
 
 export const scheduleEvent = defineType({
@@ -6,6 +7,7 @@ export const scheduleEvent = defineType({
   title: "Schedule Event",
   type: "document",
   fields: [
+    orderRankField({ type: "scheduleEvent" }),
     defineField({
       name: "title",
       title: "Event title",
@@ -88,9 +90,14 @@ export const scheduleEvent = defineType({
     }),
     featuredField,
     showOnWebsiteField,
-    displayOrderField,
+    defineField({
+      ...displayOrderField,
+      hidden: true,
+      description: "Fallback only. Drag events in the Schedule list to set the public order.",
+    }),
   ],
   orderings: [
+    orderRankOrdering,
     {
       title: "Display order",
       name: "displayOrderAsc",

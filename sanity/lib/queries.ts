@@ -26,7 +26,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
 `);
 
 export const SCHEDULE_EVENTS_QUERY = defineQuery(`
-  *[_type == "scheduleEvent" && showOnWebsite != false] | order(displayOrder asc) {
+  *[_type == "scheduleEvent" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
     _id,
     title,
     date,
@@ -42,6 +42,7 @@ export const SCHEDULE_EVENTS_QUERY = defineQuery(`
     invitationOnly,
     isPrivate,
     featured,
+    orderRank,
     displayOrder
   }
 `);

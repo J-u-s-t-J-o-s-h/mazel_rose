@@ -1,4 +1,5 @@
 import type { StructureResolver } from "sanity/structure";
+import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import { SINGLETON_IDS } from "./schemaTypes";
 
 const singleton = (
@@ -12,7 +13,7 @@ const singleton = (
     .id(id)
     .child(S.document().schemaType(type).documentId(id).title(title));
 
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
   S.list()
     .title("Website Content")
     .items([
@@ -24,13 +25,12 @@ export const structure: StructureResolver = (S) =>
       ),
       singleton(S, SINGLETON_IDS.homePage, "Home Page", "homePage"),
       S.divider(),
-      S.listItem()
-        .title("Schedule")
-        .child(
-          S.documentTypeList("scheduleEvent")
-            .title("Schedule Events")
-            .defaultOrdering([{ field: "displayOrder", direction: "asc" }]),
-        ),
+      orderableDocumentListDeskItem({
+        type: "scheduleEvent",
+        title: "Schedule",
+        S,
+        context,
+      }),
       S.listItem()
         .title("Travel")
         .child(

@@ -64,9 +64,9 @@ type in.
 
 1. Click the section (for example **Schedule**).
 2. Look for a **+ button or "Create" button** and click it.
-3. Fill in the boxes. If there's a "Display order" box, that's just
-   which position it appears in (1 is first, 2 is second...).
-4. Press **Publish**.
+3. Fill in the boxes.
+4. For **Schedule**, drag the events in the list to the order you want on the website. That order is saved when you drop them.
+5. Press **Publish** for the event details.
 
 
 ## Recipe 4: See who has RSVP'd

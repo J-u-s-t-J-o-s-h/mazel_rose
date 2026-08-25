@@ -43,7 +43,7 @@ All 12 notes were still **open**. Check them off here as you handle them.
 - [ ] **Welcome Gathering — invitation only** (`scheduleEvent.welcome` / `invitationOnly`) — 22 Jul 2026  
       Add RSVP for event
 
-- [ ] **Cocktail Hour — title** (`scheduleEvent.cocktail` / `title`) — 17 Aug 2026  
+- [x] **Cocktail Hour — title** (`scheduleEvent.cocktail` / `title`) — 17 Aug 2026  
       Can you make it so I can drag/drop the boxes in the order I want them?
 
 - [ ] **After-Party — title** (`scheduleEvent.after-party` / `title`) — 17 Aug 2026  
