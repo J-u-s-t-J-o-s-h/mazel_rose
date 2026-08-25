@@ -197,7 +197,6 @@ async function main() {
       { _key: "ceremony", key: "ceremony", label: "Ceremony" },
       { _key: "reception", key: "reception", label: "Reception" },
       { _key: "welcome", key: "welcome", label: "Welcome gathering" },
-      { _key: "brunch", key: "brunch", label: "Farewell brunch" },
     ],
     showDietaryField: true,
     showSongRequestField: true,

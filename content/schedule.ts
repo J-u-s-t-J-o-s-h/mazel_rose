@@ -77,37 +77,10 @@ export const scheduleEvents: ScheduleEvent[] = [
     parking: "Complimentary valet through the evening.",
     isPlaceholder: true,
   },
-  {
-    id: "after-party",
-    title: "After-Party",
-    date: "October 18, 2027",
-    startTime: "11:00 PM",
-    endTime: "1:00 AM",
-    venue: "The Velvet Lounge",
-    address: "88 Whiskey Road, Aiken, SC 29801",
-    description:
-      "Continue the celebration with late-night music and nightcaps.",
-    dressCode: "Cocktail attire",
-    invitationOnly: true,
-    isPlaceholder: true,
-  },
-  {
-    id: "brunch",
-    title: "Farewell Brunch",
-    date: "October 19, 2027",
-    startTime: "10:00 AM",
-    endTime: "12:30 PM",
-    venue: "Hotel Veranda",
-    address: "12 Whitney Drive, Aiken, SC 29801",
-    description:
-      "A relaxed morning meal before guest departures. Come as you are.",
-    dressCode: "Casual",
-    isPlaceholder: true,
-  },
 ];
 
 export const scheduleIntro = {
   title: "Schedule of Events",
   scriptIntro: "The Day",
-  body: "A carefully composed sequence of gatherings—from welcome moments to farewell brunch. Times and details below are placeholders until confirmed.",
+  body: "A carefully composed sequence of gatherings—from welcome moments through the reception. Times and details below are placeholders until confirmed.",
 };

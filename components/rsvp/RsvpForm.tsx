@@ -26,7 +26,6 @@ const defaultEventOptions = [
   { key: "ceremony", label: "Ceremony" },
   { key: "reception", label: "Reception" },
   { key: "welcome", label: "Welcome gathering" },
-  { key: "brunch", label: "Farewell brunch" },
 ] as const;
 
 export type RsvpFormSettingsProps = {
@@ -78,7 +77,6 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
         ceremony: true,
         reception: true,
         welcome: false,
-        brunch: false,
       },
       mealChoice: undefined,
       dietaryRestrictions: "",
