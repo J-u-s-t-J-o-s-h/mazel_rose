@@ -2,7 +2,7 @@
 
 The one link you need (bookmark it!):
 
-    https://mazelrose.life/studio
+    https://mazelrose.life/admin
 
 That link opens your website's **editing room**. Guests never see this
 part. They see the pretty site at mazelrose.life. You see forms you can
@@ -11,7 +11,7 @@ type in.
 
 ## The 3 Golden Rules
 
-1. **Nothing goes public until you press the "Publish" button.**
+1. **Nothing goes public until you press the green "Publish" button.**
    Until then, it's a private draft only you can see. Close the tab
    mid-edit? Nothing breaks. Your draft is even saved for later.
 
@@ -25,10 +25,11 @@ type in.
 
 ## Getting In (first time only)
 
-1. Open the Studio link at the top of this sheet.
-2. Sign in with the email and password you were given. (The site owner
-   can add people under Team. There is no Google invite email.)
-3. You'll see a list on the left side: Wedding Details, Home Page,
+1. Check your email for an invitation.
+2. Click it and create your account. Use "Continue with Google" if
+   that email is Gmail; otherwise pick a password you'll remember.
+3. Go to the link at the top of this sheet and sign in.
+4. You'll see a list on the left side: Wedding Details, Home Page,
    Schedule, Travel, Registry, Wedding Party, Gallery, Things To Do,
    FAQs, RSVP. Each one is a section of the website.
 
@@ -38,7 +39,7 @@ type in.
 1. Click the section on the left. Start with **Wedding Details**,
    which is where the names, date, and venue live.
 2. Click into any text box and type, like a Word document.
-3. Press **Save draft**, then **Publish**.
+3. Press the green **Publish** button (bottom right corner).
 4. Open the regular website and refresh the page. Your change is live
    within a few seconds. That's the whole job!
 
@@ -48,18 +49,21 @@ type in.
 1. Click the section that has the photo (**Home Page** for the big
    photos, **Gallery** for the photo album, **Wedding Party** for
    portraits).
-2. Choose a new photo from your computer (keep it under 4 MB if you
-   can). Use the best quality original you have.
-3. Fill in the short "description" box if there is one (it helps
+2. Click the image box, then choose **Upload** (or **Replace** if a
+   photo is already there).
+3. Pick the photo from your computer. Use the best quality original
+   you have, since the website shrinks it automatically.
+4. If a cropping circle appears, drag it so faces are in the middle.
+5. Fill in the short "description" box if there is one (it helps
    visitors who use screen readers).
-4. Press **Save draft**, then **Publish**.
+6. Press **Publish**.
 
 
 ## Recipe 3: Add something to a list
 (a schedule event, an FAQ, a registry link, an activity)
 
 1. Click the section (for example **Schedule**).
-2. Look for **Add item** and click it.
+2. Look for a **+ button or "Create" button** and click it.
 3. Fill in the boxes. If there's a "Display order" box, that's just
    which position it appears in (1 is first, 2 is second...).
 4. Press **Publish**.
@@ -85,8 +89,9 @@ and calls you about it), just tell Josh and he'll correct it.
 
 - **"I published but the site looks the same."** Refresh the page
   (press F5, or pull down on your phone). Give it 30 seconds.
-- **"I can't sign in."** Use the email and password you were given.
-  Ask the owner to add you under Team if you do not have an account.
+- **"I can't sign in."** Make sure you're using the same email the
+  invitation was sent to. Use the "Forgot password" link if you need
+  it. It's the normal one, not a special one.
 - **"I'm scared I ruined it."** You didn't. Call Josh, and remember
   Rule 2. Anything can be fixed in about a minute.
 - **"There's a yellow banner or a weird preview thing."** Click

@@ -12,10 +12,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "4mb",
-    },
+  async redirects() {
+    return [
+      { source: "/studio", destination: "/admin", permanent: false },
+      { source: "/studio/:path*", destination: "/admin", permanent: false },
+    ];
   },
   images: {
     remotePatterns: [

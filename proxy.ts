@@ -1,46 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifySessionToken } from "@/lib/studio/session";
-
-function isPublicStudioPath(pathname: string): boolean {
-  return pathname === "/studio/login" || pathname === "/api/studio/login";
-}
-
-function isStudioPath(pathname: string): boolean {
-  return pathname.startsWith("/studio") || pathname.startsWith("/api/studio");
-}
 
 /**
  * Optional site-wide password protection.
  * Enable with ENABLE_SITE_PASSWORD=true and SITE_PASSWORD=<value>.
  * Guests authenticate via /api/site-auth or the gate form cookie.
- *
- * /studio is gated by signed studio sessions, not the guest password.
  */
-export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  if (pathname.startsWith("/admin")) {
-    const studio = request.nextUrl.clone();
-    studio.pathname = "/studio";
-    studio.search = "";
-    return NextResponse.redirect(studio);
-  }
-
-  if (isStudioPath(pathname) && !isPublicStudioPath(pathname)) {
-    const token = request.cookies.get("studio_session")?.value;
-    const session = await verifySessionToken(token);
-    if (!session) {
-      if (pathname.startsWith("/api/studio")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      const login = request.nextUrl.clone();
-      login.pathname = "/studio/login";
-      login.search = `?next=${encodeURIComponent(pathname)}`;
-      return NextResponse.redirect(login);
-    }
-  }
-
+export function proxy(request: NextRequest) {
   const enabled = process.env.ENABLE_SITE_PASSWORD === "true";
   const password = process.env.SITE_PASSWORD;
 
@@ -48,10 +14,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const studioToken = request.cookies.get("studio_session")?.value;
-  if (await verifySessionToken(studioToken)) {
-    return NextResponse.next();
-  }
+  const { pathname } = request.nextUrl;
 
   if (
     pathname.startsWith("/_next") ||
@@ -60,7 +23,6 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/images") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/studio") ||
-    pathname.startsWith("/api/studio") ||
     pathname.startsWith("/api/draft-mode") ||
     pathname.startsWith("/api/revalidate") ||
     pathname === "/api/site-auth" ||

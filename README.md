@@ -8,14 +8,13 @@ Built with Next.js App Router, TypeScript, Tailwind CSS, Framer Motion, React Ho
 
 Guests can view schedule, travel, registry, wedding party, gallery, things to do, FAQs, and submit an RSVP.
 
-Content editors manage the site through the built-in Studio at `/studio`. Design and layout stay in code.
+Content editors manage the site through Sanity Studio at `/admin`. Design and layout stay in code.
 
-Owner-friendly guide: [`docs/website-owner-guide.md`](docs/website-owner-guide.md)  
-Studio setup (env, first login): [`docs/studio-setup.md`](docs/studio-setup.md)
+Owner-friendly guide: [`docs/website-owner-guide.md`](docs/website-owner-guide.md)
 
-## What Studio is
+## What Sanity Studio is
 
-`/studio` is a signed-in editing room that uses this site’s design system. After signing in, Owners, Editors, and Reviewers can review pages, leave comments, edit text/images/links/SEO, save drafts, preview, publish, and (Owners) restore previous versions. Published changes update the live site without a new Git commit or Vercel deploy.
+Sanity Studio is the secure admin interface embedded at `/admin`. After signing in, the website owner can edit text, dates, links, and images, then publish. Published changes update the live site without a new Git commit or Vercel deploy.
 
 ## Local setup
 
@@ -29,7 +28,7 @@ cp .env.example .env.local
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`
    - `NEXT_PUBLIC_SANITY_DATASET=production`
    - `SANITY_API_READ_TOKEN` (Viewer token)
-   - `SANITY_API_WRITE_TOKEN` (Editor/Admin token — required for seed **and** `/studio`)
+   - `SANITY_API_WRITE_TOKEN` (Editor/Admin token — seed only)
    - `SANITY_REVALIDATE_SECRET` (random string)
 3. Add CORS origins in Sanity Manage → API → CORS Origins:
    - `http://localhost:3000` (Allow credentials: **on**)
@@ -47,7 +46,7 @@ npm run dev
 ```
 
 - Site: [http://localhost:3000](http://localhost:3000)
-- Studio: [http://localhost:3000/studio](http://localhost:3000/studio)
+- Admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
 Without Sanity env vars, the site still builds and serves local fallback content from `content/`.
 
@@ -61,7 +60,6 @@ Without Sanity env vars, the site still builds and serves local fallback content
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript |
 | `npm run sanity:seed` | Idempotent Sanity content migration |
-| `npm run studio:bootstrap` | Create the first `/studio` Owner from env vars |
 
 ## Environment variables
 
@@ -75,14 +73,14 @@ See `.env.example`.
 | `NEXT_PUBLIC_SANITY_DATASET` | Dataset (`production`) |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | API version date |
 | `SANITY_API_READ_TOKEN` | Server read token for published + draft preview |
-| `SANITY_API_WRITE_TOKEN` | Write token for seed **and** `/studio` (keep this; do not revoke after seed) |
+| `SANITY_API_WRITE_TOKEN` | Write token for `npm run sanity:seed` only |
 | `SANITY_REVALIDATE_SECRET` | Webhook signature secret |
 
 Never expose write/revalidate secrets through `NEXT_PUBLIC_` variables.
 
 ### Site / RSVP / privacy
 
-Also supported: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_NOINDEX`, RSVP provider vars, optional `ENABLE_SITE_PASSWORD` / `SITE_PASSWORD`, and Studio vars (`STUDIO_SESSION_SECRET`, bootstrap owner email/name/password). See [`docs/studio-setup.md`](docs/studio-setup.md).
+Also supported: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_NOINDEX`, RSVP provider vars, optional `ENABLE_SITE_PASSWORD` / `SITE_PASSWORD`.
 
 ## Content architecture
 
@@ -110,14 +108,18 @@ Images are seeded as empty fields so high-quality originals can be uploaded in S
 
 ## Draft preview workflow
 
-`/studio` shows the real website beside the form. Saving a draft (including autosave) reloads that preview via `/api/studio/preview` in Draft Mode for signed-in Studio users.
+1. Open `/admin`
+2. Use Presentation / preview
+3. Draft Mode is enabled via `/api/draft-mode/enable` (authenticated by Sanity)
+4. Click-to-edit overlays appear when available
+5. Exit with **Exit Preview** or `/api/draft-mode/disable`
 
 Public visitors never receive draft content.
 
 ## Publishing workflow
 
 1. Edit in Studio
-2. Confirm the live page preview
+2. Preview
 3. Publish
 4. Sanity Live + webhook revalidation refresh the public site
 
@@ -145,21 +147,20 @@ _type in [
 
 ## Inviting the website owner
 
-Day-to-day editing uses `/studio`, not a Sanity invite.
-
-1. Complete [`docs/studio-setup.md`](docs/studio-setup.md) (write token, session secret, bootstrap).
-2. Sign in at `/studio/login` as Owner.
-3. Add Editors and Reviewers at `/studio/team`.
-4. Share `/studio` and [`docs/website-owner-guide.md`](docs/website-owner-guide.md).
+1. Sanity Manage → Project → Members
+2. Invite by email
+3. Recommended role: **Editor** (can edit/publish content, not manage billing/API tokens)
+4. Share `/admin` URL and [`docs/website-owner-guide.md`](docs/website-owner-guide.md)
 
 ## Vercel setup
 
 1. Deploy the Next.js app
 2. Add all env vars from `.env.example`
 3. Set `NEXT_PUBLIC_SITE_URL` to the production domain
-4. Configure the revalidation webhook
-5. Bootstrap Studio (`npm run studio:bootstrap`) and add people at `/studio/team`
-6. Run `npm run sanity:seed` once against production dataset (locally with production credentials, or via a one-off secure job)
+4. Add the production URL to Sanity CORS (credentials on)
+5. Configure the revalidation webhook
+6. Invite the owner to Sanity
+7. Run `npm run sanity:seed` once against production dataset (locally with production credentials, or via a one-off secure job)
 
 ## RSVP data remains outside Sanity
 
@@ -176,11 +177,11 @@ ENABLE_SITE_PASSWORD=true
 SITE_PASSWORD=your-shared-password
 ```
 
-`/studio`, draft-mode routes, and revalidate remain reachable for editors/webhooks.
+`/admin`, draft-mode routes, and revalidate remain reachable for editors/webhooks.
 
 ## Troubleshooting
 
-- **`/studio` login fails:** confirm `STUDIO_SESSION_SECRET` and `SANITY_API_WRITE_TOKEN` are set. See [`docs/studio-setup.md`](docs/studio-setup.md).
+- **`/admin` blank / auth loop:** confirm CORS origins include the current site URL with credentials.
 - **Draft preview fails:** confirm `SANITY_API_READ_TOKEN` has Viewer access.
 - **Publish does not update site:** confirm webhook secret and `/api/revalidate` logs.
 - **Missing images after seed:** upload originals in Studio; fallbacks keep layout intact meanwhile.

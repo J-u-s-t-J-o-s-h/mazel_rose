@@ -2,7 +2,7 @@ import type { SiteConfig } from "@/types/content";
 
 /**
  * Fallback / seed source only.
- * After `npm run sanity:seed`, edit Wedding Details in `/studio`.
+ * After `npm run sanity:seed`, edit Wedding Details in Sanity Studio (`/admin`).
  * PLACEHOLDER: Replace couple names, dates, venue, and contact details before launch.
  */
 export const siteConfig: SiteConfig = {
