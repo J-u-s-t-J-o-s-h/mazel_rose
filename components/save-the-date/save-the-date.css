@@ -1,5 +1,5 @@
 html:has(.save-the-date-root) {
-  background: #0e1a2b;
+  background: #0e5c6d;
   scroll-behavior: smooth;
 }
 
@@ -9,8 +9,8 @@ html:has(.save-the-date-root) body {
 }
 
 .save-the-date-root {
-  --navy: #0e1a2b;
-  --navy-soft: #18283d;
+  --navy: #0e5c6d;
+  --navy-soft: #186a7f;
   --orange: #b35a2e;
   --gold: #d4af37;
   --gold-muted: #ad8530;
@@ -61,7 +61,7 @@ html:has(.save-the-date-root) body {
   .hero-art {
     background-color: var(--navy);
     background-image:
-      linear-gradient(to bottom, rgba(14, 26, 43, 0.28), rgba(14, 26, 43, 0.16) 42%, rgba(14, 26, 43, 0.78)),
+      linear-gradient(to bottom, rgba(14, 92, 109, 0.28), rgba(14, 92, 109, 0.16) 42%, rgba(14, 92, 109, 0.78)),
       url("/tiffany-cary/hero-coastal-chuppah.webp");
     background-position: center;
     background-size: cover;
@@ -71,8 +71,8 @@ html:has(.save-the-date-root) body {
 
   .hero-vignette {
     background:
-      radial-gradient(circle at 50% 44%, transparent 5%, rgba(14, 26, 43, 0.12) 43%, rgba(8, 14, 25, 0.76) 100%),
-      linear-gradient(90deg, rgba(14, 26, 43, 0.62), transparent 28%, transparent 72%, rgba(14, 26, 43, 0.62));
+      radial-gradient(circle at 50% 44%, transparent 5%, rgba(14, 92, 109, 0.12) 43%, rgba(6, 48, 58, 0.76) 100%),
+      linear-gradient(90deg, rgba(14, 92, 109, 0.62), transparent 28%, transparent 72%, rgba(14, 92, 109, 0.62));
   }
 
   .hero::after, .paper-section::before {
@@ -274,7 +274,7 @@ html:has(.save-the-date-root) body {
   .rsvp-intro { align-items: center; display: flex; flex-direction: column; max-width: 40rem; padding-inline: clamp(0.25rem, 2vw, 1rem); position: relative; text-align: center; width: 100%; z-index: 2; }
   .section-star { height: 2rem; margin-bottom: 1.4rem; width: 2rem; }
   .rsvp-intro .navy-button { margin-top: 2rem; }
-  .navy-button { background: var(--navy); border-color: var(--navy); box-shadow: 0 14px 35px rgba(14, 26, 43, 0.16); }
+  .navy-button { background: var(--navy); border-color: var(--navy); box-shadow: 0 14px 35px rgba(14, 92, 109, 0.16); }
   .navy-button:hover { background: var(--plum); border-color: var(--plum); transform: translateY(-2px); }
 
   .rsvp-card {
@@ -377,7 +377,7 @@ html:has(.save-the-date-root) body {
   .rsvp-bloom-left { background-position: left center; bottom: 0; left: -3rem; }
   .rsvp-bloom-right { background-position: right center; right: -3rem; top: 4rem; }
 
-  footer { align-items: center; background: #0b1626; color: var(--ivory); display: flex; flex-direction: column; padding: 4.5rem 1.5rem; text-align: center; }
+  footer { align-items: center; background: var(--navy); color: var(--ivory); display: flex; flex-direction: column; padding: 4.5rem 1.5rem; text-align: center; }
   footer .flourish { height: 1.3rem; max-width: 11rem; }
   .footer-script { font-family: var(--std-script); font-size: 3.4rem; line-height: 1; margin: 1.8rem 0 1rem; }
   footer > p:not(.footer-script) { font-family: var(--std-display); font-size: 0.65rem; letter-spacing: 0.2em; margin: 0; text-transform: uppercase; }
