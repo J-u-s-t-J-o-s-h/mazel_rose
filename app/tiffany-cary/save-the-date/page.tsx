@@ -1,7 +1,4 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { InvitationExperience } from "@/components/save-the-date/InvitationExperience";
-import { SAVE_THE_DATE_COOKIE } from "@/lib/save-the-date/cookie";
 import { SAVE_THE_DATE_PATH } from "@/lib/save-the-date/paths";
 import { createPageMetadata } from "@/lib/metadata";
 import { getWeddingDetails } from "@/sanity/lib/getContent";
@@ -32,14 +29,7 @@ export async function generateMetadata() {
 
 export default async function SaveTheDatePage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const preview = isFlagEnabled(params.preview);
   const forceIntro = isFlagEnabled(params.intro);
-  const cookieStore = await cookies();
-  const completed = cookieStore.get(SAVE_THE_DATE_COOKIE)?.value;
-
-  if (completed && !preview) {
-    redirect("/");
-  }
 
   return <InvitationExperience forceIntro={forceIntro} />;
 }

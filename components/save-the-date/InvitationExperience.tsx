@@ -94,7 +94,9 @@ function CountdownDisplay() {
 }
 
 function SaveTheDateForm() {
-  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
   const [errorMessage, setErrorMessage] = useState("");
   const [attendance, setAttendance] = useState<"" | "attending" | "declined">("");
 
@@ -122,7 +124,7 @@ function SaveTheDateForm() {
         throw new Error(result.error || "We couldn’t save your response.");
       }
 
-      window.location.replace("/");
+      setStatus("sent");
     } catch (error) {
       setStatus("error");
       setErrorMessage(
@@ -319,8 +321,19 @@ function SaveTheDateForm() {
           disabled={status === "sending"}
           type="submit"
         >
-          <span>{status === "sending" ? "Sending…" : "Submit information"}</span>
+          <span>
+            {status === "sending"
+              ? "Sending…"
+              : status === "sent"
+                ? "Update information"
+                : "Submit information"}
+          </span>
         </button>
+        <p className="form-success" role="status" aria-live="polite">
+          {status === "sent"
+            ? "Thank you — we received your information. You can review this page or submit again if anything changes."
+            : ""}
+        </p>
         <p className="form-error" role="alert" aria-live="polite">
           {status === "error" ? errorMessage : ""}
         </p>

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { saveTheDateCookieOptions, SAVE_THE_DATE_COOKIE } from "@/lib/save-the-date/cookie";
 import { getSaveTheDateProvider } from "@/lib/save-the-date/provider";
 import { saveTheDateSchema } from "@/lib/save-the-date/schema";
 
@@ -94,13 +93,7 @@ export async function POST(request: Request) {
       return NextResponse.json(result, { status: 502 });
     }
 
-    const response = NextResponse.json(result, { status: 201 });
-    response.cookies.set(
-      SAVE_THE_DATE_COOKIE,
-      "1",
-      saveTheDateCookieOptions,
-    );
-    return response;
+    return NextResponse.json(result, { status: 201 });
   } catch {
     return NextResponse.json(
       { success: false, error: "We couldn’t save your response just now. Please try again." },

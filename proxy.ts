@@ -1,26 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { SAVE_THE_DATE_COOKIE } from "@/lib/save-the-date/cookie";
-import { SAVE_THE_DATE_PATH } from "@/lib/save-the-date/paths";
 
 /**
- * Optional site-wide password protection, plus Save the Date completion
- * redirects. Completion is checked here so a returning guest never sees the
- * invitation flash before the homepage.
+ * Optional site-wide password protection. The Save the Date page stays
+ * reachable after a guest submits so they can review or update it.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  if (pathname === SAVE_THE_DATE_PATH) {
-    const preview = request.nextUrl.searchParams.get("preview") === "1";
-    const completed = request.cookies.get(SAVE_THE_DATE_COOKIE)?.value;
-    if (completed && !preview) {
-      const home = request.nextUrl.clone();
-      home.pathname = "/";
-      home.search = "";
-      return NextResponse.redirect(home);
-    }
-  }
 
   const enabled = process.env.ENABLE_SITE_PASSWORD === "true";
   const password = process.env.SITE_PASSWORD;
