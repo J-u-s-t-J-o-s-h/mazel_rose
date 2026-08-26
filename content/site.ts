@@ -19,9 +19,9 @@ export const siteConfig: SiteConfig = {
   weddingDateDisplay: "October 18, 2027",
   weddingDateIso: "2027-10-18T16:00:00-04:00",
   location: {
-    city: "Aiken",
-    state: "South Carolina",
-    display: "Aiken, South Carolina",
+    city: "Orlando",
+    state: "Florida",
+    display: "Orlando, Florida",
     isPlaceholder: true,
   },
   venue: {
