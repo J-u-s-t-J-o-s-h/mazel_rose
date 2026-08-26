@@ -11,6 +11,8 @@ export type SaveTheDateSubmission = {
   city: string;
   state: string;
   zipCode: string;
+  email: string;
+  phone: string;
 };
 
 export type SaveTheDateResult =

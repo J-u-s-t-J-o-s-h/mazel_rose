@@ -7,12 +7,15 @@ import { createPageMetadata } from "@/lib/metadata";
 import { getWeddingDetails } from "@/sanity/lib/getContent";
 
 type PageProps = {
-  searchParams: Promise<{ preview?: string | string[] }>;
+  searchParams: Promise<{
+    preview?: string | string[];
+    intro?: string | string[];
+  }>;
 };
 
-function isPreviewMode(value: string | string[] | undefined): boolean {
-  const preview = Array.isArray(value) ? value[0] : value;
-  return preview === "1";
+function isFlagEnabled(value: string | string[] | undefined): boolean {
+  const flag = Array.isArray(value) ? value[0] : value;
+  return flag === "1";
 }
 
 export async function generateMetadata() {
@@ -29,7 +32,8 @@ export async function generateMetadata() {
 
 export default async function SaveTheDatePage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const preview = isPreviewMode(params.preview);
+  const preview = isFlagEnabled(params.preview);
+  const forceIntro = isFlagEnabled(params.intro);
   const cookieStore = await cookies();
   const completed = cookieStore.get(SAVE_THE_DATE_COOKIE)?.value;
 
@@ -37,5 +41,5 @@ export default async function SaveTheDatePage({ searchParams }: PageProps) {
     redirect("/");
   }
 
-  return <InvitationExperience />;
+  return <InvitationExperience forceIntro={forceIntro} />;
 }

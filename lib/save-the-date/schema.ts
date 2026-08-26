@@ -8,7 +8,7 @@ const requiredText = (message: string, maxLength: number) =>
 
 export const saveTheDateSchema = z
   .object({
-    guestName: requiredText("Please enter your name.", 120),
+    guestName: requiredText("Please enter a guest or household name.", 120),
     attendance: z.preprocess(
       (value) => (typeof value === "string" ? value : ""),
       z.enum(["attending", "declined"]),
@@ -35,6 +35,11 @@ export const saveTheDateSchema = z
           "Please enter a complete U.S. mailing address.",
         ),
     ),
+    email: z.preprocess(
+      (value) => (typeof value === "string" ? value.trim() : ""),
+      z.string().email("Please enter a preferred email address."),
+    ),
+    phone: z.string().trim().max(40).optional().or(z.literal("")),
     website: z.string().max(0).optional().or(z.literal("")),
   })
   .superRefine((data, ctx) => {

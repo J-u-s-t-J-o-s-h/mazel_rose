@@ -1,6 +1,14 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { SaveTheDateSplash } from "@/components/save-the-date/SaveTheDateSplash";
 import { SAVE_THE_DATE_API_PATH } from "@/lib/save-the-date/paths";
 
 const WEDDING_DATE = new Date("2026-11-08T00:00:00-05:00").getTime();
@@ -126,14 +134,16 @@ function SaveTheDateForm() {
   return (
     <form className="rsvp-form" onSubmit={handleSubmit}>
       <div className="form-section-heading full-field">
-        <p className="eyebrow">Your response</p>
         <h3>Your household</h3>
-        <p>Please respond for the names listed on your invitation.</p>
       </div>
 
       <div className="field full-field">
-        <label htmlFor="guestName">Name on the invitation</label>
+        <label htmlFor="guestName">Guest or household name</label>
         <input id="guestName" name="guestName" autoComplete="name" required />
+        <small>
+          Please enter the name or names as you would like them to appear on
+          your formal invitation.
+        </small>
       </div>
 
       <fieldset className="attendance-fieldset">
@@ -210,9 +220,11 @@ function SaveTheDateForm() {
       </div>
 
       <div className="address-heading full-field">
-        <p className="eyebrow">Mailing details</p>
-        <h3>Your mailing address</h3>
-        <p>We’ll use this only to send your invitation.</p>
+        <h3>Mailing address</h3>
+        <p>
+          Please enter the preferred address for receiving your formal
+          invitation.
+        </p>
       </div>
 
       <div className="field full-field">
@@ -266,18 +278,48 @@ function SaveTheDateForm() {
         />
       </div>
 
+      <div className="contact-heading full-field">
+        <h3>Contact details</h3>
+      </div>
+
+      <div className="field full-field">
+        <label htmlFor="email">Preferred email address</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+      </div>
+
+      <div className="field full-field">
+        <label htmlFor="phone">
+          Preferred phone number <em>optional</em>
+        </label>
+        <input id="phone" name="phone" type="tel" autoComplete="tel" />
+      </div>
+
       <div className="honeypot" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="form-actions full-field">
+        <p className="form-privacy">
+          Your information will remain private and will not be shared. We’ll
+          contact you only when necessary about our wedding—no spam, we promise!
+        </p>
+        <p className="form-questions">
+          Questions? Contact us at{" "}
+          <a href="mailto:hello@mazelrose.life">hello@mazelrose.life</a>.
+        </p>
         <button
           className="gold-button submit-button"
           disabled={status === "sending"}
           type="submit"
         >
-          <span>{status === "sending" ? "Sending…" : "Send our response"}</span>
+          <span>{status === "sending" ? "Sending…" : "Submit information"}</span>
         </button>
         <p className="form-error" role="alert" aria-live="polite">
           {status === "error" ? errorMessage : ""}
@@ -287,9 +329,17 @@ function SaveTheDateForm() {
   );
 }
 
-export function InvitationExperience() {
+type InvitationExperienceProps = {
+  forceIntro?: boolean;
+};
+
+export function InvitationExperience({
+  forceIntro = false,
+}: InvitationExperienceProps) {
   const [rsvpOpen, setRsvpOpen] = useState(false);
+  const [introActive, setIntroActive] = useState(true);
   const shellRef = useRef<HTMLElement>(null);
+  const heroTitleRef = useRef<HTMLHeadingElement>(null);
   const scrollTarget = useMemo(
     () => ({ behavior: "smooth" as const, block: "start" as const }),
     [],
@@ -319,8 +369,27 @@ export function InvitationExperience() {
     );
   }
 
+  const revealInvitation = useCallback(() => {
+    setIntroActive(false);
+    window.requestAnimationFrame(() => {
+      heroTitleRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
+
   return (
-    <main ref={shellRef} className="invitation-shell">
+    <>
+      <SaveTheDateSplash
+        mode="gate"
+        forceIntro={forceIntro}
+        onDismiss={revealInvitation}
+      />
+
+      <main
+        ref={shellRef}
+        className="invitation-shell"
+        aria-hidden={introActive}
+        inert={introActive}
+      >
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-art" aria-hidden="true" />
         <div className="hero-vignette" aria-hidden="true" />
@@ -334,7 +403,7 @@ export function InvitationExperience() {
         <div className="hero-content">
           <StarOfDavid className="hero-star" />
           <p className="hero-kicker">Save the Date</p>
-          <h1 id="hero-title">
+          <h1 id="hero-title" ref={heroTitleRef} tabIndex={-1}>
             <span>Tiffany</span>
             <i>&amp;</i>
             <span>Cary</span>
@@ -346,14 +415,9 @@ export function InvitationExperience() {
             <span>Two Thousand Twenty-Six</span>
           </p>
           <button className="gold-button hero-rsvp" type="button" onClick={openRsvp}>
-            <span>Save the Date</span>
+            <span>Open Invitation</span>
           </button>
         </div>
-
-        <a className="scroll-cue" href="#date" aria-label="Continue to the invitation">
-          <span>Open the invitation</span>
-          <i />
-        </a>
       </section>
 
       <section className="date-reveal paper-section" id="date">
@@ -393,11 +457,11 @@ export function InvitationExperience() {
         <div className="rsvp-bloom rsvp-bloom-right" aria-hidden="true" />
         <div className="rsvp-intro">
           <StarOfDavid className="section-star" />
-          <p className="eyebrow">The pleasure of your reply</p>
-          <h2 id="rsvp-title">Kindly reply</h2>
+          <h2 id="rsvp-title">Update your contact information</h2>
           <p>
-            Please reply for your household, tell us who hopes to celebrate
-            with you, and share the best address for your formal invitation.
+            We can’t wait to celebrate with you! Please share your household’s
+            current and preferred contact information so we can send your formal
+            wedding invitation and any essential wedding updates.
           </p>
           {!rsvpOpen && (
             <button className="navy-button" type="button" onClick={() => setRsvpOpen(true)}>
@@ -424,6 +488,7 @@ export function InvitationExperience() {
         <p>November 8, 2026</p>
         <small>Formal invitation &amp; wedding details coming soon</small>
       </footer>
-    </main>
+      </main>
+    </>
   );
 }
