@@ -12,8 +12,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const isAdmin = pathname?.startsWith("/admin");
   const isStudio = pathname?.startsWith("/studio");
   const isGate = pathname === "/gate";
+  const isSaveTheDate = pathname === "/tiffany-cary/save-the-date";
 
-  if (isAdmin || isStudio) {
+  if (isAdmin || isStudio || isSaveTheDate) {
     return <>{children}</>;
   }
 
