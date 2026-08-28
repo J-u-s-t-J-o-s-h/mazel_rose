@@ -3,6 +3,12 @@ html:has(.save-the-date-root) {
   scroll-behavior: smooth;
 }
 
+html.std-invitation-tour,
+html.std-invitation-tour body {
+  overflow-anchor: none;
+  scroll-behavior: auto !important;
+}
+
 html:has(.save-the-date-root) body {
   background: #f6f1e8;
   overflow-x: hidden;
