@@ -4,12 +4,112 @@ import {
   FormEvent,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import { SaveTheDateSplash } from "@/components/save-the-date/SaveTheDateSplash";
 import { SAVE_THE_DATE_API_PATH } from "@/lib/save-the-date/paths";
+
+const RSVP_SECTION_ID = "rsvp";
+
+/* Slow enough that the date and countdown sections can be read on the way
+   down. Native `behavior: "smooth"` typically finishes in a few hundred ms. */
+const RSVP_SCROLL_PX_PER_SECOND = 260;
+const RSVP_SCROLL_MIN_MS = 4800;
+const RSVP_SCROLL_MAX_MS = 10000;
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function scrollYForElement(element: HTMLElement): number {
+  const margin = Number.parseFloat(getComputedStyle(element).scrollMarginTop) || 0;
+  const y = window.scrollY + element.getBoundingClientRect().top - margin;
+  const max = Math.max(
+    0,
+    document.documentElement.scrollHeight - window.innerHeight,
+  );
+  return Math.max(0, Math.min(y, max));
+}
+
+function isScrollKey(key: string): boolean {
+  return (
+    key === " " ||
+    key === "PageDown" ||
+    key === "PageUp" ||
+    key === "Home" ||
+    key === "End" ||
+    key === "ArrowDown" ||
+    key === "ArrowUp"
+  );
+}
+
+function easeInOutSine(t: number): number {
+  return -(Math.cos(Math.PI * t) - 1) / 2;
+}
+
+/** Animated window scroll. Returns a cancel function. */
+function scrollToElementSlowly(element: HTMLElement): () => void {
+  if (prefersReducedMotion()) {
+    element.scrollIntoView({ block: "start" });
+    return () => {};
+  }
+
+  const startY = window.scrollY;
+  const distance = Math.abs(scrollYForElement(element) - startY);
+  const duration = Math.min(
+    RSVP_SCROLL_MAX_MS,
+    Math.max(RSVP_SCROLL_MIN_MS, (distance / RSVP_SCROLL_PX_PER_SECOND) * 1000),
+  );
+
+  const html = document.documentElement;
+  const previousBehavior = html.style.scrollBehavior;
+  html.style.scrollBehavior = "auto";
+
+  let frame = 0;
+  let cancelled = false;
+  const startedAt = performance.now();
+
+  const stop = () => {
+    if (cancelled) return;
+    cancelled = true;
+    if (frame) window.cancelAnimationFrame(frame);
+    html.style.scrollBehavior = previousBehavior;
+    removeInterruptListeners();
+  };
+
+  const onWheelOrTouch = () => stop();
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (isScrollKey(event.key)) stop();
+  };
+
+  const interruptOptions: AddEventListenerOptions = { passive: true };
+  function removeInterruptListeners() {
+    window.removeEventListener("wheel", onWheelOrTouch, interruptOptions);
+    window.removeEventListener("touchstart", onWheelOrTouch, interruptOptions);
+    window.removeEventListener("keydown", onKeyDown);
+  }
+
+  window.addEventListener("wheel", onWheelOrTouch, interruptOptions);
+  window.addEventListener("touchstart", onWheelOrTouch, interruptOptions);
+  window.addEventListener("keydown", onKeyDown);
+
+  const step = (now: number) => {
+    if (cancelled) return;
+    const progress = Math.min(1, (now - startedAt) / duration);
+    const nextY =
+      startY + (scrollYForElement(element) - startY) * easeInOutSine(progress);
+    window.scrollTo(0, nextY);
+    if (progress < 1) {
+      frame = window.requestAnimationFrame(step);
+      return;
+    }
+    stop();
+  };
+
+  frame = window.requestAnimationFrame(step);
+  return stop;
+}
 
 const WEDDING_DATE = new Date("2026-11-08T00:00:00-05:00").getTime();
 
@@ -353,10 +453,7 @@ export function InvitationExperience({
   const [introActive, setIntroActive] = useState(true);
   const shellRef = useRef<HTMLElement>(null);
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
-  const scrollTarget = useMemo(
-    () => ({ behavior: "smooth" as const, block: "start" as const }),
-    [],
-  );
+  const cancelScrollRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -374,13 +471,31 @@ export function InvitationExperience({
     };
   }, []);
 
-  function openRsvp() {
+  const openRsvp = useCallback(() => {
     setRsvpOpen(true);
-    window.setTimeout(
-      () => document.getElementById("rsvp")?.scrollIntoView(scrollTarget),
-      80,
-    );
-  }
+    cancelScrollRef.current?.();
+
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        const target = document.getElementById(RSVP_SECTION_ID);
+        if (!target) return;
+        cancelScrollRef.current = scrollToElementSlowly(target);
+      });
+    });
+
+    cancelScrollRef.current = () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, []);
+
+  useEffect(
+    () => () => {
+      cancelScrollRef.current?.();
+    },
+    [],
+  );
 
   const revealInvitation = useCallback(() => {
     setIntroActive(false);
@@ -465,7 +580,7 @@ export function InvitationExperience({
         </div>
       </section>
 
-      <section className="rsvp-section paper-section" id="rsvp" aria-labelledby="rsvp-title">
+      <section className="rsvp-section paper-section" id={RSVP_SECTION_ID} aria-labelledby="rsvp-title">
         <div className="rsvp-bloom rsvp-bloom-left" aria-hidden="true" />
         <div className="rsvp-bloom rsvp-bloom-right" aria-hidden="true" />
         <div className="rsvp-intro">
