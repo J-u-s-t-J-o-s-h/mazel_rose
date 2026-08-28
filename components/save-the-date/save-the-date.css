@@ -862,11 +862,14 @@ html:has(.save-the-date-root) body {
     margin: 1.2rem 0 1.7rem;
   }
 
-  .invitation-copy, .rsvp-intro > p:last-of-type { font-size: 1.22rem; line-height: 1.65; margin: 0; max-width: 35rem; }
+  .invitation-copy, .rsvp-intro > p:last-of-type { line-height: 1.65; margin: 0; max-width: 35rem; }
   .invitation-copy { font-size: 1.4rem; }
+  .rsvp-intro > p:last-of-type { font-size: 1.525rem; max-width: 40rem; }
   .date-lockup { align-items: center; border-bottom: 1px solid rgba(131, 141, 156, 0.52); border-top: 1px solid rgba(131, 141, 156, 0.52); display: flex; flex-direction: column; margin-top: 3.3rem; padding: 1.4rem 2.7rem; }
   .date-lockup span { font-family: var(--std-display); font-size: 0.76rem; letter-spacing: 0.24em; text-transform: uppercase; }
   .date-lockup strong { color: var(--plum); font-size: 2.2rem; font-weight: 400; margin: 0.28rem 0; }
+  .date-lockup .date-location { letter-spacing: 0.2em; margin-top: 0.7rem; }
+  .section-continue { margin-top: 2.5rem; }
 
   .countdown-section { background: var(--navy); color: var(--ivory); padding: 7rem 1.3rem; position: relative; text-align: center; }
   .countdown-section::before, .countdown-section::after { background: linear-gradient(90deg, transparent, rgba(169, 180, 194, 0.72), transparent); content: ""; height: 1px; left: 10%; position: absolute; right: 10%; }
@@ -880,17 +883,56 @@ html:has(.save-the-date-root) body {
   .countdown-unit:last-child { border-right: 0; }
   .countdown-unit span { font-size: clamp(2rem, 9vw, 4.6rem); font-weight: 400; line-height: 1; }
   .countdown-unit small { color: #c3ccda; font-family: var(--std-display); font-size: clamp(0.47rem, 1.8vw, 0.68rem); letter-spacing: 0.1em; margin-top: 0.65rem; text-transform: uppercase; }
-  .countdown-note { color: rgba(246, 241, 232, 0.7); font-size: 1rem; font-style: italic; }
+  .countdown-note { color: rgba(246, 241, 232, 0.7); font-size: 1.25rem; font-style: italic; }
   .countdown-complete { font-family: var(--std-script); font-size: 3.5rem; }
 
   .rsvp-section {
     align-items: center;
+    background-color: var(--paper);
+    background-image: none;
     display: flex;
     flex-direction: column;
+    isolation: isolate;
     min-height: 100svh;
     overflow: hidden;
     padding: clamp(5.75rem, 10vw, 7.5rem) clamp(1rem, 5vw, 4.5rem) clamp(6.5rem, 11vw, 8rem);
     scroll-margin-top: 1rem;
+  }
+  .rsvp-section::after {
+    border: 1px solid rgba(92, 42, 74, 0.16);
+    box-shadow: inset 0 0 0 0.55rem rgba(246, 241, 232, 0.28);
+    content: "";
+    inset: clamp(0.75rem, 2vw, 1.5rem);
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+  }
+  .rsvp-atmosphere {
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
+  .rsvp-atmosphere::before {
+    background: url("/tiffany-cary/hero-coastal-chuppah.webp") center 46% / cover;
+    content: "";
+    filter: saturate(0.5) contrast(0.94);
+    inset: -3%;
+    opacity: 0.18;
+    position: absolute;
+  }
+  .rsvp-atmosphere::after {
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, rgba(239, 229, 213, 0.9) 0%, rgba(246, 241, 232, 0.78) 36%, rgba(246, 241, 232, 0.8) 64%, rgba(239, 229, 213, 0.94) 100%),
+      radial-gradient(ellipse at 50% -8%, rgba(14, 92, 109, 0.16), transparent 48%),
+      radial-gradient(ellipse at 50% 108%, rgba(14, 92, 109, 0.14), transparent 44%),
+      radial-gradient(circle at 12% 30%, rgba(92, 42, 74, 0.08), transparent 32%),
+      radial-gradient(circle at 88% 72%, rgba(179, 90, 46, 0.08), transparent 34%);
+    content: "";
+    inset: 0;
+    position: absolute;
   }
   .rsvp-intro { align-items: center; display: flex; flex-direction: column; max-width: 40rem; padding-inline: clamp(0.25rem, 2vw, 1rem); position: relative; text-align: center; width: 100%; z-index: 2; }
   .section-star { height: 2rem; margin-bottom: 1.4rem; width: 2rem; }
@@ -988,20 +1030,6 @@ html:has(.save-the-date-root) body {
   .form-error { color: #862f2f; font-size: 0.95rem; min-height: 1.3rem; }
   .honeypot { height: 0; overflow: hidden; position: absolute; width: 0; }
 
-  .rsvp-bloom {
-    background-image: url("/tiffany-cary/hero-coastal-chuppah.webp");
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-    filter: saturate(0.78);
-    height: 23rem;
-    opacity: 0.26;
-    pointer-events: none;
-    position: absolute;
-    width: 12rem;
-  }
-  .rsvp-bloom-left { background-position: left center; bottom: 0; left: -3rem; }
-  .rsvp-bloom-right { background-position: right center; right: -3rem; top: 4rem; }
-
   footer { align-items: center; background: var(--navy); color: var(--ivory); display: flex; flex-direction: column; padding: 4.5rem 1.5rem; text-align: center; }
   footer .flourish { height: 1.3rem; max-width: 11rem; }
   .footer-script { font-family: var(--std-script); font-size: 3.4rem; line-height: 1; margin: 1.8rem 0 1rem; }
@@ -1065,7 +1093,6 @@ html:has(.save-the-date-root) body {
     .hero-art { background-position: center 48%; }
     .date-reveal { min-height: 88svh; }
     .rsvp-card { max-width: 56rem; }
-    .rsvp-bloom { height: 34rem; opacity: 0.38; width: 20rem; }
   }
 
   @media (max-width: 359px) {

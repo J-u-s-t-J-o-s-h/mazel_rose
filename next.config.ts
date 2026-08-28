@@ -4,6 +4,8 @@ import path from "node:path";
 const nextConfig: NextConfig = {
   // Allow phones / other devices on the LAN to load the Next.js dev server.
   allowedDevOrigins: [
+    "192.168.3.129",
+    "192.168.1.250",
     "192.168.3.118",
     "192.168.*.*",
     "10.*.*.*",

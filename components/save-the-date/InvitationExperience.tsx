@@ -4,7 +4,6 @@ import {
   FormEvent,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -28,6 +27,93 @@ const EMPTY_COUNTDOWN: Countdown = {
   seconds: 0,
   complete: false,
 };
+
+const SECTION_SCROLL_MS_PER_PX = 2.2;
+const SECTION_SCROLL_MIN_MS = 1800;
+const SECTION_SCROLL_MAX_MS = 3200;
+
+function easeInOutCubic(progress: number) {
+  return progress < 0.5
+    ? 4 * progress * progress * progress
+    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function scrollToElementSlowly(id: string, onDone?: () => void): () => void {
+  const target = document.getElementById(id);
+  if (!target) {
+    onDone?.();
+    return () => undefined;
+  }
+
+  if (prefersReducedMotion()) {
+    target.scrollIntoView({ behavior: "auto", block: "start" });
+    onDone?.();
+    return () => undefined;
+  }
+
+  const startY = window.scrollY;
+  const endY = target.getBoundingClientRect().top + window.scrollY;
+  const distance = endY - startY;
+  if (Math.abs(distance) < 2) {
+    onDone?.();
+    return () => undefined;
+  }
+
+  const duration = Math.min(
+    SECTION_SCROLL_MAX_MS,
+    Math.max(SECTION_SCROLL_MIN_MS, Math.abs(distance) * SECTION_SCROLL_MS_PER_PX),
+  );
+
+  let frame = 0;
+  let settled = false;
+  const startTime = performance.now();
+
+  const stop = () => {
+    if (settled) return;
+    settled = true;
+    if (frame) window.cancelAnimationFrame(frame);
+    window.removeEventListener("wheel", stop);
+    window.removeEventListener("touchstart", stop);
+    window.removeEventListener("keydown", onKeyInterrupt);
+    onDone?.();
+  };
+
+  const onKeyInterrupt = (event: KeyboardEvent) => {
+    if (
+      event.key === " " ||
+      event.key === "PageDown" ||
+      event.key === "PageUp" ||
+      event.key === "ArrowDown" ||
+      event.key === "ArrowUp" ||
+      event.key === "Home" ||
+      event.key === "End"
+    ) {
+      stop();
+    }
+  };
+
+  const step = (now: number) => {
+    if (settled) return;
+    const progress = Math.min((now - startTime) / duration, 1);
+    const nextY = startY + distance * easeInOutCubic(progress);
+    window.scrollTo({ top: nextY, left: 0, behavior: "instant" });
+    if (progress < 1) {
+      frame = window.requestAnimationFrame(step);
+    } else {
+      stop();
+    }
+  };
+
+  window.addEventListener("wheel", stop, { passive: true });
+  window.addEventListener("touchstart", stop, { passive: true });
+  window.addEventListener("keydown", onKeyInterrupt);
+  frame = window.requestAnimationFrame(step);
+  return stop;
+}
 
 function calculateCountdown(): Countdown {
   const difference = WEDDING_DATE - Date.now();
@@ -136,7 +222,7 @@ function SaveTheDateForm() {
   return (
     <form className="rsvp-form" onSubmit={handleSubmit}>
       <div className="form-section-heading full-field">
-        <h3>Your household</h3>
+        <h3>Your Household</h3>
       </div>
 
       <div className="field full-field">
@@ -296,9 +382,7 @@ function SaveTheDateForm() {
       </div>
 
       <div className="field full-field">
-        <label htmlFor="phone">
-          Preferred phone number <em>optional</em>
-        </label>
+        <label htmlFor="phone">Preferred phone number</label>
         <input id="phone" name="phone" type="tel" autoComplete="tel" />
       </div>
 
@@ -353,10 +437,8 @@ export function InvitationExperience({
   const [introActive, setIntroActive] = useState(true);
   const shellRef = useRef<HTMLElement>(null);
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
-  const scrollTarget = useMemo(
-    () => ({ behavior: "smooth" as const, block: "start" as const }),
-    [],
-  );
+  const stopScrollRef = useRef<(() => void) | null>(null);
+  const scrollingRef = useRef(false);
 
   useEffect(() => {
     let frame = 0;
@@ -371,15 +453,18 @@ export function InvitationExperience({
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (frame) window.cancelAnimationFrame(frame);
+      stopScrollRef.current?.();
     };
   }, []);
 
-  function openRsvp() {
-    setRsvpOpen(true);
-    window.setTimeout(
-      () => document.getElementById("rsvp")?.scrollIntoView(scrollTarget),
-      80,
-    );
+  function goToSection(id: string, openForm = false) {
+    if (scrollingRef.current) return;
+    if (openForm) setRsvpOpen(true);
+    stopScrollRef.current?.();
+    scrollingRef.current = true;
+    stopScrollRef.current = scrollToElementSlowly(id, () => {
+      scrollingRef.current = false;
+    });
   }
 
   const revealInvitation = useCallback(() => {
@@ -427,7 +512,11 @@ export function InvitationExperience({
             <strong>08</strong>
             <span>Two Thousand Twenty-Six</span>
           </p>
-          <button className="gold-button hero-rsvp" type="button" onClick={openRsvp}>
+          <button
+            className="gold-button hero-rsvp"
+            type="button"
+            onClick={() => goToSection("date")}
+          >
             <span>Open Invitation</span>
           </button>
         </div>
@@ -449,28 +538,42 @@ export function InvitationExperience({
           We invite you to save the date as we gather beneath the chuppah and
           begin our forever, surrounded by the people we love most.
         </p>
-        <div className="date-lockup" aria-label="Sunday, November 8, 2026">
+        <div className="date-lockup" aria-label="Sunday, November 8, 2026, Orlando, Florida">
           <span>Sunday</span>
           <strong>November 8</strong>
           <span>2026</span>
+          <span className="date-location">Orlando, Florida</span>
         </div>
+        <button
+          className="navy-button section-continue"
+          type="button"
+          onClick={() => goToSection("countdown")}
+        >
+          <span>Continue</span>
+        </button>
       </section>
 
-      <section className="countdown-section" aria-labelledby="countdown-title">
+      <section className="countdown-section" id="countdown" aria-labelledby="countdown-title">
         <div className="countdown-inner">
           <p className="eyebrow">Until we say “I do”</p>
-          <h2 id="countdown-title">Counting down to forever</h2>
+          <h2 id="countdown-title">Counting Down to Forever</h2>
           <CountdownDisplay />
           <p className="countdown-note">Formal invitation and wedding details to follow.</p>
+          <button
+            className="gold-button section-continue"
+            type="button"
+            onClick={() => goToSection("rsvp", true)}
+          >
+            <span>Continue</span>
+          </button>
         </div>
       </section>
 
       <section className="rsvp-section paper-section" id="rsvp" aria-labelledby="rsvp-title">
-        <div className="rsvp-bloom rsvp-bloom-left" aria-hidden="true" />
-        <div className="rsvp-bloom rsvp-bloom-right" aria-hidden="true" />
+        <div className="rsvp-atmosphere" aria-hidden="true" />
         <div className="rsvp-intro">
           <StarOfDavid className="section-star" />
-          <h2 id="rsvp-title">Update your contact information</h2>
+          <h2 id="rsvp-title">Update Your Contact Information</h2>
           <p>
             We can’t wait to celebrate with you! Please share your household’s
             current and preferred contact information so we can send your formal

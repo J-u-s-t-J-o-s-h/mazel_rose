@@ -11,10 +11,10 @@ const CONFIG = {
   eyebrow: "Save the Date",
   nameA: "Tiffany",
   nameB: "Cary",
-  dateLong: "Sunday, the eighth of November",
-  year: "Two thousand twenty-six",
-  /* Venue is not announced yet, so the city line is left off the card. */
-  city: "",
+  dateWeekday: "Sunday,",
+  dateRest: "the eighth of November,",
+  year: "two thousand twenty-six",
+  city: "Orlando, Florida",
   footnote: "Invitation to follow",
   hint: "Tap the envelope",
 };
@@ -36,13 +36,13 @@ const T = {
 };
 
 /* Geometry — landscape A7 proportions -------------------------------- */
-const W = 440;
-const H = 306;
-const FLAP_H = 170;
-const CARD_W = 404;
-const CARD_H = 282;
+const W = 520;
+const H = 348;
+const FLAP_H = 188;
+const CARD_W = 500;
+const CARD_H = 324;
 const CARD_TOP = 12;
-const SLIDE = -235;
+const SLIDE = -250;
 
 const FLIGHT_MS = 1650; // arrival
 const LAP_MS = 2600; // one gilding lap, finishes ~1s after touchdown
@@ -358,7 +358,7 @@ export function SaveTheDateSplash({
                   <p className="stdEyebrow">{CONFIG.eyebrow}</p>
                   <h1 className="stdNames">
                     <span>{CONFIG.nameA}</span>
-                    <em>and</em>
+                    <em>&amp;</em>
                     <span>{CONFIG.nameB}</span>
                   </h1>
                 </div>
@@ -370,7 +370,10 @@ export function SaveTheDateSplash({
                 </div>
 
                 <div className="stdCardRight">
-                  <p className="stdDate">{CONFIG.dateLong}</p>
+                  <p className="stdDate">
+                    <span>{CONFIG.dateWeekday}</span>
+                    <span>{CONFIG.dateRest}</span>
+                  </p>
                   <p className="stdYear">{CONFIG.year}</p>
                   {CONFIG.city && <p className="stdCity">{CONFIG.city}</p>}
                   <p className="stdFoot">{CONFIG.footnote}</p>
@@ -569,7 +572,10 @@ const CSS = `
   position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(70% 55% at 50% 44%, rgba(200,210,224,.10), transparent 70%);
 }
-.stdScale{ transform-origin:center; }
+.stdScale{
+  transform-origin:center;
+  transform:scale(min(1, calc((100vw - 24px) / ${W}px)));
+}
 .stdStage{
   position:relative; width:${W}px; height:${H}px;
   perspective:1900px; perspective-origin:50% 26%;
@@ -628,7 +634,7 @@ const CSS = `
 }
 .stdReturn{
   position:absolute; top:34px; left:0; right:0; text-align:center;
-  font-size:9px; font-weight:500; letter-spacing:.34em; text-transform:uppercase; color:rgba(37,53,46,.5);
+  font-size:14.0625px; font-weight:500; letter-spacing:.34em; text-transform:uppercase; color:rgba(37,53,46,.5);
 }
 
 .stdSeal{
@@ -642,7 +648,7 @@ const CSS = `
   content:""; position:absolute; inset:5px; border-radius:50%;
   border:1px solid rgba(200,210,224,.35);
 }
-.stdSeal span{ font-family:var(--font-italiana),serif; font-size:20px; color:${T.platinumLite}; letter-spacing:.03em; }
+.stdSeal span{ font-family:var(--font-italiana),serif; font-size:31.25px; color:${T.platinumLite}; letter-spacing:.03em; }
 
 /* ---- gilded silhouette ---- */
 .stdSil{
@@ -723,32 +729,46 @@ const CSS = `
   width:${CARD_W}px; height:${CARD_H}px; border-radius:2px;
   background:linear-gradient(175deg, #FBF8F1, ${T.card} 60%, #EDE7DA);
   transition:transform cubic-bezier(.5,0,.18,1), box-shadow ease;
-  display:flex; align-items:center; justify-content:center; gap:26px;
-  padding:34px 40px; color:${T.ink};
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  padding:26px 24px; color:${T.ink};
 }
 .stdCardRule{ position:absolute; inset:12px; border:1px solid rgba(155,166,181,.42); pointer-events:none; }
-.stdCardLeft{ flex:1.15; text-align:right; }
-.stdCardRight{ flex:1; text-align:left; }
+.stdCardLeft{ flex:0 1 auto; text-align:center; padding-inline:4px 8px; }
+.stdCardRight{ flex:1 1 auto; min-width:0; text-align:left; padding-inline:8px 4px; }
 .stdEyebrow{
-  margin:0 0 18px; font-size:10px; font-weight:400; letter-spacing:.42em;
-  text-transform:uppercase; color:rgba(37,53,46,.6);
+  margin:0 0 10px; font-size:11px; font-weight:400; letter-spacing:.28em;
+  text-transform:uppercase; color:rgba(37,53,46,.6); white-space:nowrap;
 }
-.stdNames{ margin:0; font-family:var(--font-italiana),serif; font-weight:400; line-height:1; }
-.stdNames span{ display:block; font-size:33px; letter-spacing:.06em; text-transform:uppercase; }
+.stdNames{ margin:0; font-family:var(--font-italiana),serif; font-weight:400; line-height:.94; text-align:center; }
+.stdNames span{ display:block; font-size:40px; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
 .stdNames em{
   display:block; font-family:var(--font-cormorant),serif; font-style:italic;
-  font-size:18px; letter-spacing:.02em; color:${T.wine}; margin:8px 0 6px; text-transform:lowercase;
+  font-size:26px; letter-spacing:0; color:${T.wine}; margin:6px 0 4px; line-height:1;
 }
-.stdSpine{ align-self:stretch; display:flex; flex-direction:column; align-items:center; gap:10px; padding:14px 0; }
+.stdSpine{ align-self:stretch; display:flex; flex-direction:column; align-items:center; gap:8px; padding:10px 0; flex:0 0 auto; }
 .stdSpine i{ flex:1; width:1px; background:rgba(155,166,181,.55); }
-.stdSpine span{ font-size:9px; color:${T.platinum}; }
-.stdDate{ margin:0; font-family:var(--font-cormorant),serif; font-weight:500; font-size:19px; line-height:1.35; }
-.stdYear{ margin:4px 0 0; font-family:var(--font-cormorant),serif; font-weight:500; font-style:italic; font-size:16px; color:rgba(37,53,46,.72); }
-.stdCity{ margin:20px 0 0; font-size:10px; font-weight:500; letter-spacing:.32em; text-transform:uppercase; color:rgba(37,53,46,.66); }
-.stdFoot{ margin:26px 0 0; font-size:9px; font-weight:500; letter-spacing:.26em; text-transform:uppercase; color:rgba(155,166,181,.9); }
+.stdSpine span{ font-size:11.25px; color:${T.platinum}; }
+.stdDate{
+  margin:0; font-family:var(--font-cormorant),serif; font-weight:500;
+  font-size:22px; line-height:1.18; color:${T.ink};
+}
+.stdDate span{ display:block; white-space:nowrap; }
+.stdYear{
+  margin:8px 0 0; font-family:var(--font-cormorant),serif; font-weight:500;
+  font-style:italic; font-size:20px; line-height:1.2; color:rgba(37,53,46,.72);
+  white-space:nowrap;
+}
+.stdCity{
+  margin:16px 0 0; font-size:11px; font-weight:500; letter-spacing:.22em;
+  text-transform:uppercase; color:rgba(37,53,46,.66); white-space:nowrap;
+}
+.stdFoot{
+  margin:12px 0 0; font-size:10.5px; font-weight:500; letter-spacing:.16em;
+  text-transform:uppercase; color:rgba(155,166,181,.9); white-space:nowrap;
+}
 
 .stdHint{
-  position:relative; margin:44px 0 0; font-size:10px; letter-spacing:.4em;
+  position:relative; margin:44px 0 0; font-size:15.625px; letter-spacing:.4em;
   text-transform:uppercase; color:rgba(200,210,224,.6);
   transition:opacity .5s ease; animation:stdBreathe 2.8s ease-in-out infinite;
 }
@@ -786,15 +806,13 @@ const CSS = `
 }
 @keyframes stdBreathe{ 0%,100%{ opacity:.4 } 50%{ opacity:.85 } }
 
-/* The stage is a fixed ${W}px wide, so each step is the largest scale that still
-   clears the 12px root padding at the narrowest width in its range. */
-@media (max-width:560px){ .stdScale{ transform:scale(.95) } .stdHint{ margin-top:20px } }
-@media (max-width:460px){ .stdScale{ transform:scale(.86) } }
-@media (max-width:410px){ .stdScale{ transform:scale(.79) } .stdHint{ margin-top:8px } }
-@media (max-width:380px){ .stdScale{ transform:scale(.74) } }
-@media (max-width:360px){ .stdScale{ transform:scale(.69) } }
-@media (max-width:330px){ .stdScale{ transform:scale(.64) } }
-@media (max-height:640px){ .stdScale{ transform:scale(.62) } }
+/* The stage is a fixed ${W}px wide. Scale it down so the same letter
+   composition fits phones, tablets, and short landscape screens. */
+@media (max-width:540px){ .stdHint{ margin-top:20px } }
+@media (max-width:410px){ .stdHint{ margin-top:8px } }
+@media (max-height:700px){
+  .stdScale{ transform:scale(min(1, calc((100vw - 24px) / ${W}px), calc((100svh - 160px) / 520px))); }
+}
 
 @media (prefers-reduced-motion:reduce){
   .stdHint{ animation:none }
