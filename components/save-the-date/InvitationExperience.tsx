@@ -12,23 +12,21 @@ import { SAVE_THE_DATE_API_PATH } from "@/lib/save-the-date/paths";
 
 const RSVP_SECTION_ID = "rsvp";
 
-/* Slow enough that the date and countdown sections can be read on the way
-   down. Native `behavior: "smooth"` typically finishes in a few hundred ms. */
-const RSVP_SCROLL_PX_PER_SECOND = 260;
-const RSVP_SCROLL_MIN_MS = 4800;
-const RSVP_SCROLL_MAX_MS = 10000;
+/* A leisurely tour of the date and countdown, not the browser's ~300ms smooth jump. */
+const RSVP_SCROLL_MS = 8000;
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function scrollYForElement(element: HTMLElement): number {
+function getScroller(): HTMLElement {
+  return (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+}
+
+function scrollTopForElement(scroller: HTMLElement, element: HTMLElement): number {
   const margin = Number.parseFloat(getComputedStyle(element).scrollMarginTop) || 0;
-  const y = window.scrollY + element.getBoundingClientRect().top - margin;
-  const max = Math.max(
-    0,
-    document.documentElement.scrollHeight - window.innerHeight,
-  );
+  const y = scroller.scrollTop + element.getBoundingClientRect().top - margin;
+  const max = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
   return Math.max(0, Math.min(y, max));
 }
 
@@ -44,27 +42,21 @@ function isScrollKey(key: string): boolean {
   );
 }
 
-function easeInOutSine(t: number): number {
-  return -(Math.cos(Math.PI * t) - 1) / 2;
-}
-
-/** Animated window scroll. Returns a cancel function. */
+/** Animated document scroll. Returns a cancel function. */
 function scrollToElementSlowly(element: HTMLElement): () => void {
+  const scroller = getScroller();
+  const jump = () => {
+    scroller.scrollTop = scrollTopForElement(scroller, element);
+  };
+
   if (prefersReducedMotion()) {
-    element.scrollIntoView({ block: "start" });
+    jump();
     return () => {};
   }
 
-  const startY = window.scrollY;
-  const distance = Math.abs(scrollYForElement(element) - startY);
-  const duration = Math.min(
-    RSVP_SCROLL_MAX_MS,
-    Math.max(RSVP_SCROLL_MIN_MS, (distance / RSVP_SCROLL_PX_PER_SECOND) * 1000),
-  );
-
+  const startY = scroller.scrollTop;
   const html = document.documentElement;
-  const previousBehavior = html.style.scrollBehavior;
-  html.style.scrollBehavior = "auto";
+  html.classList.add("std-invitation-tour");
 
   let frame = 0;
   let cancelled = false;
@@ -74,36 +66,36 @@ function scrollToElementSlowly(element: HTMLElement): () => void {
     if (cancelled) return;
     cancelled = true;
     if (frame) window.cancelAnimationFrame(frame);
-    html.style.scrollBehavior = previousBehavior;
+    html.classList.remove("std-invitation-tour");
     removeInterruptListeners();
   };
 
-  const onWheelOrTouch = () => stop();
+  const onUserScroll = () => stop();
   const onKeyDown = (event: KeyboardEvent) => {
     if (isScrollKey(event.key)) stop();
   };
 
   const interruptOptions: AddEventListenerOptions = { passive: true };
   function removeInterruptListeners() {
-    window.removeEventListener("wheel", onWheelOrTouch, interruptOptions);
-    window.removeEventListener("touchstart", onWheelOrTouch, interruptOptions);
+    window.removeEventListener("wheel", onUserScroll, interruptOptions);
+    window.removeEventListener("touchstart", onUserScroll, interruptOptions);
     window.removeEventListener("keydown", onKeyDown);
   }
 
-  window.addEventListener("wheel", onWheelOrTouch, interruptOptions);
-  window.addEventListener("touchstart", onWheelOrTouch, interruptOptions);
+  window.addEventListener("wheel", onUserScroll, interruptOptions);
+  window.addEventListener("touchstart", onUserScroll, interruptOptions);
   window.addEventListener("keydown", onKeyDown);
 
   const step = (now: number) => {
     if (cancelled) return;
-    const progress = Math.min(1, (now - startedAt) / duration);
-    const nextY =
-      startY + (scrollYForElement(element) - startY) * easeInOutSine(progress);
-    window.scrollTo(0, nextY);
+    const progress = Math.min(1, (now - startedAt) / RSVP_SCROLL_MS);
+    scroller.scrollTop =
+      startY + (scrollTopForElement(scroller, element) - startY) * progress;
     if (progress < 1) {
       frame = window.requestAnimationFrame(step);
       return;
     }
+    jump();
     stop();
   };
 
