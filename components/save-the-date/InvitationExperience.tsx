@@ -60,19 +60,27 @@ function scrollToElementSlowly(element: HTMLElement): () => void {
 
   let frame = 0;
   let cancelled = false;
-  const startedAt = performance.now();
+  let allowCancel = false;
+  const startedAt = Date.now();
+  const armCancel = window.setTimeout(() => {
+    allowCancel = true;
+  }, 700);
 
   const stop = () => {
     if (cancelled) return;
     cancelled = true;
+    window.clearTimeout(armCancel);
     if (frame) window.cancelAnimationFrame(frame);
     html.classList.remove("std-invitation-tour");
+    delete html.dataset.stdTour;
     removeInterruptListeners();
   };
 
-  const onUserScroll = () => stop();
+  const onUserScroll = () => {
+    if (allowCancel) stop();
+  };
   const onKeyDown = (event: KeyboardEvent) => {
-    if (isScrollKey(event.key)) stop();
+    if (allowCancel && isScrollKey(event.key)) stop();
   };
 
   const interruptOptions: AddEventListenerOptions = { passive: true };
@@ -86,9 +94,10 @@ function scrollToElementSlowly(element: HTMLElement): () => void {
   window.addEventListener("touchstart", onUserScroll, interruptOptions);
   window.addEventListener("keydown", onKeyDown);
 
-  const step = (now: number) => {
+  const step = () => {
     if (cancelled) return;
-    const progress = Math.min(1, (now - startedAt) / RSVP_SCROLL_MS);
+    const progress = Math.min(1, (Date.now() - startedAt) / RSVP_SCROLL_MS);
+    html.dataset.stdTour = String(Math.round(progress * 100));
     scroller.scrollTop =
       startY + (scrollTopForElement(scroller, element) - startY) * progress;
     if (progress < 1) {
@@ -466,20 +475,9 @@ export function InvitationExperience({
   const openRsvp = useCallback(() => {
     setRsvpOpen(true);
     cancelScrollRef.current?.();
-
-    let secondFrame = 0;
-    const firstFrame = window.requestAnimationFrame(() => {
-      secondFrame = window.requestAnimationFrame(() => {
-        const target = document.getElementById(RSVP_SECTION_ID);
-        if (!target) return;
-        cancelScrollRef.current = scrollToElementSlowly(target);
-      });
-    });
-
-    cancelScrollRef.current = () => {
-      window.cancelAnimationFrame(firstFrame);
-      window.cancelAnimationFrame(secondFrame);
-    };
+    const target = document.getElementById(RSVP_SECTION_ID);
+    if (!target) return;
+    cancelScrollRef.current = scrollToElementSlowly(target);
   }, []);
 
   useEffect(
