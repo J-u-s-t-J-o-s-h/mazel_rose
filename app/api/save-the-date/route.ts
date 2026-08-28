@@ -66,20 +66,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, id: "ok" });
     }
 
-    const attendance = parsed.data.attendance;
-    const partySize =
-      attendance === "attending"
-        ? Math.floor(Number(parsed.data.partySize))
-        : 0;
-
     const provider = getSaveTheDateProvider();
     const result = await provider.submit({
       guestName: parsed.data.guestName,
-      attendance,
-      partySize,
-      guestNames: attendance === "attending" ? parsed.data.guestNames?.trim() || "" : "",
-      additionalNotes:
-        attendance === "attending" ? parsed.data.additionalNotes?.trim() || "" : "",
+      partySize: parsed.data.partySize,
+      guestNames: parsed.data.guestNames,
+      additionalNotes: parsed.data.additionalNotes?.trim() || "",
       streetAddress: parsed.data.streetAddress,
       addressLine2: parsed.data.addressLine2?.trim() || "",
       city: parsed.data.city,

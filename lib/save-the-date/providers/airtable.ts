@@ -36,10 +36,9 @@ export const airtableProvider: SaveTheDateProvider = {
         body: JSON.stringify({
           fields: {
             "Guest Name": data.guestName,
-            Attendance: data.attendance,
             "Party Size": data.partySize,
             "Guest Names": data.guestNames,
-            "Additional Notes": data.additionalNotes,
+            "Additional Notes": data.additionalNotes || null,
             "Street Address": data.streetAddress,
             "Address Line 2": data.addressLine2,
             City: data.city,

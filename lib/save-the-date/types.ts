@@ -1,8 +1,5 @@
-export type SaveTheDateAttendance = "attending" | "declined";
-
 export type SaveTheDateSubmission = {
   guestName: string;
-  attendance: SaveTheDateAttendance;
   partySize: number;
   guestNames: string;
   additionalNotes: string;

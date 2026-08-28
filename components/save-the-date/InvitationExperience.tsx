@@ -184,7 +184,6 @@ function SaveTheDateForm() {
     "idle",
   );
   const [errorMessage, setErrorMessage] = useState("");
-  const [attendance, setAttendance] = useState<"" | "attending" | "declined">("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -234,77 +233,33 @@ function SaveTheDateForm() {
         </small>
       </div>
 
-      <fieldset className="attendance-fieldset">
-        <legend>Will you attend on November 8?</legend>
-        <div className="attendance-options">
-          <label>
-            <input
-              type="radio"
-              name="attendance"
-              value="attending"
-              checked={attendance === "attending"}
-              onChange={() => setAttendance("attending")}
-              required
-            />
-            <span>Joyfully accepts</span>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="attendance"
-              value="declined"
-              checked={attendance === "declined"}
-              onChange={() => setAttendance("declined")}
-              required
-            />
-            <span>Regretfully declines</span>
-          </label>
-        </div>
-      </fieldset>
+      <div className="field party-size-field">
+        <label htmlFor="partySize">Party size</label>
+        <select id="partySize" name="partySize" defaultValue="" required>
+          <option value="" disabled>
+            Select
+          </option>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
+            <option value={count} key={count}>
+              {count}
+            </option>
+          ))}
+        </select>
+        <small>How many people are in this household?</small>
+      </div>
 
-      <div
-        className={`attendance-details full-field ${attendance === "attending" ? "is-visible" : ""}`}
-        aria-hidden={attendance !== "attending"}
-        inert={attendance !== "attending"}
-      >
-        <div className="attendance-details-inner">
-          <div className="field party-size-field">
-            <label htmlFor="partySize">Number attending</label>
-            <select
-              id="partySize"
-              name="partySize"
-              defaultValue=""
-              required={attendance === "attending"}
-            >
-              <option value="" disabled>
-                Select
-              </option>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
-                <option value={count} key={count}>
-                  {count}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="field guest-names-field">
+        <label htmlFor="guestNames">Guest names</label>
+        <textarea id="guestNames" name="guestNames" rows={3} required />
+        <small>Please include everyone who should receive a formal invitation.</small>
+      </div>
 
-          <div className="field guest-names-field">
-            <label htmlFor="guestNames">Names of everyone attending</label>
-            <textarea
-              id="guestNames"
-              name="guestNames"
-              rows={3}
-              required={attendance === "attending"}
-            />
-            <small>Please include yourself and every guest in your party.</small>
-          </div>
-
-          <div className="field notes-field">
-            <label htmlFor="additionalNotes">
-              Dietary or accessibility notes <em>optional</em>
-            </label>
-            <textarea id="additionalNotes" name="additionalNotes" rows={3} />
-          </div>
-        </div>
+      <div className="field notes-field full-field">
+        <label htmlFor="additionalNotes">
+          Additional notes <em>optional</em>
+        </label>
+        <textarea id="additionalNotes" name="additionalNotes" rows={3} />
+        <small>Dietary, accessibility, or anything else we should know.</small>
       </div>
 
       <div className="address-heading full-field">
