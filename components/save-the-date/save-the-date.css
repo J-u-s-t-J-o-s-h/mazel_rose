@@ -1006,7 +1006,135 @@ html:has(.save-the-date-root) body {
   .form-questions a { color: var(--plum); text-decoration: underline; text-underline-offset: 0.2em; }
   .submit-button { background: var(--navy); border-color: var(--navy); color: var(--ivory); width: 100%; }
   .submit-button:disabled { cursor: wait; opacity: 0.7; }
-  .form-success { color: var(--plum); font-size: 0.95rem; font-style: italic; min-height: 1.3rem; }
+  .form-success {
+    align-items: center;
+    animation: std-success-card 0.75s cubic-bezier(.2,.75,.25,1) both;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(246, 241, 232, 0.95), rgba(255, 252, 246, 0.88) 46%);
+    border: 1px solid rgba(92, 42, 74, 0.22);
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    margin: 0 auto 1.35rem;
+    max-width: 32rem;
+    overflow: visible;
+    padding: 1.65rem 1.15rem 1.75rem;
+    position: relative;
+    text-align: center;
+  }
+  .form-success:focus { outline: none; }
+  .form-success-burst {
+    inset: 0.2rem 0.6rem 48%;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
+  .form-success-burst i {
+    animation: std-success-spark 1.55s ease-out var(--delay) both;
+    background: linear-gradient(135deg, #f7f4ee, var(--platinum) 42%, var(--plum));
+    border-radius: 1px;
+    box-shadow: 0 0 7px rgba(169, 180, 194, 0.75);
+    display: block;
+    height: var(--size);
+    left: 50%;
+    position: absolute;
+    top: 58%;
+    width: var(--size);
+  }
+  .form-success-mark {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .form-success-seal {
+    align-items: center;
+    animation: std-success-seal 0.9s cubic-bezier(.2,.75,.25,1) 0.08s both;
+    display: flex;
+    flex-shrink: 0;
+    height: 4.15rem;
+    justify-content: center;
+    margin: 0 auto 0.2rem;
+    position: relative;
+    transform-origin: center center;
+    width: 4.15rem;
+    z-index: 1;
+  }
+  .form-success-seal::before,
+  .form-success-seal::after {
+    border-radius: 50%;
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    transform-origin: center center;
+  }
+  .form-success-seal::before {
+    animation: std-success-glow 1.6s ease 0.35s both;
+    background: radial-gradient(circle, rgba(169, 180, 194, 0.38), transparent 68%);
+  }
+  .form-success-seal::after {
+    animation: std-success-ring 1.15s cubic-bezier(.2,.75,.25,1) 0.18s both;
+    border: 1px solid rgba(92, 42, 74, 0.32);
+  }
+  .form-success .success-star {
+    display: block;
+    flex: 0 0 auto;
+    height: 2.05rem;
+    margin: 0;
+    overflow: visible;
+    position: relative;
+    stroke: var(--plum);
+    width: 2.05rem;
+    z-index: 1;
+  }
+  .form-success .success-star path {
+    animation: std-draw-line 1.05s ease 0.18s both;
+    stroke-dasharray: 140;
+    stroke-dashoffset: 140;
+  }
+  .form-success .success-star path:last-child { animation-delay: 0.32s; }
+  .form-success-script {
+    animation: std-name-reveal 1.15s cubic-bezier(.2,.75,.25,1) 0.38s both;
+    color: var(--plum);
+    font-family: var(--std-script);
+    font-size: clamp(2.7rem, 8vw, 3.6rem);
+    line-height: 0.9;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .form-success .flourish {
+    animation: std-gentle-reveal 0.8s ease 0.7s both;
+    height: 1.25rem;
+    margin-top: 0.55rem;
+    max-width: 12rem;
+    stroke: rgba(92, 42, 74, 0.72);
+    width: 68%;
+  }
+  .form-success .flourish path {
+    animation: std-draw-line 1.35s ease 0.62s both;
+    stroke-dasharray: 340;
+    stroke-dashoffset: 340;
+  }
+  .form-success-title {
+    animation: std-gentle-reveal 0.9s ease 0.82s both;
+    color: var(--ink);
+    font-family: var(--std-serif);
+    font-size: clamp(1.55rem, 4.6vw, 2.15rem);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+    margin: 0.55rem 0 0;
+  }
+  .form-success-copy {
+    animation: std-gentle-reveal 0.9s ease 1s both;
+    color: #655e56;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    margin: 0.55rem 0 0;
+    max-width: 26rem;
+  }
   .form-error { color: #862f2f; font-size: 0.95rem; min-height: 1.3rem; }
   .honeypot { height: 0; overflow: hidden; position: absolute; width: 0; }
 
@@ -1122,6 +1250,12 @@ html:has(.save-the-date-root) body {
     .std-intro__foil-trace,
     .std-intro__foil-trace::before,
     .std-intro__foil-trace::after { opacity: 0 !important; }
+    .form-success-burst { display: none; }
+    .form-success .success-star path,
+    .form-success .flourish path {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+    }
   }
 
 }
@@ -1133,6 +1267,29 @@ html:has(.save-the-date-root) body {
 @keyframes std-gentle-reveal { from { opacity: 0; transform: translateY(0.45rem); } to { opacity: 1; transform: translateY(0); } }
 @keyframes std-name-reveal { from { filter: blur(5px); opacity: 0; transform: translateY(1rem); } to { filter: blur(0); opacity: 1; transform: translateY(0); } }
 @keyframes std-draw-line { to { stroke-dashoffset: 0; } }
+@keyframes std-success-card {
+  from { transform: translateY(0.55rem) scale(0.985); }
+  to { transform: translateY(0) scale(1); }
+}
+@keyframes std-success-seal {
+  from { opacity: 0; transform: scale(0.72) rotate(-10deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes std-success-ring {
+  0% { opacity: 0; transform: scale(0.55); }
+  42% { opacity: 1; }
+  100% { opacity: 0.28; transform: scale(1); }
+}
+@keyframes std-success-glow {
+  0% { opacity: 0; transform: scale(0.6); }
+  40% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 0.45; transform: scale(1); }
+}
+@keyframes std-success-spark {
+  0% { opacity: 0; transform: translate(-50%, -50%) rotate(45deg) scale(0.2); }
+  20% { opacity: 1; transform: translate(-50%, -50%) rotate(45deg) scale(1.2); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(45deg) scale(0.3); }
+}
 
 @keyframes std-intro-envelope-flip {
   0% { transform: rotateX(1.5deg) rotateY(0deg) translateZ(0); }

@@ -44,7 +44,16 @@ export const saveTheDateSchema = z.object({
     (value) => (typeof value === "string" ? value.trim() : ""),
     z.string().email("Please enter a preferred email address."),
   ),
-  phone: z.string().trim().max(40).optional().or(z.literal("")),
+  phone: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim() : ""),
+    z
+      .string()
+      .min(1, "Please enter a preferred phone number.")
+      .max(40, "Please enter a preferred phone number.")
+      .refine((value) => (value.match(/\d/g) ?? []).length >= 7, {
+        message: "Please enter a preferred phone number.",
+      }),
+  ),
   website: z.string().max(0).optional().or(z.literal("")),
 });
 

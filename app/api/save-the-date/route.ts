@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       state: parsed.data.state,
       zipCode: parsed.data.zipCode,
       email: parsed.data.email,
-      phone: parsed.data.phone?.trim() || "",
+      phone: parsed.data.phone,
     });
 
     if (!result.success) {

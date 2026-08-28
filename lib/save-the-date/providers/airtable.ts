@@ -45,7 +45,7 @@ export const airtableProvider: SaveTheDateProvider = {
             State: data.state,
             "ZIP Code": data.zipCode,
             Email: data.email,
-            Phone: data.phone || null,
+            Phone: data.phone,
             "Submitted At": new Date().toISOString(),
           },
         }),

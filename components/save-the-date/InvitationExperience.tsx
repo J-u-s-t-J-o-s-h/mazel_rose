@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CSSProperties,
   FormEvent,
   useCallback,
   useEffect,
@@ -146,6 +147,17 @@ function Flourish() {
   );
 }
 
+const SUCCESS_SPARKS = [
+  { dx: -64, dy: -30, delay: 0.08, size: 6 },
+  { dx: 58, dy: -38, delay: 0.16, size: 7 },
+  { dx: -36, dy: -58, delay: 0.22, size: 5 },
+  { dx: 42, dy: -56, delay: 0.28, size: 6 },
+  { dx: -78, dy: 8, delay: 0.18, size: 5 },
+  { dx: 76, dy: 4, delay: 0.26, size: 6 },
+  { dx: -22, dy: -44, delay: 0.34, size: 8 },
+  { dx: 18, dy: -62, delay: 0.12, size: 5 },
+];
+
 function CountdownDisplay() {
   const [countdown, setCountdown] = useState<Countdown>(EMPTY_COUNTDOWN);
 
@@ -184,6 +196,13 @@ function SaveTheDateForm() {
     "idle",
   );
   const [errorMessage, setErrorMessage] = useState("");
+  const [thanksKey, setThanksKey] = useState(0);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (status !== "sent") return;
+    successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [status]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -210,6 +229,7 @@ function SaveTheDateForm() {
       }
 
       setStatus("sent");
+      setThanksKey((key) => key + 1);
     } catch (error) {
       setStatus("error");
       setErrorMessage(
@@ -338,7 +358,14 @@ function SaveTheDateForm() {
 
       <div className="field full-field">
         <label htmlFor="phone">Preferred phone number</label>
-        <input id="phone" name="phone" type="tel" autoComplete="tel" />
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          inputMode="tel"
+          required
+        />
       </div>
 
       <div className="honeypot" aria-hidden="true">
@@ -355,6 +382,44 @@ function SaveTheDateForm() {
           Questions? Contact us at{" "}
           <a href="mailto:hello@mazelrose.life">hello@mazelrose.life</a>.
         </p>
+        {status === "sent" ? (
+          <div
+            className="form-success"
+            key={thanksKey}
+            ref={successRef}
+            role="status"
+            aria-live="polite"
+            tabIndex={-1}
+          >
+            <div className="form-success-burst" aria-hidden="true">
+              {SUCCESS_SPARKS.map((spark, index) => (
+                <i
+                  key={index}
+                  style={
+                    {
+                      "--dx": `${spark.dx}px`,
+                      "--dy": `${spark.dy}px`,
+                      "--delay": `${spark.delay}s`,
+                      "--size": `${spark.size}px`,
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
+            <div className="form-success-mark">
+              <div className="form-success-seal" aria-hidden="true">
+                <StarOfDavid className="success-star" />
+              </div>
+              <p className="form-success-script">Thank you</p>
+            </div>
+            <Flourish />
+            <h3 className="form-success-title">Thank you for submitting</h3>
+            <p className="form-success-copy">
+              We received your information. You can review this page or submit
+              again if anything changes.
+            </p>
+          </div>
+        ) : null}
         <button
           className="gold-button submit-button"
           disabled={status === "sending"}
@@ -368,11 +433,6 @@ function SaveTheDateForm() {
                 : "Submit information"}
           </span>
         </button>
-        <p className="form-success" role="status" aria-live="polite">
-          {status === "sent"
-            ? "Thank you — we received your information. You can review this page or submit again if anything changes."
-            : ""}
-        </p>
         <p className="form-error" role="alert" aria-live="polite">
           {status === "error" ? errorMessage : ""}
         </p>
