@@ -758,6 +758,10 @@ html:has(.save-the-date-root) body {
     margin: 2.25rem 0 1.9rem;
     width: 100%;
   }
+  .hero h1:focus,
+  .hero h1:focus-visible {
+    outline: none;
+  }
 
   .hero h1 span { display: block; opacity: 0; white-space: nowrap; }
   .hero h1 span:first-child { animation: std-name-reveal 1.35s cubic-bezier(.2,.75,.25,1) 0.85s forwards; }

@@ -422,12 +422,16 @@ export function InvitationExperience({
     });
   }
 
-  const revealInvitation = useCallback(() => {
-    setIntroActive(false);
-    window.requestAnimationFrame(() => {
-      heroTitleRef.current?.focus({ preventScroll: true });
-    });
-  }, []);
+  const revealInvitation = useCallback(
+    (opts?: { restoreFocus?: boolean }) => {
+      setIntroActive(false);
+      if (opts?.restoreFocus === false) return;
+      window.requestAnimationFrame(() => {
+        heroTitleRef.current?.focus({ preventScroll: true });
+      });
+    },
+    [],
+  );
 
   return (
     <>

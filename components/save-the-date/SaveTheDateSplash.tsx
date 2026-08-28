@@ -85,8 +85,11 @@ export type SaveTheDateSplashProps = {
    * Fires after the fade-out finishes and the splash has removed itself. Gate
    * mode only. The splash unmounts itself, so the host needs this to know when
    * the underlying page is interactive again.
+   *
+   * `restoreFocus` is false when the splash was skipped because it had already
+   * been seen this session, so a page refresh should not steal focus.
    */
-  onDismiss?: () => void;
+  onDismiss?: (opts?: { restoreFocus?: boolean }) => void;
 };
 
 export function SaveTheDateSplash({
@@ -139,7 +142,7 @@ export function SaveTheDateSplash({
         setDecision("skip");
         if (!skipNotified.current) {
           skipNotified.current = true;
-          onDismissRef.current?.();
+          onDismissRef.current?.({ restoreFocus: false });
         }
       });
       return;
