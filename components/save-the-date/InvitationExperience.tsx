@@ -228,6 +228,7 @@ function SaveTheDateForm() {
         throw new Error(result.error || "We couldn’t save your response.");
       }
 
+      form.reset();
       setStatus("sent");
       setThanksKey((key) => key + 1);
     } catch (error) {
@@ -415,8 +416,8 @@ function SaveTheDateForm() {
             <Flourish />
             <h3 className="form-success-title">Thank you for submitting</h3>
             <p className="form-success-copy">
-              We received your information. You can review this page or submit
-              again if anything changes.
+              We received your information. You can submit again if anything
+              changes.
             </p>
           </div>
         ) : null}
@@ -429,7 +430,7 @@ function SaveTheDateForm() {
             {status === "sending"
               ? "Sending…"
               : status === "sent"
-                ? "Update information"
+                ? "Submit again"
                 : "Submit information"}
           </span>
         </button>
