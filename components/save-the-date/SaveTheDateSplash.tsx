@@ -786,10 +786,42 @@ const CSS = `
 /* the two bottom controls share one row so they cannot overlap */
 .stdActions{
   position:absolute; bottom:26px; left:0; right:0;
-  display:flex; align-items:center; justify-content:center; gap:30px;
+  display:flex; align-items:center; justify-content:center; gap:22px;
+  flex-wrap:wrap; padding:0 16px;
 }
 .stdActions .stdReset{ position:static; bottom:auto; }
-.stdContinue{ color:rgba(200,210,224,.82); }
+.stdRoot button.stdContinue{
+  color:${T.night};
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.26em;
+  min-height:48px;
+  padding:0 32px;
+  border:1px solid ${T.platinumHot};
+  background:${T.platinumHot};
+  box-shadow:0 0 0 0 rgba(242,246,251,.0), 0 12px 32px rgba(0,0,0,.28);
+  animation:stdContinuePulse 2.4s ease-in-out infinite;
+  transition:opacity .6s ease .4s, color .2s, background-color .2s, border-color .2s, box-shadow .2s, transform .2s;
+}
+.stdRoot button.stdContinue:hover,
+.stdRoot button.stdContinue:focus-visible{
+  color:${T.night};
+  background:#fff;
+  border-color:#fff;
+  transform:translateY(-1px);
+  box-shadow:0 0 0 8px rgba(242,246,251,.22), 0 14px 34px rgba(0,0,0,.3);
+  animation:none;
+}
+.stdContinue::after{
+  content:"→";
+  margin-left:.55em;
+  letter-spacing:0;
+  font-size:13px;
+}
+@keyframes stdContinuePulse{
+  0%,100%{ box-shadow:0 0 0 0 rgba(242,246,251,.0), 0 12px 32px rgba(0,0,0,.28) }
+  50%{ box-shadow:0 0 0 10px rgba(242,246,251,.2), 0 12px 32px rgba(0,0,0,.28) }
+}
 
 /* skip sits clear of the card and is available from the first frame */
 .stdSkip{
@@ -819,6 +851,7 @@ const CSS = `
 
 @media (prefers-reduced-motion:reduce){
   .stdHint{ animation:none }
+  .stdContinue{ animation:none }
   .stdMotes, .stdTrail, .stdOrbs{ display:none }
   .stdSilSweep, .stdSilBloom{ display:none }
   .stdSilBase{ animation:none; stroke-dasharray:none }
