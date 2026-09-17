@@ -23,10 +23,7 @@ export function Footer() {
       <div className="relative mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-20">
         <div className="flex flex-col items-center text-center">
           <Monogram tone="light" size="lg" />
-          <p className="mt-5 font-serif text-3xl tracking-[0.08em] lowercase sm:text-4xl">
-            {site.brandName}
-          </p>
-          <p className="mt-3 font-script text-3xl text-champagne">
+          <p className="mt-5 font-script text-3xl text-champagne">
             {site.coupleNames.display}
           </p>
           <DecorativeDivider className="mt-5" tone="ivory" />

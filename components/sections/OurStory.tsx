@@ -33,12 +33,14 @@ export function OurStory({ story }: { story: HomeContent["story"] }) {
           <SectionHeading
             title={story.title}
             description={story.body}
-            align="left"
+            className="[&>p:last-of-type]:text-left"
             dividerTone="burgundy"
           />
-          <p className="mt-6 max-w-md border-l-2 border-sage pl-4 text-sm italic text-charcoal/70">
-            {story.accentNote}
-          </p>
+          {story.accentNote ? (
+            <p className="mt-6 max-w-md border-l-2 border-sage pl-4 text-sm italic text-charcoal/70">
+              {story.accentNote}
+            </p>
+          ) : null}
           <Link
             href="/gallery"
             className="mt-8 inline-flex text-xs uppercase tracking-[0.2em] text-burgundy transition hover:text-cinnamon"

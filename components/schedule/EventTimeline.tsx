@@ -7,7 +7,7 @@ export function EventTimeline({ events }: { events: ScheduleEvent[] }) {
     <ol className="relative mx-auto max-w-4xl space-y-0">
       {events.map((event, index) => (
         <FadeIn key={event.id} delay={index * 0.04}>
-          <li className="relative grid gap-4 border-l border-brass/50 py-8 pl-8 sm:grid-cols-[180px_1fr] sm:gap-8 sm:pl-12">
+          <li className="relative grid gap-4 border-l border-brass/50 py-8 pl-8 sm:pl-12">
             <span className="absolute -left-[5px] top-10 h-2.5 w-2.5 rounded-full bg-burgundy ring-4 ring-parchment" />
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-cinnamon">
@@ -23,25 +23,18 @@ export function EventTimeline({ events }: { events: ScheduleEvent[] }) {
                 <h2 className="font-serif text-2xl text-wine-black sm:text-3xl">
                   {event.title}
                 </h2>
-                <div className="flex flex-wrap gap-2">
-                  {event.isPrivate ? (
-                    <span className="border border-burgundy/30 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-burgundy">
-                      Private
-                    </span>
-                  ) : null}
-                  {event.invitationOnly ? (
-                    <span className="border border-cinnamon/40 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-cinnamon">
-                      Invitation only
-                    </span>
-                  ) : null}
-                </div>
+                {event.isPrivate ? (
+                  <span className="border border-burgundy/30 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-burgundy">
+                    Private
+                  </span>
+                ) : null}
               </div>
               <p className="mt-3 text-sm font-medium text-peacock">{event.venue}</p>
               <p className="mt-1 text-sm text-charcoal/70">{event.address}</p>
               <p className="mt-4 text-sm leading-relaxed text-charcoal/80">
                 {event.description}
               </p>
-              <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+              <dl className="mt-5 grid gap-3 text-sm">
                 {event.dressCode ? (
                   <div>
                     <dt className="text-xs uppercase tracking-[0.16em] text-charcoal/50">

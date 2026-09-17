@@ -14,7 +14,7 @@ export function WelcomeNote({ welcome }: { welcome: HomeContent["welcome"] }) {
             script={welcome.scriptIntro}
             title={welcome.title}
             description={welcome.body}
-            align="left"
+            className="[&>p:last-of-type]:text-left"
             dividerTone="brass"
           />
         </FadeIn>

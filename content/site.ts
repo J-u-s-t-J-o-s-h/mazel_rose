@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
   },
   rsvpDeadline: "2027-09-01",
   rsvpDeadlineDisplay: "September 1, 2027",
-  contactEmail: "hello@mazel.rose",
+  contactEmail: "hello@mazelrose.life",
   tagline: "Romantic. Rich. Timeless.",
   closingStatement: "With love, we look forward to celebrating with you.",
   theme: "classic",

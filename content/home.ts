@@ -21,12 +21,12 @@ export const homeContent: HomeContent = {
     imageAlt: "Couple walking through soft autumn light among trees",
   },
   story: {
-    title: "Our beginning",
+    title: "Our Beginning",
     body: "What began as an unexpected conversation became a shared life of laughter, travel, and quiet evenings. Through seasons of change, we found a love that feels both deeply rooted and endlessly new. Now we look forward to beginning the next chapter—surrounded by family and friends.",
     image:
       "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1600&q=80",
     imageAlt: "Romantic portrait with soft natural light and warm tones",
-    accentNote: "PLACEHOLDER: Replace with your story and photograph.",
+    accentNote: "",
   },
   schedulePreview: {
     title: "The celebration",
