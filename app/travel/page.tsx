@@ -4,6 +4,7 @@ import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { createPageMetadata } from "@/lib/metadata";
 import { getTravelPage, getWeddingDetails } from "@/sanity/lib/getContent";
+import { cn } from "@/lib/utils";
 
 export async function generateMetadata() {
   const site = await getWeddingDetails({ stega: false });
@@ -38,11 +39,10 @@ export default async function TravelPage() {
             <SectionHeading
               title="Airports"
               description="Recommended arrival airports with approximate drive times."
-              align="left"
               dividerTone="sage"
             />
           </FadeIn>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
             {travel.airports.map((airport, index) => (
               <FadeIn key={airport.code} delay={index * 0.06}>
                 <article className="h-full border border-sage/40 bg-parchment/50 p-5">
@@ -67,14 +67,23 @@ export default async function TravelPage() {
         <div className="mx-auto max-w-6xl">
           <FadeIn>
             <SectionHeading
-              title="Where to stay"
-              description="Preferred hotels with room-block details where available."
+              title="Where To Stay"
+              description="Mention Paradise Cove when booking for exclusive offers."
               dividerTone="brass"
             />
           </FadeIn>
-          <div className="mt-12 grid gap-8 lg:grid-cols-3">
+          <div className="mt-12 grid auto-rows-fr grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-6">
             {travel.hotels.map((hotel, index) => (
-              <FadeIn key={hotel.id} delay={index * 0.06}>
+              <FadeIn
+                key={hotel.id}
+                delay={index * 0.06}
+                className={cn(
+                  "h-full lg:col-span-2",
+                  index === 3 && "lg:col-start-2",
+                  index === 4 &&
+                    "md:col-span-2 md:mx-auto md:w-[calc((100%-2rem)/2)] lg:col-span-2 lg:mx-0 lg:w-auto",
+                )}
+              >
                 <HotelCard hotel={hotel} />
               </FadeIn>
             ))}
@@ -83,10 +92,9 @@ export default async function TravelPage() {
       </section>
 
       <section className="bg-ivory px-6 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
           {[
             ["Driving", travel.details.driving],
-            ["Shuttle", travel.details.shuttle],
             ["Parking", travel.details.parking],
           ].map(([title, body], index) => (
             <FadeIn key={title} delay={index * 0.05}>
@@ -109,9 +117,6 @@ export default async function TravelPage() {
           >
             {travel.details.localContact.email}
           </a>
-          <p className="mt-2 text-xs text-charcoal/50">
-            {travel.details.localContact.note}
-          </p>
         </FadeIn>
       </section>
     </>

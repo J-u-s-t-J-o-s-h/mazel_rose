@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import type { HomeContent } from "@/types/content";
 import { Button } from "@/components/ui/Button";
 import { DecorativeDivider } from "@/components/ui/DecorativeDivider";
+import { Monogram } from "@/components/ui/Monogram";
 import { useSite } from "@/components/providers/SiteProvider";
 
 export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
@@ -26,6 +28,13 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
       <div className="absolute inset-0 bg-gradient-to-b from-peacock/75 via-wine-black/55 to-wine-black/80" />
       <div className="candlelight pointer-events-none absolute inset-0" />
       <div className="editorial-frame pointer-events-none absolute inset-4 sm:inset-8" />
+      <Link
+        href="/"
+        aria-label={`${site.brandName} home`}
+        className="absolute left-6 top-6 z-20 sm:left-11 sm:top-11"
+      >
+        <Monogram priority />
+      </Link>
 
       <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 py-28 sm:px-8">
         <div className="mx-auto max-w-4xl text-center text-ivory">

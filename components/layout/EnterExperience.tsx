@@ -92,7 +92,7 @@ export function EnterExperience() {
             }}
           >
             <div className="flex max-w-lg flex-col items-center text-center">
-              <Monogram tone="light" />
+              <Monogram tone="light" size="lg" />
               <p className="mt-6 font-script text-4xl text-champagne sm:text-5xl">
                 Together
               </p>

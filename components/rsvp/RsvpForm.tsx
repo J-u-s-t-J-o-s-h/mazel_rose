@@ -127,7 +127,7 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
   if (settings.formOpen === false) {
     return (
       <div className="border border-sterling/60 bg-ivory p-8 text-center shadow-[var(--shadow-soft)] sm:p-12">
-        <Monogram tone="brass" />
+        <Monogram tone="brass" size="md" />
         <h2 className="mt-5 font-serif text-3xl text-wine-black">RSVP closed</h2>
         <DecorativeDivider className="mt-5" />
         <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-charcoal/75">
@@ -143,7 +143,7 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
   if (submitState === "success") {
     return (
       <div className="border border-brass/40 bg-ivory p-8 text-center shadow-[var(--shadow-soft)] sm:p-12">
-        <Monogram tone="brass" />
+        <Monogram tone="brass" size="md" />
         <p className="mt-5 font-script text-4xl text-burgundy">Thank you</p>
         <h2 className="mt-3 font-serif text-3xl text-wine-black sm:text-4xl">
           {settings.confirmationHeading || "Your reply has been received"}

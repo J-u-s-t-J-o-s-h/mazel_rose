@@ -88,7 +88,7 @@ export default function GatePage() {
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-peacock px-6 py-20 text-ivory">
       <div className="candlelight pointer-events-none absolute inset-0" />
       <div className="relative flex w-full max-w-lg flex-col items-center text-center">
-        <Monogram tone="light" />
+        <Monogram tone="light" size="lg" />
         <h1 className="mt-6 font-serif text-4xl tracking-[0.08em] lowercase sm:text-5xl">
           mazel.rose
         </h1>

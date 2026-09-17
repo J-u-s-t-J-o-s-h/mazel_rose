@@ -22,7 +22,7 @@ export function Footer() {
       <div className="candlelight pointer-events-none absolute inset-0" />
       <div className="relative mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-20">
         <div className="flex flex-col items-center text-center">
-          <Monogram tone="light" />
+          <Monogram tone="light" size="lg" />
           <p className="mt-5 font-serif text-3xl tracking-[0.08em] lowercase sm:text-4xl">
             {site.brandName}
           </p>

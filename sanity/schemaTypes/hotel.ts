@@ -72,6 +72,17 @@ export const hotel = defineType({
       type: "string",
     }),
     defineField({
+      name: "contactName",
+      title: "Sales contact name",
+      type: "string",
+    }),
+    defineField({
+      name: "contactEmail",
+      title: "Sales contact email",
+      type: "string",
+      validation: (rule) => rule.email(),
+    }),
+    defineField({
       name: "amenities",
       title: "Amenities",
       type: "array",

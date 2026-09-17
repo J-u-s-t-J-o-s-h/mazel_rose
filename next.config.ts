@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/studio", destination: "/admin", permanent: false },
       { source: "/studio/:path*", destination: "/admin", permanent: false },
+      { source: "/wedding-party", destination: "/", permanent: true },
     ];
   },
   images: {

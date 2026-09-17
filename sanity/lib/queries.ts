@@ -79,13 +79,6 @@ export const REGISTRY_LINKS_QUERY = defineQuery(`
   }
 `);
 
-export const WEDDING_PARTY_QUERY = defineQuery(`
-  *[_type == "weddingPartyMember" && showOnWebsite != false] | order(orderRank asc, displayOrder asc) {
-    ...,
-    photo{${imageFields}}
-  }
-`);
-
 export const GALLERY_SETTINGS_QUERY = defineQuery(`
   *[_type == "gallerySettings" && _id == "gallerySettings"][0]{
     ...,

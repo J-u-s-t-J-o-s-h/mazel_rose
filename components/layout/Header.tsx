@@ -43,24 +43,23 @@ export function Header() {
             : "border-b border-parchment/80 bg-ivory/92 backdrop-blur-md shadow-[0_8px_30px_rgba(36,23,27,0.06)]",
         )}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <Link
-            href="/"
-            className="group flex items-center gap-3"
-            aria-label={`${site.brandName} home`}
-          >
-            <Monogram tone={overHero ? "light" : "brass"} />
-            <span
-              className={cn(
-                "font-serif text-lg tracking-[0.18em] lowercase transition-colors sm:text-xl",
-                overHero
-                  ? "text-ivory group-hover:text-champagne"
-                  : "text-wine-black group-hover:text-burgundy",
-              )}
+        <div
+          className={cn(
+            "flex items-center gap-4",
+            overHero
+              ? "justify-end px-6 py-6 sm:px-11 sm:py-11 lg:mx-auto lg:max-w-7xl lg:px-8 lg:py-4"
+              : "mx-auto max-w-7xl justify-between px-5 py-4 sm:px-8",
+          )}
+        >
+          {overHero ? null : (
+            <Link
+              href="/"
+              className="group flex items-center"
+              aria-label={`${site.brandName} home`}
             >
-              {site.brandName}
-            </span>
-          </Link>
+              <Monogram tone="brass" priority />
+            </Link>
+          )}
 
           <DesktopNav light={overHero} />
 
@@ -69,7 +68,7 @@ export function Header() {
             className={cn(
               "inline-flex h-11 w-11 items-center justify-center rounded-sm border lg:hidden",
               overHero
-                ? "border-ivory/40 text-ivory hover:border-brass hover:text-champagne"
+                ? "border-ivory/80 bg-wine-black/60 text-ivory shadow-sm backdrop-blur-sm hover:border-brass hover:text-champagne"
                 : "border-sterling/70 text-wine-black hover:border-burgundy hover:text-burgundy",
             )}
             aria-label="Open menu"

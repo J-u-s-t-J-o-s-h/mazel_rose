@@ -72,6 +72,8 @@ export type Hotel = {
   groupCode?: string;
   reservationDeadline?: string;
   phone?: string;
+  contactName?: string;
+  contactEmail?: string;
   amenities: string[];
 } & PlaceholderFlag;
 

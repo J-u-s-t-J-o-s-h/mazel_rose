@@ -15,7 +15,6 @@ import {
   SCHEDULE_EVENTS_QUERY,
   TRAVEL_OVERVIEW_QUERY,
   WEDDING_DETAILS_QUERY,
-  WEDDING_PARTY_QUERY,
 } from "@/sanity/lib/queries";
 import {
   mapActivities,
@@ -28,7 +27,6 @@ import {
   mapRegistryLinks,
   mapScheduleEvents,
   mapWeddingDetails,
-  mapWeddingParty,
 } from "@/sanity/lib/mappers";
 import { siteConfig as fallbackSite } from "@/content/site";
 import { homeContent as fallbackHome } from "@/content/home";
@@ -43,10 +41,6 @@ import {
   registryIntro as fallbackRegistryIntro,
   registryItems as fallbackRegistry,
 } from "@/content/registry";
-import {
-  weddingParty as fallbackParty,
-  weddingPartyIntro as fallbackPartyIntro,
-} from "@/content/wedding-party";
 import {
   galleryImages as fallbackGallery,
   galleryIntro as fallbackGalleryIntro,
@@ -147,16 +141,6 @@ export async function getRegistryPage() {
       body: String(intro?.message || fallbackRegistryIntro.body),
     },
     items: mapRegistryLinks(links, fallbackRegistry),
-  };
-}
-
-export async function getWeddingPartyPage() {
-  const members = await safeFetch<Array<Record<string, unknown>>>(
-    WEDDING_PARTY_QUERY,
-  );
-  return {
-    intro: fallbackPartyIntro,
-    members: mapWeddingParty(members, fallbackParty),
   };
 }
 

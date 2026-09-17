@@ -16,7 +16,7 @@ export default async function StudioLoginPage() {
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-ivory px-6 py-20">
       <div className="paper-texture pointer-events-none absolute inset-0" />
       <div className="relative flex w-full max-w-lg flex-col items-center text-center">
-        <Monogram tone="dark" />
+        <Monogram tone="dark" size="lg" />
         <h1 className="mt-6 font-serif text-4xl tracking-[0.08em] lowercase text-wine-black sm:text-5xl">
           Studio
         </h1>

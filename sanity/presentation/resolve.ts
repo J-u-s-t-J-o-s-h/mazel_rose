@@ -59,12 +59,6 @@ export const resolve: PresentationPluginOptions["resolve"] = {
         locations: [{ title: "Registry", href: "/registry" }],
       }),
     }),
-    weddingPartyMember: defineLocations({
-      select: { title: "name" },
-      resolve: () => ({
-        locations: [{ title: "Wedding Party", href: "/wedding-party" }],
-      }),
-    }),
     gallerySettings: defineLocations({
       select: { title: "heading" },
       resolve: () => ({

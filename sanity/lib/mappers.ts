@@ -8,7 +8,6 @@ import type {
   RegistryItem,
   ScheduleEvent,
   SiteConfig,
-  WeddingPartyMember,
 } from "@/types/content";
 import type { HomeContent } from "@/types/content";
 import { resolveImageUrl } from "@/sanity/lib/image";
@@ -259,6 +258,8 @@ export function mapHotels(
         ? String(doc.bookingDeadline)
         : undefined,
       phone: doc.phone ? String(doc.phone) : undefined,
+      contactName: doc.contactName ? String(doc.contactName) : undefined,
+      contactEmail: doc.contactEmail ? String(doc.contactEmail) : undefined,
       amenities: Array.isArray(doc.amenities)
         ? (doc.amenities as string[])
         : [],
@@ -278,31 +279,6 @@ export function mapRegistryLinks(
     url: String(doc.url || "#"),
     type: (doc.registryType as RegistryItem["type"]) || "retailer",
   }));
-}
-
-export function mapWeddingParty(
-  docs: Array<Record<string, unknown>> | null,
-  fallback: WeddingPartyMember[],
-): WeddingPartyMember[] {
-  if (!docs?.length) return fallback;
-  return docs.map((doc, index) => {
-    const photo = doc.photo as SanityImage;
-    const fallbackMember = fallback[index] || fallback[0];
-    return {
-      id: String(doc._id),
-      name: String(doc.name || ""),
-      role: String(doc.role || ""),
-      image: resolveImageUrl(photo, 1200) || "",
-      imageAlt:
-        photo?.alt ||
-        fallbackMember?.imageAlt ||
-        String(doc.name || "Wedding party member"),
-      relationship: String(doc.relationship || ""),
-      bio: String(doc.biography || ""),
-      funFact: doc.funFact ? String(doc.funFact) : undefined,
-      side: (doc.side as WeddingPartyMember["side"]) || "shared",
-    };
-  });
 }
 
 export function mapGalleryPhotos(

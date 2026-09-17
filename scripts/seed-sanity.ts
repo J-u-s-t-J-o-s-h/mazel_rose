@@ -271,6 +271,8 @@ async function main() {
       groupCode: hotel.groupCode,
       bookingDeadline: hotel.reservationDeadline,
       phone: hotel.phone,
+      contactName: hotel.contactName,
+      contactEmail: hotel.contactEmail,
       amenities: hotel.amenities,
       featured: index === 0,
       showOnWebsite: true,

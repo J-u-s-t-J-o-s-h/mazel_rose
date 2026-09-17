@@ -77,12 +77,6 @@ export const structure: StructureResolver = (S, context) =>
               }),
             ]),
         ),
-      orderableDocumentListDeskItem({
-        type: "weddingPartyMember",
-        title: "Wedding Party",
-        S,
-        context,
-      }),
       singleton(S, SINGLETON_IDS.gallerySettings, "Gallery", "gallerySettings"),
       S.listItem()
         .title("Things To Do")

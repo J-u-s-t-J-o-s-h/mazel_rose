@@ -3,96 +3,123 @@ import type { Airport, Hotel } from "@/types/content";
 export const travelIntro = {
   title: "Travel & Stay",
   scriptIntro: "Journey",
-  body: "We want your arrival to feel unhurried. Below you will find airport guidance, preferred hotels, and transportation notes. PLACEHOLDER: Confirm room blocks, codes, and shuttle times before launch.",
+  body: "We want your arrival to feel unhurried. Below you will find airport guidance, preferred hotels, and notes on driving and parking.",
 };
 
 export const airports: Airport[] = [
   {
-    name: "Augusta Regional Airport",
-    code: "AGS",
-    distance: "Approximately 30 minutes",
-    notes: "Closest commercial airport with rental car options.",
+    name: "Orlando Sanford International Airport",
+    code: "SFB",
+    distance: "Approximately 35–50 minutes",
+    notes: "A smaller airport north of Orlando, often with simpler arrival and rental-car pickup.",
     isPlaceholder: true,
   },
   {
-    name: "Columbia Metropolitan Airport",
-    code: "CAE",
-    distance: "Approximately 1 hour 15 minutes",
-    notes: "Broader flight options; ideal for guests flying from farther away.",
-    isPlaceholder: true,
-  },
-  {
-    name: "Charlotte Douglas International",
-    code: "CLT",
-    distance: "Approximately 2 hours 30 minutes",
-    notes: "Major hub with frequent connections; consider a rental car.",
+    name: "Orlando International Airport",
+    code: "MCO",
+    distance: "Approximately 20–40 minutes",
+    notes: "The primary Orlando airport, with the broadest choice of airlines and connections.",
     isPlaceholder: true,
   },
 ];
 
 export const hotels: Hotel[] = [
   {
-    id: "hotel-estate",
-    name: "The Magnolia Inn",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=80",
-    imageAlt: "Elegant hotel lobby with warm lighting and refined interiors",
-    address: "100 Whitney Drive, Aiken, SC 29801",
-    distance: "8 minutes from venue",
+    id: "grand-beach",
+    name: "Grand Beach by Hilton",
+    image: "/travel/hotels/grand-beach.jpg",
+    imageAlt:
+      "White lakeside suites at Grand Beach by Hilton reflected in Lake Bryan",
+    address: "8317 Lake Bryan Beach Blvd, Orlando, FL 32821",
+    distance: "Approximately 5 minutes from venue",
     description:
-      "Our preferred lodging—quiet rooms, polished service, and a short ride to the celebration.",
-    bookingUrl: "https://example.com/hotel-magnolia",
-    groupCode: "MAZELROSE",
-    reservationDeadline: "September 1, 2027",
-    phone: "(803) 555-0142",
-    amenities: ["Complimentary breakfast", "Shuttle access", "Parking"],
-    isPlaceholder: true,
+      "Spacious 1–3 bedroom suites on Lake Bryan, a few minutes from Paradise Cove.",
+    bookingUrl:
+      "https://www.hiltongrandvacations.com/en/resorts-and-destinations/florida/grand-beach-a-hilton-vacation-club",
+    groupCode: "Paradise Cove",
+    phone: "(407) 238-2500",
+    contactName: "Yamile Rivera",
+    contactEmail: "yamile.rivera@hgv.com",
+    amenities: ["1–3 bedroom suites"],
   },
   {
-    id: "hotel-garden",
-    name: "Garden House Hotel",
-    image:
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1400&q=80",
-    imageAlt: "Boutique hotel room with soft neutrals and natural light",
-    address: "44 Park Avenue, Aiken, SC 29801",
-    distance: "12 minutes from venue",
+    id: "holiday-inn",
+    name: "Holiday Inn",
+    image: "/travel/hotels/holiday-inn.jpg",
+    imageAlt:
+      "Heated resort pool at Holiday Inn Resort Orlando–Lake Buena Vista",
+    address: "13351 State Road 535, Orlando, FL 32821",
+    distance: "Walking distance from venue",
     description:
-      "A boutique stay with garden views and easy access to downtown restaurants.",
-    bookingUrl: "https://example.com/hotel-garden",
-    groupCode: "MRWEDDING",
-    reservationDeadline: "September 1, 2027",
-    phone: "(803) 555-0198",
-    amenities: ["Courtyard", "Fitness center", "Evening wine hour"],
-    isPlaceholder: true,
+      "A Lake Buena Vista resort within walking distance of Paradise Cove.",
+    bookingUrl: "https://www.hiresortlbv.com/",
+    groupCode: "Paradise Cove",
+    phone: "(407) 239-4500",
+    contactEmail: "sales@hiresortlbv.com",
+    amenities: ["Walking distance"],
   },
   {
-    id: "hotel-reserve",
-    name: "The Reserve Suites",
-    image:
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1400&q=80",
-    imageAlt: "Luxury suite bedroom with warm ambient lighting",
-    address: "220 Whiskey Road, Aiken, SC 29801",
-    distance: "15 minutes from venue",
+    id: "marriott-village",
+    name: "Marriott Village",
+    image: "/travel/hotels/marriott-village.jpg",
+    imageAlt:
+      "Nighttime entrance at Marriott Village, with the Fairfield Inn canopy and circular drive",
+    address: "8623 Vineland Avenue, Orlando, FL 32821",
+    distance: "Approximately 8 minutes from venue",
     description:
-      "Spacious suites for families or guests seeking a longer stay.",
-    bookingUrl: "https://example.com/hotel-reserve",
-    reservationDeadline: "August 20, 2027",
-    phone: "(803) 555-0177",
-    amenities: ["Kitchenette options", "Pool", "Free parking"],
-    isPlaceholder: true,
+      "One village with three Marriott options: Courtyard, Fairfield Inn & Suites, and SpringHill Suites.",
+    bookingUrl: "https://marriott-village-florida.marriott.com/",
+    groupCode: "Paradise Cove",
+    phone: "(407) 938-9001",
+    contactName: "Mary Nasarzewski",
+    contactEmail: "Mary.Nasarzewski@MarriottVillageOrlando.com",
+    amenities: ["Three Marriott hotels"],
+  },
+  {
+    id: "caribe-royale",
+    name: "Caribe Royale",
+    image: "/travel/hotels/caribe-royale.jpg",
+    imageAlt: "Dusk view of the pink Caribe Royale facade and arched entrance",
+    address: "8101 World Center Drive, Orlando, FL 32821",
+    distance: "Approximately 10 minutes from venue",
+    description:
+      "A resort-style stay with suites, pools, and easy access to the celebration.",
+    bookingUrl: "https://www.cariberoyale.com",
+    groupCode: "Paradise Cove",
+    phone: "(407) 238-8000",
+    contactName: "Saudia Sookram",
+    contactEmail: "ssookram@cariberoyale.com",
+    amenities: ["Resort style"],
+  },
+  {
+    id: "sheraton-lbv",
+    name: "Sheraton Orlando Lake Buena Vista",
+    image: "/travel/hotels/sheraton-lbv.jpg",
+    imageAlt:
+      "Aerial view of the lagoon-style pools at Sheraton Orlando Lake Buena Vista",
+    address: "12205 S. Apopka Vineland Rd., Orlando, FL 32836",
+    distance: "Approximately 2 minutes from venue",
+    description:
+      "A Lake Buena Vista resort just down the road from Paradise Cove.",
+    bookingUrl: "https://lnk.bio/sheratonlbv",
+    groupCode: "Paradise Cove",
+    phone: "(407) 550-1040",
+    contactName: "Danilla Henry",
+    contactEmail: "Danilla.Henry@SheratonLBV.com",
+    amenities: ["Pool resort"],
   },
 ];
 
 export const travelDetails = {
   driving:
-    "Aiken is accessible via I-20. Allow extra time for autumn weekend traffic. Venue entrance signage will be posted along Magnolia Lane. PLACEHOLDER: Confirm final driving directions.",
+    "Paradise Cove sits on Lake Bryan in Orlando, just south of I-4 near Apopka Vineland Road (SR 535). Use 13245 Lake Bryan Drive, Orlando, FL 32821 in your navigation app. Allow extra time on I-4 around theme-park rush hours.",
   shuttle:
-    "Complimentary shuttle service will run between preferred hotels and the venue on the wedding day, beginning mid-afternoon. Exact timing will be shared closer to the date.",
+    "Recommended hotels are a short drive or rideshare from Paradise Cove. Holiday Inn is within walking distance of the venue.",
   parking:
-    "Valet parking will be available at the venue. Overnight parking is available at preferred hotels.",
+    "On-site parking is available at Paradise Cove. Overnight parking is at your hotel. Rideshare drop-off is at the Lake Bryan Drive entrance.",
   localContact: {
     label: "Local travel questions",
-    email: "travel@mazel.rose",
-    note: "PLACEHOLDER: Replace with a real contact before launch.",
+    email: "travel@mazelrose.life",
+    note: "",
   },
 };
