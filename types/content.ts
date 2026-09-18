@@ -90,6 +90,7 @@ export type RegistryItem = {
   description: string;
   url: string;
   type: "retailer" | "honeymoon" | "cash" | "charity";
+  buttonLabel?: string;
 } & PlaceholderFlag;
 
 export type WeddingPartyMember = {

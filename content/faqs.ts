@@ -60,7 +60,7 @@ export const faqs: FaqItem[] = [
     id: "weather",
     question: "What weather should guests expect?",
     answer:
-      "Mid-October in Aiken is typically mild and lovely—often crisp evenings. A light wrap or jacket is recommended after sunset.",
+      "Early November in Orlando is usually warm and comfortable—daytime highs in the upper 70s, evenings around 60°F. A light layer is enough after sunset; rain is less common than in summer.",
     isPlaceholder: true,
   },
   {

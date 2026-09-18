@@ -40,7 +40,7 @@ export const siteConfig: SiteConfig = {
     { label: "Home", href: "/" },
     { label: "Schedule", href: "/schedule" },
     { label: "Travel", href: "/travel" },
-    { label: "Registry", href: "/registry" },
+    { label: "Pay It Forward", href: "/registry" },
     { label: "Gallery", href: "/gallery" },
     { label: "Things To Do", href: "/things-to-do" },
     { label: "FAQs", href: "/faqs" },

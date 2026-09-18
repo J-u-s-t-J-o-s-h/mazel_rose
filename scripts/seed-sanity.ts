@@ -289,7 +289,7 @@ async function main() {
       registryType: item.type,
       description: item.description,
       url: item.url,
-      buttonLabel: "View registry",
+      buttonLabel: item.buttonLabel || "Learn more",
       featured: false,
       showOnWebsite: true,
       displayOrder: index,

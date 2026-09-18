@@ -3,16 +3,21 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { ExternalLink, MapPin } from "lucide-react";
+import { stegaClean } from "@sanity/client/stega";
 import { activityCategories } from "@/content/activities";
 import type { Activity, ActivityCategory } from "@/types/content";
 import { cn, formatExternalRel } from "@/lib/utils";
+
+function categoryKey(value: string) {
+  return stegaClean(value).toLowerCase().replace(/[^a-z]/g, "");
+}
 
 export function CategoryFilter({ activities }: { activities: Activity[] }) {
   const [active, setActive] = useState<ActivityCategory | "all">("all");
 
   const filtered = useMemo(() => {
     if (active === "all") return activities;
-    return activities.filter((item) => item.category === active);
+    return activities.filter((item) => categoryKey(item.category) === active);
   }, [active, activities]);
 
   return (
@@ -64,7 +69,7 @@ export function CategoryFilter({ activities }: { activities: Activity[] }) {
             <div className="p-5">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-xs uppercase tracking-[0.16em] text-cinnamon">
-                  {item.category}
+                  {stegaClean(item.category)}
                 </p>
                 {item.priceRange ? (
                   <p className="text-xs tracking-[0.12em] text-charcoal/55">

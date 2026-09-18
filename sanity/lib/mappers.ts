@@ -10,9 +10,29 @@ import type {
   SiteConfig,
 } from "@/types/content";
 import type { HomeContent } from "@/types/content";
+import { stegaClean } from "@sanity/client/stega";
 import { resolveImageUrl } from "@/sanity/lib/image";
 import { siteConfig as fallbackSite } from "@/content/site";
 import { homeContent as fallbackHome } from "@/content/home";
+
+const ACTIVITY_CATEGORIES: ActivityCategory[] = [
+  "restaurants",
+  "coffee",
+  "bars",
+  "attractions",
+  "shopping",
+  "outdoor",
+  "family",
+];
+
+function asActivityCategory(value: unknown): ActivityCategory {
+  const cleaned = stegaClean(String(value || ""))
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+  return ACTIVITY_CATEGORIES.includes(cleaned as ActivityCategory)
+    ? (cleaned as ActivityCategory)
+    : "attractions";
+}
 
 type SanityImage = {
   asset?: unknown;
@@ -278,6 +298,7 @@ export function mapRegistryLinks(
     description: String(doc.description || ""),
     url: String(doc.url || "#"),
     type: (doc.registryType as RegistryItem["type"]) || "retailer",
+    buttonLabel: doc.buttonLabel ? String(doc.buttonLabel) : undefined,
   }));
 }
 
@@ -316,12 +337,16 @@ export function mapActivities(
   if (!docs?.length) return fallback;
   return docs.map((doc, index) => {
     const image = doc.image as SanityImage;
-    const fallbackActivity = fallback[index] || fallback[0];
+    const fallbackId = String(doc._id).replace(/^activity\./, "");
+    const fallbackActivity =
+      fallback.find((item) => item.id === fallbackId) ||
+      fallback[index] ||
+      fallback[0];
     return {
       id: String(doc._id),
       name: String(doc.name || ""),
-      category: (doc.category as ActivityCategory) || "attractions",
-      image: resolveImageUrl(image, 1200) || "",
+      category: asActivityCategory(doc.category),
+      image: resolveImageUrl(image, 1200) || fallbackActivity?.image || "",
       imageAlt:
         image?.alt ||
         fallbackActivity?.imageAlt ||

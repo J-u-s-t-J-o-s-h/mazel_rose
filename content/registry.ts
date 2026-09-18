@@ -1,44 +1,28 @@
 import type { RegistryItem } from "@/types/content";
 
 export const registryIntro = {
-  title: "Registry",
+  title: "Pay It Forward",
   scriptIntro: "With Gratitude",
-  body: "Your presence is the greatest gift. Should you wish to honor us further, we have gathered a few thoughtful options below. PLACEHOLDER: Replace retailer links and fund details before launch.",
+  body: "Hakarat HaTov — Recognizing the Good. Your presence is truly the greatest gift.",
 };
 
 export const registryItems: RegistryItem[] = [
   {
-    id: "crate",
-    name: "Crate & Barrel",
-    description: "Home essentials and tableware for our first home together.",
-    url: "https://www.crateandbarrel.com",
-    type: "retailer",
-    isPlaceholder: true,
-  },
-  {
-    id: "williams",
-    name: "Williams Sonoma",
-    description: "Kitchen pieces for slow dinners and shared mornings.",
-    url: "https://www.williams-sonoma.com",
-    type: "retailer",
-    isPlaceholder: true,
-  },
-  {
-    id: "honeymoon",
-    name: "Honeymoon Fund",
+    id: "sentinel",
+    name: "Orlando Sentinel",
     description:
-      "Contribute toward a quiet autumn escape following the celebration.",
-    url: "https://example.com/honeymoon-fund",
-    type: "honeymoon",
-    isPlaceholder: true,
-  },
-  {
-    id: "charity",
-    name: "Charitable Gift",
-    description:
-      "A donation in our honor to a cause close to our hearts. PLACEHOLDER: Confirm organization.",
-    url: "https://example.com/charity",
+      "Reporting on the sloths rescued from Sloth World, including the zoo’s care for Willow and the animals still in rehabilitation.",
+    url: "https://www.orlandosentinel.com/2026/06/16/another-rescue-from-sloth-world-dies-during-rehabilitation-central-florida-zoo-says/",
     type: "charity",
-    isPlaceholder: true,
+    buttonLabel: "Read the article",
+  },
+  {
+    id: "zoo",
+    name: "Central Florida Zoo",
+    description:
+      "Meet the sloths in care, follow their updates, and find ways to donate to the Central Florida Zoo.",
+    url: "https://www.centralfloridazoo.org/sloths-at-the-central-florida-zoo/",
+    type: "charity",
+    buttonLabel: "Visit the zoo",
   },
 ];
