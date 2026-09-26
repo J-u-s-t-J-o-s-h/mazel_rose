@@ -72,7 +72,6 @@ export async function POST(request: Request) {
     const result = await provider.submit({
       ...parsed.data,
       phone: parsed.data.phone || undefined,
-      invitationCode: parsed.data.invitationCode || undefined,
       website: undefined,
     });
 

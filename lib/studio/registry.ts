@@ -82,7 +82,7 @@ export const STUDIO_PAGES: StudioPage[] = [
         fields: [
           { name: "partnerOneName", title: "First partner's name", type: "string", required: true, maxLength: 40 },
           { name: "partnerTwoName", title: "Second partner's name", type: "string", required: true, maxLength: 40 },
-          { name: "coupleDisplayName", title: "Couple display name", type: "string", required: true, maxLength: 80, hint: "Shown as Mazel & Rose throughout the site." },
+          { name: "coupleDisplayName", title: "Couple display name", type: "string", required: true, maxLength: 80, hint: "Shown as Tiffany & Cary throughout the site." },
           { name: "initials", title: "Monogram initials", type: "initials" },
           { name: "tagline", title: "Tagline", type: "string" },
           { name: "footerMessage", title: "Footer message", type: "text", rows: 3, required: true, maxLength: 240 },
@@ -100,7 +100,7 @@ export const STUDIO_PAGES: StudioPage[] = [
         titleField: "weddingDateDisplay",
         fields: [
           { name: "weddingDate", title: "Wedding date and time", type: "datetime", required: true },
-          { name: "weddingDateDisplay", title: "Wedding date display text", type: "string", required: true, maxLength: 60, hint: "Example: October 18, 2027" },
+          { name: "weddingDateDisplay", title: "Wedding date display text", type: "string", required: true, maxLength: 60, hint: "Example: Sunday, November 8, 2026" },
           { name: "rsvpDeadline", title: "RSVP deadline", type: "datetime", required: true },
           { name: "rsvpDeadlineDisplay", title: "RSVP deadline display text", type: "string", required: true, maxLength: 60 },
           { name: "timezone", title: "Default timezone", type: "string", hint: "Used for countdown context. Example: America/New_York" },
@@ -117,7 +117,7 @@ export const STUDIO_PAGES: StudioPage[] = [
         fields: [
           { name: "locationCity", title: "City", type: "string", required: true },
           { name: "locationState", title: "State", type: "string", required: true },
-          { name: "locationDisplay", title: "Location display text", type: "string", required: true, hint: "Example: Aiken, South Carolina" },
+          { name: "locationDisplay", title: "Location display text", type: "string", required: true, hint: "Example: Orlando, Florida" },
           { name: "ceremonyVenueName", title: "Ceremony venue name", type: "string", required: true },
           { name: "ceremonyVenueAddress", title: "Ceremony venue address", type: "string", required: true },
           { name: "receptionVenueName", title: "Reception venue name", type: "string" },
@@ -314,7 +314,7 @@ export const STUDIO_PAGES: StudioPage[] = [
         titleField: "title",
         fields: [
           { name: "title", title: "Event title", type: "string", required: true, maxLength: 80 },
-          { name: "date", title: "Date", type: "string", required: true, hint: "Example: October 18, 2027" },
+          { name: "date", title: "Date", type: "string", required: true, hint: "Example: Sunday, November 8, 2026" },
           { name: "startTime", title: "Start time", type: "string", required: true, hint: "Example: 4:00 PM" },
           { name: "endTime", title: "End time", type: "string" },
           { name: "venue", title: "Venue", type: "string", required: true },

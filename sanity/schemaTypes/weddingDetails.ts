@@ -39,7 +39,7 @@ export const weddingDetails = defineType({
       name: "coupleDisplayName",
       title: "Couple display name",
       type: "string",
-      description: 'Shown as “Mazel & Rose” throughout the site.',
+      description: 'Shown as “Tiffany & Cary” throughout the site.',
       validation: (rule) => rule.required().max(80),
     }),
     defineField({
@@ -59,7 +59,7 @@ export const weddingDetails = defineType({
       name: "weddingDateDisplay",
       title: "Wedding date display text",
       type: "string",
-      description: 'Example: “October 18, 2027”',
+      description: 'Example: “Sunday, November 8, 2026”',
       validation: (rule) => rule.required().max(60),
     }),
     defineField({
@@ -99,7 +99,7 @@ export const weddingDetails = defineType({
       name: "locationDisplay",
       title: "Location display text",
       type: "string",
-      description: 'Example: “Aiken, South Carolina”',
+      description: 'Example: “Orlando, Florida”',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -152,7 +152,7 @@ export const weddingDetails = defineType({
       name: "tagline",
       title: "Tagline",
       type: "string",
-      initialValue: "Romantic. Rich. Timeless.",
+      description: "Leave blank to show no footer tagline.",
     }),
     defineField({
       name: "socialDescription",

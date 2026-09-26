@@ -4,6 +4,9 @@
  * Usage:
  *   npm run sanity:seed
  *
+ * Production is refused unless ALLOW_PRODUCTION_SEED=true. Prefer
+ * `scripts/publish-canonical-content.ts` for targeted corrections.
+ *
  * Loads variables from `.env.local` (see package.json). Requires
  * NEXT_PUBLIC_SANITY_PROJECT_ID and SANITY_API_WRITE_TOKEN.
  *
@@ -65,6 +68,39 @@ async function upsert(
 }
 
 async function main() {
+  if (
+    dataset === "production" &&
+    process.env.ALLOW_PRODUCTION_SEED !== "true"
+  ) {
+    console.error(
+      "Refusing to seed the production dataset. This script overwrites wedding documents, including images left empty. Set ALLOW_PRODUCTION_SEED=true only for an intentional production reseed.",
+    );
+    process.exit(1);
+  }
+
+  const obsolete = [
+    "October 18, 2027",
+    "September 1, 2027",
+    "The Willow Estate",
+    "Aiken",
+    "Romantic. Rich. Timeless.",
+    "hello@mazel.rose",
+    "on-site valet",
+    "indoor contingency",
+  ];
+  const seedPreview = JSON.stringify({
+    siteConfig,
+    scheduleEvents,
+    faqs,
+    faqsIntro,
+  });
+  for (const term of obsolete) {
+    if (seedPreview.includes(term)) {
+      console.error(`Refusing to seed: content still contains "${term}".`);
+      process.exit(1);
+    }
+  }
+
   console.log(`Seeding Sanity project ${projectId}/${dataset}…`);
 
   await upsert(SINGLETON_IDS.weddingDetails, {
@@ -198,15 +234,7 @@ async function main() {
     confirmationHeading: "Your reply has been received",
     confirmationMessage:
       "We are so grateful. We cannot wait to celebrate with you.",
-    mealOptions: [
-      { _key: "beef", value: "beef", label: "Beef" },
-      { _key: "chicken", value: "chicken", label: "Chicken" },
-      { _key: "fish", value: "fish", label: "Fish" },
-      { _key: "vegetarian", value: "vegetarian", label: "Vegetarian" },
-      { _key: "vegan", value: "vegan", label: "Vegan" },
-      { _key: "kids", value: "kids", label: "Child meal" },
-      { _key: "undecided", value: "undecided", label: "Still deciding" },
-    ],
+    mealOptions: [],
     eventOptions: [
       { _key: "ceremony", key: "ceremony", label: "Ceremony" },
       { _key: "reception", key: "reception", label: "Reception" },

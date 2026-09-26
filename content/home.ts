@@ -3,7 +3,7 @@ import type { HomeContent } from "@/types/content";
 export const homeContent: HomeContent = {
   hero: {
     scriptIntro: "Together",
-    heading: "MAZEL & ROSE",
+    heading: "TIFFANY & CARY",
     invitationLine: "Request the pleasure of your company",
     primaryCta: { label: "Respond to the Invitation", href: "/rsvp" },
     secondaryCta: { label: "View the Schedule", href: "/schedule" },
@@ -37,7 +37,7 @@ export const homeContent: HomeContent = {
   feature: {
     quote:
       "In the soft glow of autumn, we choose each other—again and always.",
-    attribution: "Mazel & Rose",
+    attribution: "Tiffany & Cary",
     image:
       "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=2400&q=80",
     imageAlt: "Editorial wedding florals in burgundy, mauve, and sage",
@@ -49,7 +49,7 @@ export const homeContent: HomeContent = {
     highlights: [
       "Recommended airports nearby",
       "Preferred hotel room blocks",
-      "Shuttle and parking notes",
+      "Driving and parking notes",
     ],
   },
   galleryPreview: {

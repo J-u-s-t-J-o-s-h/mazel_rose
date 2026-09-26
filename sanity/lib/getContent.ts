@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import { isSanityConfigured } from "@/sanity/env";
 import {
   ACTIVITIES_QUERY,
@@ -54,15 +55,26 @@ import { resolveImageUrl } from "@/sanity/lib/image";
 
 async function safeFetch<T>(
   query: Parameters<typeof import("@/sanity/lib/live").sanityFetch>[0]["query"],
-  stega = true,
+  stega?: boolean,
 ): Promise<T | null> {
   if (!isSanityConfigured()) return null;
+
+  // Stega watermarks are for Visual Editing only. Published pages stay clean
+  // unless draft mode is on. Callers can still force stega off (form values).
+  let encode = stega;
+  if (encode === undefined) {
+    try {
+      encode = (await draftMode()).isEnabled;
+    } catch {
+      encode = false;
+    }
+  }
 
   try {
     const { sanityFetch } = await import("@/sanity/lib/live");
     const { data } = await sanityFetch({
       query,
-      stega,
+      stega: encode,
       // tags inferred by next-sanity live when available
     });
     return (data as T) ?? null;
@@ -75,7 +87,7 @@ async function safeFetch<T>(
 export async function getWeddingDetails(options?: { stega?: boolean }) {
   const data = await safeFetch<Record<string, unknown>>(
     WEDDING_DETAILS_QUERY,
-    options?.stega ?? true,
+    options?.stega,
   );
   return mapWeddingDetails(data);
 }

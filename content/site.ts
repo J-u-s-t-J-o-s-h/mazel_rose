@@ -1,39 +1,42 @@
+import { formatUsLongDate } from "@/lib/dates";
 import type { SiteConfig } from "@/types/content";
 
 /**
- * Fallback / seed source only.
- * After `npm run sanity:seed`, edit Wedding Details in Sanity Studio (`/admin`).
- * PLACEHOLDER: Replace couple names, dates, venue, and contact details before launch.
+ * Production fallback used only when Wedding Details cannot be loaded.
+ * Keep this aligned with the real wedding. Do not put placeholder events here.
  */
+const rsvpDeadline = "2026-10-12";
+
 export const siteConfig: SiteConfig = {
   brandName: "mazel.rose",
-  isPlaceholder: true,
+  isPlaceholder: false,
   coupleNames: {
-    partnerOne: "Mazel",
-    partnerTwo: "Rose",
-    display: "Mazel & Rose",
-    initials: ["M", "R"],
-    isPlaceholder: true,
+    partnerOne: "Tiffany",
+    partnerTwo: "Cary",
+    display: "Tiffany & Cary",
+    initials: ["T", "C"],
+    isPlaceholder: false,
   },
-  weddingDate: "2027-10-18",
-  weddingDateDisplay: "October 18, 2027",
-  weddingDateIso: "2027-10-18T16:00:00-04:00",
+  weddingDate: "2026-11-08",
+  weddingDateDisplay: "Sunday, November 8, 2026",
+  weddingDateIso: "2026-11-08T16:00:00-04:00",
   location: {
     city: "Orlando",
     state: "Florida",
     display: "Orlando, Florida",
-    isPlaceholder: true,
+    isPlaceholder: false,
   },
   venue: {
-    name: "The Willow Estate",
-    address: "123 Magnolia Lane, Aiken, SC 29801",
-    mapUrl: "https://maps.google.com/?q=Aiken,+South+Carolina",
-    isPlaceholder: true,
+    name: "Paradise Cove",
+    address: "13245 Lake Bryan Dr, Orlando, FL 32821",
+    mapUrl:
+      "https://www.google.com/maps/dir//Paradise+Cove+Orlando,+13245+Lake+Bryan+Dr,+Orlando,+FL+32821/",
+    isPlaceholder: false,
   },
-  rsvpDeadline: "2027-09-01",
-  rsvpDeadlineDisplay: "September 1, 2027",
+  rsvpDeadline,
+  rsvpDeadlineDisplay: formatUsLongDate(rsvpDeadline),
   contactEmail: "hello@mazelrose.life",
-  tagline: "Romantic. Rich. Timeless.",
+  tagline: "",
   closingStatement: "With love, we look forward to celebrating with you.",
   theme: "classic",
   navigation: [
@@ -49,6 +52,6 @@ export const siteConfig: SiteConfig = {
   social: {
     title: "mazel.rose — Wedding Celebration",
     description:
-      "You are warmly invited to celebrate the wedding of Mazel & Rose. Explore the schedule, travel details, gallery, and RSVP.",
+      "You are warmly invited to celebrate the wedding of Tiffany & Cary. Explore the schedule, travel details, gallery, and RSVP.",
   },
 };

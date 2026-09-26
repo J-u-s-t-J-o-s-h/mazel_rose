@@ -1,51 +1,50 @@
 import type { ScheduleEvent } from "@/types/content";
 
-/**
- * PLACEHOLDER: Confirm times, venues, dress codes, and private-event details.
- */
+const paradiseCove = {
+  venue: "Paradise Cove",
+  address: "13245 Lake Bryan Dr, Orlando, FL 32821",
+  mapUrl:
+    "https://www.google.com/maps/dir//Paradise+Cove+Orlando,+13245+Lake+Bryan+Dr,+Orlando,+FL+32821/",
+};
+
 export const scheduleEvents: ScheduleEvent[] = [
   {
     id: "welcome",
     title: "Welcome Gathering",
-    date: "October 17, 2027",
-    startTime: "6:00 PM",
+    date: "Saturday, November 7, 2026",
+    startTime: "12:00 PM",
     endTime: "8:00 PM",
-    venue: "The Garden Courtyard",
-    address: "45 Park Avenue, Aiken, SC 29801",
+    venue: "The Great Escape Lakeside",
+    address: "Clermont, Florida",
     description:
-      "An informal evening of light bites and warm conversation as guests arrive in town.",
-    dressCode: "Smart casual",
-    mapUrl: "https://maps.google.com/?q=Aiken,+South+Carolina",
-    isPrivate: false,
-    isPlaceholder: true,
+      "A day of fun, laughter, shenanigans, good food and warm conversation as guests arrive in town.",
+    dressCode: "Casual, bring a swim suit and towel **weather permitting**",
   },
   {
     id: "ceremony",
     title: "Ceremony",
-    date: "October 18, 2027",
+    date: "Sunday, November 8, 2026",
     startTime: "4:00 PM",
-    endTime: "9:00 PM",
-    venue: "The Willow Estate",
-    address: "123 Magnolia Lane, Aiken, SC 29801",
+    venue: paradiseCove.venue,
+    address: paradiseCove.address,
     description:
-      "Please be seated by 3:45 PM. The ceremony will take place outdoors beneath the oaks, weather permitting.",
+      "Guests may arrive from 3:15 PM. Please be seated by 3:45 PM. The ceremony begins at 4:00 PM. The ceremony will take place outdoors beneath the oaks, weather permitting.",
     dressCode: "Cocktail / autumn formal",
-    mapUrl: "https://maps.google.com/?q=Aiken,+South+Carolina",
-    parking: "On-site valet available for guests arriving by car.",
-    isPlaceholder: true,
+    mapUrl: paradiseCove.mapUrl,
+    parking: "On-site parking available for guests arriving by car.",
   },
   {
     id: "cocktail",
     title: "Cocktail Hour",
-    date: "October 18, 2027",
-    startTime: "4:45 PM",
+    date: "Sunday, November 8, 2026",
+    startTime: "Immediately following ceremony",
     endTime: "6:00 PM",
-    venue: "Estate Terrace",
-    address: "123 Magnolia Lane, Aiken, SC 29801",
+    venue: paradiseCove.venue,
+    address: paradiseCove.address,
     description:
-      "Champagne, seasonal cocktails, and passed hors d'oeuvres as the golden hour settles in.",
+      "Seasonal cocktails, beer, wine and passed hors d'oeuvres as the golden hour settles in.",
     dressCode: "Cocktail / autumn formal",
-    isPlaceholder: true,
+    mapUrl: paradiseCove.mapUrl,
   },
   {
     id: "reception",
@@ -53,17 +52,17 @@ export const scheduleEvents: ScheduleEvent[] = [
     date: "Sunday, November 8, 2026",
     startTime: "6:00 PM",
     endTime: "9:00 PM",
-    venue: "The Willow Estate Ballroom",
-    address: "123 Magnolia Lane, Aiken, SC 29801",
+    venue: paradiseCove.venue,
+    address: paradiseCove.address,
     description:
       "Dinner, toasts, and dancing beneath candlelight and autumn florals.",
     dressCode: "Cocktail / autumn formal",
-    isPlaceholder: true,
+    mapUrl: paradiseCove.mapUrl,
   },
 ];
 
 export const scheduleIntro = {
   title: "Schedule of Events",
   scriptIntro: "The Day",
-  body: "A carefully composed sequence of gatherings—from welcome moments through the reception. Times and details below are placeholders until confirmed.",
+  body: "A carefully composed sequence of gatherings—from welcome moments through the reception.",
 };

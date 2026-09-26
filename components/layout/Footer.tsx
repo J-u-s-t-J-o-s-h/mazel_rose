@@ -60,9 +60,11 @@ export function Footer() {
           >
             {site.contactEmail}
           </a>
-          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-ivory/45">
-            {site.tagline}
-          </p>
+          {site.tagline.trim() ? (
+            <p className="mt-6 text-xs uppercase tracking-[0.2em] text-ivory/45">
+              {site.tagline}
+            </p>
+          ) : null}
         </div>
       </div>
     </footer>

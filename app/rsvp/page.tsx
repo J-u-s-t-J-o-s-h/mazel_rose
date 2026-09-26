@@ -14,7 +14,7 @@ export async function generateMetadata() {
   ]);
   return createPageMetadata({
     title: settings.heading || "RSVP",
-    description: `Kindly respond by ${settings.rsvpDeadlineDisplay || site.rsvpDeadlineDisplay}.`,
+    description: `Kindly respond by ${site.rsvpDeadlineDisplay}.`,
     path: "/rsvp",
     site,
   });
@@ -36,10 +36,7 @@ export default async function RsvpPage() {
       <PageHero
         script={settings.scriptIntro}
         title={settings.heading}
-        description={
-          settings.introduction ||
-          `We hope you will join us in ${site.location.display}. Please reply by ${settings.rsvpDeadlineDisplay || site.rsvpDeadlineDisplay}.`
-        }
+        description={`We hope you will join us in ${site.location.display}. Please reply by ${site.rsvpDeadlineDisplay}.`}
         tone="burgundy"
       />
       <section className="bg-parchment px-6 py-16 sm:px-8 sm:py-20">

@@ -12,16 +12,6 @@ import { FormField, fieldClassName } from "@/components/rsvp/FormField";
 import { useSite } from "@/components/providers/SiteProvider";
 import { cn } from "@/lib/utils";
 
-const defaultMealOptions = [
-  { value: "beef", label: "Beef" },
-  { value: "chicken", label: "Chicken" },
-  { value: "fish", label: "Fish" },
-  { value: "vegetarian", label: "Vegetarian" },
-  { value: "vegan", label: "Vegan" },
-  { value: "kids", label: "Child meal" },
-  { value: "undecided", label: "Still deciding" },
-] as const;
-
 const defaultEventOptions = [
   { key: "ceremony", label: "Ceremony" },
   { key: "reception", label: "Reception" },
@@ -33,8 +23,6 @@ export type RsvpFormSettingsProps = {
   closedMessage?: string;
   confirmationHeading?: string;
   confirmationMessage?: string;
-  rsvpDeadlineDisplay?: string;
-  mealOptions?: Array<{ value: string; label: string }>;
   eventOptions?: Array<{ key: string; label: string }>;
   showDietaryField?: boolean;
   showSongRequestField?: boolean;
@@ -49,14 +37,10 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
   const site = useSite();
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const mealOptions = settings.mealOptions?.length
-    ? settings.mealOptions
-    : defaultMealOptions;
   const eventOptions = settings.eventOptions?.length
     ? settings.eventOptions
     : defaultEventOptions;
-  const deadline =
-    settings.rsvpDeadlineDisplay || site.rsvpDeadlineDisplay;
+  const deadline = site.rsvpDeadlineDisplay;
 
   const {
     register,
@@ -70,7 +54,6 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
       primaryGuestName: "",
       email: "",
       phone: "",
-      invitationCode: "",
       attendance: "attending",
       guests: [],
       events: {
@@ -78,7 +61,6 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
         reception: true,
         welcome: false,
       },
-      mealChoice: undefined,
       dietaryRestrictions: "",
       songRequest: "",
       message: "",
@@ -244,19 +226,6 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
           ) : null}
         </div>
 
-        <FormField
-          label="Invitation code"
-          htmlFor="invitationCode"
-          hint="Optional — use if provided on your invitation."
-          error={errors.invitationCode?.message}
-        >
-          <input
-            id="invitationCode"
-            className={fieldClassName}
-            {...register("invitationCode")}
-          />
-        </FormField>
-
         <fieldset>
           <legend className="mb-3 text-xs uppercase tracking-[0.16em] text-charcoal/70">
             Will you attend? <span className="text-burgundy">*</span>
@@ -321,33 +290,6 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
                     <span className="text-sm text-wine-black">
                       {option.label}
                     </span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <legend className="mb-3 text-xs uppercase tracking-[0.16em] text-charcoal/70">
-                Meal preference <span className="text-burgundy">*</span>
-              </legend>
-              {errors.mealChoice?.message ? (
-                <p className="mb-3 text-sm text-burgundy" role="alert">
-                  {errors.mealChoice.message}
-                </p>
-              ) : null}
-              <div className="grid gap-3 sm:grid-cols-2">
-                {mealOptions.map((option) => (
-                  <label
-                    key={option.value}
-                    className="flex min-h-12 cursor-pointer items-center gap-3 border border-sterling/70 px-4 py-3 has-[:checked]:border-burgundy has-[:checked]:bg-burgundy has-[:checked]:text-ivory"
-                  >
-                    <input
-                      type="radio"
-                      value={option.value}
-                      className="sr-only"
-                      {...register("mealChoice")}
-                    />
-                    <span className="text-sm">{option.label}</span>
                   </label>
                 ))}
               </div>

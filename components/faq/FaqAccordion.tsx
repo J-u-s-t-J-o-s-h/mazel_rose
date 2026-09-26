@@ -6,6 +6,33 @@ import { ChevronDown } from "lucide-react";
 import type { FaqItem } from "@/types/content";
 import { cn } from "@/lib/utils";
 
+const EMAIL_PATTERN = /([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi;
+
+function isEmail(value: string) {
+  return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+}
+
+function FaqAnswer({ text }: { text: string }) {
+  const parts = text.split(EMAIL_PATTERN);
+  return (
+    <>
+      {parts.map((part, index) =>
+        isEmail(part) ? (
+          <a
+            key={`${part}-${index}`}
+            href={`mailto:${part}`}
+            className="text-burgundy underline decoration-burgundy/40 underline-offset-2 hover:text-cinnamon"
+          >
+            {part}
+          </a>
+        ) : (
+          <span key={`${part}-${index}`}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
 export function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {
   const [openId, setOpenId] = useState<string | null>(faqs[0]?.id ?? null);
   const reduceMotion = useReducedMotion();
@@ -53,7 +80,7 @@ export function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {
                   className="overflow-hidden"
                 >
                   <p className="px-5 pb-5 text-sm leading-relaxed text-charcoal/80 sm:px-6 sm:text-base">
-                    {item.answer}
+                    <FaqAnswer text={item.answer} />
                   </p>
                 </motion.div>
               ) : null}

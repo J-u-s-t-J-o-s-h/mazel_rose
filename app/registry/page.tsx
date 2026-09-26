@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { PageHero } from "@/components/ui/PageHero";
+import { Button } from "@/components/ui/Button";
 import { RegistryCard } from "@/components/registry/RegistryCard";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { createPageMetadata } from "@/lib/metadata";
@@ -36,15 +37,34 @@ export default async function RegistryPage() {
         tone="parchment"
       />
       <section className="bg-ivory px-6 py-16 paper-texture sm:px-8 sm:py-20">
-        <FadeIn>
-          <figure className="relative mx-auto max-w-[22rem] sm:max-w-md">
+        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
+          {registry.items.map((item, index) => (
+            <FadeIn key={item.id} delay={0.08 + index * 0.06}>
+              <RegistryCard item={item} />
+            </FadeIn>
+          ))}
+        </div>
+        <FadeIn className="mx-auto mt-20 max-w-xl text-center">
+          <h2 className="font-serif text-2xl text-wine-black sm:text-3xl">
+            The card you&apos;ll find at your table
+          </h2>
+          <div className="mt-6">
+            <Button
+              href={QR_DONATE_URL}
+              target="_blank"
+              rel={formatExternalRel(QR_DONATE_URL)}
+              className="normal-case tracking-normal"
+            >
+              Donate to the Central Florida Zoo
+            </Button>
+          </div>
+          <figure className="relative mx-auto mt-8 w-full max-w-[11rem] sm:max-w-[14rem]">
             <Image
               src="/registry/pay-it-forward.jpg"
-              alt="Pay It Forward poster inviting guests to support the Central Florida Zoo in honor of the sloths. Includes a QR code to donate."
+              alt="Pay It Forward table card inviting guests to support the Central Florida Zoo. The printed card includes a QR code."
               width={597}
               height={1024}
               unoptimized
-              priority
               className="block h-auto w-full border border-sterling/60 bg-ivory shadow-[var(--shadow-soft)]"
             />
             <a
@@ -52,19 +72,12 @@ export default async function RegistryPage() {
               target="_blank"
               rel={formatExternalRel(QR_DONATE_URL)}
               className="absolute left-[31.5%] top-[64.8%] z-10 block h-[19.5%] w-[37%] cursor-pointer rounded-sm hover:ring-2 hover:ring-burgundy/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy"
-              aria-label="Donate to Central Florida Zoo & Botanical Gardens (opens the same page as scanning the QR code)"
+              aria-label="Donate to the Central Florida Zoo"
             >
-              <span className="sr-only">Scan to donate</span>
+              <span className="sr-only">Donate to the Central Florida Zoo</span>
             </a>
           </figure>
         </FadeIn>
-        <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
-          {registry.items.map((item, index) => (
-            <FadeIn key={item.id} delay={0.08 + index * 0.06}>
-              <RegistryCard item={item} />
-            </FadeIn>
-          ))}
-        </div>
       </section>
     </>
   );

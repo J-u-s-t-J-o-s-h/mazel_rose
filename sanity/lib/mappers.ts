@@ -11,6 +11,7 @@ import type {
 } from "@/types/content";
 import type { HomeContent } from "@/types/content";
 import { stegaClean } from "@sanity/client/stega";
+import { formatUsLongDate, newYorkDateOnly } from "@/lib/dates";
 import { resolveImageUrl } from "@/sanity/lib/image";
 import { siteConfig as fallbackSite } from "@/content/site";
 import { homeContent as fallbackHome } from "@/content/home";
@@ -56,10 +57,11 @@ export function mapWeddingDetails(doc: Record<string, unknown> | null): SiteConf
       display: String(doc.coupleDisplayName || fallbackSite.coupleNames.display),
       initials: [initials[0] || "M", initials[1] || "R"],
     },
-    weddingDate: String(doc.weddingDate || fallbackSite.weddingDate).slice(0, 10),
+    weddingDate:
+      newYorkDateOnly(String(doc.weddingDate || "")) || fallbackSite.weddingDate,
     weddingDateDisplay: String(
       doc.weddingDateDisplay || fallbackSite.weddingDateDisplay,
-    ),
+    ).trim(),
     weddingDateIso: String(doc.weddingDate || fallbackSite.weddingDateIso),
     location: {
       city: String(doc.locationCity || fallbackSite.location.city),
@@ -71,12 +73,15 @@ export function mapWeddingDetails(doc: Record<string, unknown> | null): SiteConf
       address: String(doc.ceremonyVenueAddress || fallbackSite.venue.address),
       mapUrl: String(doc.mapUrl || fallbackSite.venue.mapUrl),
     },
-    rsvpDeadline: String(doc.rsvpDeadline || fallbackSite.rsvpDeadline).slice(0, 10),
-    rsvpDeadlineDisplay: String(
-      doc.rsvpDeadlineDisplay || fallbackSite.rsvpDeadlineDisplay,
+    rsvpDeadline:
+      newYorkDateOnly(String(doc.rsvpDeadline || "")) ||
+      fallbackSite.rsvpDeadline,
+    rsvpDeadlineDisplay: formatUsLongDate(
+      newYorkDateOnly(String(doc.rsvpDeadline || "")) ||
+        fallbackSite.rsvpDeadline,
     ),
     contactEmail: String(doc.contactEmail || fallbackSite.contactEmail),
-    tagline: String(doc.tagline || fallbackSite.tagline),
+    tagline: doc.tagline == null ? "" : String(doc.tagline).trim(),
     closingStatement: String(doc.footerMessage || fallbackSite.closingStatement),
     navigation: fallbackSite.navigation,
     social: {

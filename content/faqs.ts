@@ -1,9 +1,10 @@
+import { siteConfig } from "@/content/site";
 import type { FaqItem } from "@/types/content";
 
 export const faqsIntro = {
   title: "Frequently Asked Questions",
   scriptIntro: "Details",
-  body: "A few notes to help you plan. PLACEHOLDER: Update answers with final decisions before launch.",
+  body: "A few notes to help you plan.",
 };
 
 export const faqs: FaqItem[] = [
@@ -12,83 +13,73 @@ export const faqs: FaqItem[] = [
     question: "What is the dress code?",
     answer:
       "Cocktail to autumn formal. Think rich textures, jewel tones, and elegant neutrals. Dark suits and cocktail dresses are perfect. We gently ask guests to avoid white and ivory.",
-    isPlaceholder: true,
   },
   {
     id: "children",
     question: "Are children invited?",
     answer:
-      "We adore your little ones, but this celebration will be an adults-only evening so that everyone can enjoy the night fully. Thank you for understanding.",
-    isPlaceholder: true,
+      "We have reserved seats for the children of our immediate family. For everyone else, we hope this is a chance for an evening out, and we will miss the little ones dearly.",
   },
   {
     id: "plus-one",
     question: "Can I bring a guest?",
     answer:
-      "Please refer to your invitation. If a plus-one was included, their name will appear on your RSVP. If you have questions, reach out to us directly.",
-    isPlaceholder: true,
+      "Yes. Every invited guest is welcome to bring someone. Please add their name to your RSVP so we can set a place for them.",
   },
   {
     id: "rsvp-when",
     question: "When should I RSVP?",
-    answer:
-      "Kindly respond by September 1, 2027 so we can finalize seating, meals, and arrangements with care.",
-    isPlaceholder: true,
+    answer: `Please reply by ${siteConfig.rsvpDeadlineDisplay}. Our caterer needs the final count shortly after, so an early yes or no is a real kindness.`,
   },
   {
+    // Final transportation policy is not confirmed. This repeats the Travel
+    // page and does not promise a shuttle.
     id: "transportation",
     question: "Is transportation provided?",
     answer:
-      "Yes—complimentary shuttle service will run between preferred hotels and the venue on the wedding day. Timing details will be shared closer to the celebration.",
-    isPlaceholder: true,
+      "Recommended hotels are a short drive or rideshare from Paradise Cove. Holiday Inn is within walking distance of the venue.",
   },
   {
     id: "parking",
     question: "Is parking available?",
     answer:
-      "Valet parking will be available at the venue. Preferred hotels also offer on-site parking for overnight guests.",
-    isPlaceholder: true,
+      "Yes. Paradise Cove has self-parking on site. There is no valet, so please allow a few extra minutes to park and walk over to the ceremony.",
   },
   {
     id: "indoors-outdoors",
     question: "Is the ceremony indoors or outdoors?",
     answer:
-      "The ceremony is planned outdoors beneath the oaks, weather permitting, with an indoor contingency ready if needed.",
-    isPlaceholder: true,
+      "Both. The ceremony is outdoors, beneath the oaks at the edge of the lake. Cocktail hour and the reception that follows are under a covered pavilion, so the evening stays comfortable whatever the sky decides to do.",
   },
   {
     id: "weather",
     question: "What weather should guests expect?",
     answer:
-      "Early November in Orlando is usually warm and comfortable—daytime highs in the upper 70s, evenings around 60°F. A light layer is enough after sunset; rain is less common than in summer.",
-    isPlaceholder: true,
+      "Early November in Orlando is usually lovely. Expect the mid-seventies in the late afternoon, cooling into the sixties once the sun goes down. A wrap or light jacket for the evening is a good idea.",
   },
   {
+    // Venue accessibility has not been confirmed. Do not describe parking,
+    // paths, restrooms, entrances, or seating as accessible.
     id: "accessible",
     question: "Is the venue accessible?",
     answer:
-      "Yes. The venue offers accessible entrances, restrooms, and seating. Please note any accessibility needs in your RSVP so we can prepare thoughtfully.",
-    isPlaceholder: true,
+      "Please note any accessibility needs in your RSVP, and we will follow up with you directly.",
   },
   {
     id: "contact",
     question: "Who should I contact with questions?",
-    answer:
-      "For wedding details, email hello@mazel.rose. For travel logistics, use travel@mazel.rose. PLACEHOLDER: Confirm contact addresses.",
-    isPlaceholder: true,
+    answer: `Email us anytime at ${siteConfig.contactEmail}. We read every note.`,
   },
   {
     id: "arrive",
     question: "What time should guests arrive?",
     answer:
-      "Please plan to arrive by 3:45 PM so you may be comfortably seated before the ceremony begins at 4:00 PM.",
-    isPlaceholder: true,
+      "Our arrival window opens at 3:15 PM, which leaves time to park and settle in. Please be seated no later than 3:45 PM. The ceremony begins at 4:00 PM.",
   },
   {
     id: "dietary",
     question: "Can dietary restrictions be accommodated?",
     answer:
-      "Absolutely. Share your dietary needs in the RSVP form, and our culinary team will prepare thoughtfully for every guest.",
-    isPlaceholder: true,
+      "We are not plating individual meals, so there will be a good variety to choose from. Allergies are what we most need to know about. Please list any in your RSVP and we will make sure the kitchen plans for them.",
   },
 ];

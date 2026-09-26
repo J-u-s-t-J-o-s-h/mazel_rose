@@ -18,7 +18,7 @@ export const scheduleEvent = defineType({
       name: "date",
       title: "Date",
       type: "string",
-      description: 'Example: “October 18, 2027”',
+      description: 'Example: “Sunday, November 8, 2026”',
       validation: (rule) => rule.required(),
     }),
     defineField({
