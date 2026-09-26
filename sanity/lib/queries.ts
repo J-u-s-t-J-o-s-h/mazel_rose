@@ -11,7 +11,8 @@ const imageFields = /* groq */ `
 export const WEDDING_DETAILS_QUERY = defineQuery(`
   *[_type == "weddingDetails" && _id == "weddingDetails"][0]{
     ...,
-    socialImage{${imageFields}}
+    socialImage{${imageFields}},
+    "contentUpdatedAt": _updatedAt
   }
 `);
 

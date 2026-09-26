@@ -6,7 +6,9 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  // The API, not the CDN. A stale CDN document made the RSVP deadline
+  // render as the previous calendar day after timezone conversion.
+  useCdn: false,
   perspective: "published",
   stega: {
     studioUrl: `${getSiteUrl()}${studioUrl}`,
