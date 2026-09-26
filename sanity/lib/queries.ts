@@ -129,5 +129,8 @@ export const FAQ_ITEMS_QUERY = defineQuery(`
 `);
 
 export const RSVP_FORM_SETTINGS_QUERY = defineQuery(`
-  *[_type == "rsvpFormSettings" && _id == "rsvpFormSettings"][0]
+  *[_type == "rsvpFormSettings" && _id == "rsvpFormSettings"][0]{
+    ...,
+    "contentUpdatedAt": _updatedAt
+  }
 `);
