@@ -82,6 +82,7 @@ export const REGISTRY_LINKS_QUERY = defineQuery(`
 
 export const GALLERY_SETTINGS_QUERY = defineQuery(`
   *[_type == "gallerySettings" && _id == "gallerySettings"][0]{
+    introduction,
     ...,
     featureImage{${imageFields}},
     photos[]{
