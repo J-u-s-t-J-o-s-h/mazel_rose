@@ -43,21 +43,17 @@ export function GuestMemories({
     });
   }, [slides.length]);
 
+  if (status === "empty") return null;
+
   return (
-    <div className="mt-20">
-      <h2 className="text-center font-serif text-3xl text-ivory sm:text-4xl">From Our Guests</h2>
+    <div className="mt-14">
       {status === "unavailable" || status === "unconfigured" ? (
-        <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-ivory/75" role="status">
+        <p className="mx-auto max-w-xl text-center text-base leading-relaxed text-ivory/75" role="status">
           Guest memories can&apos;t be loaded right now. Please try again in a little while.
         </p>
       ) : null}
-      {status === "empty" ? (
-        <p className="mx-auto mt-8 max-w-xl text-center text-lg leading-relaxed text-ivory/85">
-          No photos or videos yet. Use Add a photo or video above when you are ready.
-        </p>
-      ) : null}
       {status === "ready" ? (
-        <div className="mt-10">
+        <div>
           <div className="mb-8 flex justify-center">
             <SaveAllUploadsLink
               hasImage={slides.some((slide) => slide.mediaType === "image")}
