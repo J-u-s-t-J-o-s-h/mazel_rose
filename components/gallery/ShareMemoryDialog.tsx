@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { FormField, fieldClassName } from "@/components/rsvp/FormField";
@@ -33,6 +34,7 @@ type ShareMemoryDialogProps = {
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
+  const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -294,6 +296,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
       }
       setSucceeded(true);
       resetForm();
+      router.refresh();
     } catch (error) {
       if (submissionId && uploadToken) {
         await fetch("/api/guest-gallery/abandon", {
@@ -351,7 +354,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
           <div className="mt-8 space-y-3" role="status">
             <p className="font-serif text-2xl">Thank you for sharing a memory with us.</p>
             <p className="text-base leading-relaxed text-charcoal/80">
-              Your submission has been received and will appear in the gallery after it is reviewed.
+              Your memory is in the gallery.
             </p>
             <div className="pt-4">
               <Button type="button" onClick={closeDialog}>

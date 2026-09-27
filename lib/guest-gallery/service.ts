@@ -5,7 +5,6 @@ import { assertGuestGalleryRateLimit, assertTurnstile, recordGuestGalleryAttempt
 import { validateGuestFiles, validateGuestText } from "@/lib/guest-gallery/limits";
 import {
   assertStoredObject,
-  clearUploadSecret,
   createSignedReadUrl,
   createSignedUpload,
   deleteStoredPrefix,
@@ -139,16 +138,14 @@ export async function finalizeGuestSubmission(input: {
       });
     }
     await insertMedia(media);
+    const published = await setSubmissionStatus(submission.id, "approved");
+    if (!published) {
+      throw new GuestGalleryError("We couldn't finish saving your memory. Please try again.");
+    }
   } catch (error) {
     await deleteStoredPrefix(submission.id);
     await deleteSubmission(submission.id);
     throw error;
-  }
-
-  try {
-    await clearUploadSecret(submission.id);
-  } catch (error) {
-    console.error("Guest gallery upload secret could not be cleared", error);
   }
 }
 
