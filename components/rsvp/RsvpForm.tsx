@@ -13,9 +13,9 @@ import { useSite } from "@/components/providers/SiteProvider";
 import { cn } from "@/lib/utils";
 
 const defaultEventOptions = [
+  { key: "welcome", label: "Welcome gathering" },
   { key: "ceremony", label: "Ceremony" },
   { key: "reception", label: "Reception" },
-  { key: "welcome", label: "Welcome gathering" },
 ] as const;
 
 export type RsvpFormSettingsProps = {

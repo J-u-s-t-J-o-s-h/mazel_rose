@@ -5,6 +5,8 @@ type DatedEvent = {
   startTime: string;
 };
 
+const EVENT_ORDER = ["welcome", "ceremony", "reception"];
+
 const TITLE_MATCH: Record<string, (title: string) => boolean> = {
   ceremony: (title) => title === "ceremony",
   reception: (title) => title === "reception",
@@ -15,17 +17,24 @@ export function withEventDates<T extends { key: string; label: string }>(
   options: T[],
   events: DatedEvent[],
 ): Array<T & { when?: string }> {
-  return options.map((option) => {
-    const key = option.key.trim().toLowerCase();
-    const label = option.label.trim().toLowerCase();
-    const match = events.find((event) => {
-      const title = event.title.trim().toLowerCase();
-      const byKey = TITLE_MATCH[key];
-      return event.id === key || (byKey ? byKey(title) : title === label);
-    });
-    if (!match?.date) return option;
-    const time = match.startTime.replace(/ /g, "\u00a0");
-    const when = time ? `${match.date} · ${time}` : match.date;
-    return { ...option, when };
-  });
+  return options
+    .map((option) => {
+      const key = option.key.trim().toLowerCase();
+      const label = option.label.trim().toLowerCase();
+      const match = events.find((event) => {
+        const title = event.title.trim().toLowerCase();
+        const byKey = TITLE_MATCH[key];
+        return event.id === key || (byKey ? byKey(title) : title === label);
+      });
+      if (!match?.date) return option;
+      const time = match.startTime.replace(/ /g, "\u00a0");
+      const when = time ? `${match.date} · ${time}` : match.date;
+      return { ...option, when };
+    })
+    .sort((a, b) => eventRank(a.key) - eventRank(b.key));
+}
+
+function eventRank(key: string): number {
+  const index = EVENT_ORDER.indexOf(key.trim().toLowerCase());
+  return index === -1 ? EVENT_ORDER.length : index;
 }

@@ -236,9 +236,9 @@ async function main() {
       "We are so grateful. We cannot wait to celebrate with you.",
     mealOptions: [],
     eventOptions: [
+      { _key: "welcome", key: "welcome", label: "Welcome gathering" },
       { _key: "ceremony", key: "ceremony", label: "Ceremony" },
       { _key: "reception", key: "reception", label: "Reception" },
-      { _key: "welcome", key: "welcome", label: "Welcome gathering" },
     ],
     showDietaryField: true,
     showSongRequestField: true,
