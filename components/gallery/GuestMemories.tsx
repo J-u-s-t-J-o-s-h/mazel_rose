@@ -7,6 +7,7 @@ import {
   memoryAlt,
   type GuestSlide,
 } from "@/components/gallery/GuestMemoryLightbox";
+import { ThreeDCarousel } from "@/components/gallery/ThreeDCarousel";
 import type { GuestGalleryStatus, PublicMemory } from "@/lib/guest-gallery/types";
 
 export function GuestMemories({
@@ -55,39 +56,37 @@ export function GuestMemories({
         </p>
       ) : null}
       {status === "ready" ? (
-        <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3">
-          {slides.map((slide, slideIndex) => (
-            <button
-              key={slide.id}
-              type="button"
-              onClick={() => setIndex(slideIndex)}
-              className="group mb-4 block w-full break-inside-avoid overflow-hidden border border-ivory/10 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-champagne"
-            >
-              <span className="relative block">
-                {slide.mediaType === "image" ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={slide.url} alt={memoryAlt(slide)} className="h-auto w-full object-cover" />
-                ) : (
-                  <span className="relative block bg-wine-black">
-                    <video
-                      src={slide.url}
-                      className="pointer-events-none h-auto w-full"
-                      muted
-                      playsInline
-                      preload="metadata"
-                    />
-                    <PlayBadge />
-                  </span>
-                )}
-              </span>
-              <span className="block px-3 py-3">
-                <span className="block font-serif text-lg text-ivory">{slide.guestName}</span>
+        <div className="mt-10">
+          <ThreeDCarousel
+            items={slides}
+            label="Guest memories"
+            onActivate={setIndex}
+            renderItem={(slide, active) =>
+              slide.mediaType === "image" ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={slide.url} alt={memoryAlt(slide)} className="h-full w-full object-cover" />
+              ) : (
+                <span className="relative block h-full w-full bg-wine-black">
+                  <video
+                    src={slide.url}
+                    className="pointer-events-none h-full w-full object-cover"
+                    muted
+                    playsInline
+                    preload={active ? "metadata" : "none"}
+                  />
+                  <PlayBadge />
+                </span>
+              )
+            }
+            renderCaption={(slide) => (
+              <>
+                <p className="font-serif text-xl text-ivory">{slide.guestName}</p>
                 {slide.message ? (
-                  <span className="mt-1 block text-sm leading-relaxed text-ivory/75">{slide.message}</span>
+                  <p className="mt-1 text-sm leading-relaxed text-ivory/75">{slide.message}</p>
                 ) : null}
-              </span>
-            </button>
-          ))}
+              </>
+            )}
+          />
         </div>
       ) : null}
       <GuestMemoryLightbox
