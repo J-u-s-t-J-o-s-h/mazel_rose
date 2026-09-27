@@ -44,8 +44,8 @@ export default async function RegistryPage() {
             </FadeIn>
           ))}
         </div>
-        <FadeIn className="mx-auto mt-20 max-w-xl text-center">
-          <h2 className="font-serif text-2xl text-wine-black sm:text-3xl">
+        <FadeIn className="mx-auto mt-20 w-full max-w-3xl text-center">
+          <h2 className="mx-auto max-w-xl font-serif text-2xl text-wine-black sm:text-3xl">
             The card you&apos;ll find at your table
           </h2>
           <div className="mt-6">
@@ -58,7 +58,7 @@ export default async function RegistryPage() {
               Donate to the Central Florida Zoo
             </Button>
           </div>
-          <figure className="relative mx-auto mt-8 w-full max-w-[11rem] sm:max-w-[14rem]">
+          <figure className="relative mx-auto mt-10 w-full max-w-sm sm:max-w-md lg:max-w-lg">
             <Image
               src="/registry/pay-it-forward.jpg"
               alt="Pay It Forward table card inviting guests to support the Central Florida Zoo. The printed card includes a QR code."

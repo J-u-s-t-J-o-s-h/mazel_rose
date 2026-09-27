@@ -156,7 +156,9 @@
   }
 
   .candlelight {
-    background:
+    /* background-image only, so a color utility on the same element
+       (bg-burgundy, bg-peacock) is not reset by the background shorthand. */
+    background-image:
       radial-gradient(
         circle at 30% 20%,
         rgba(216, 195, 165, 0.22),
