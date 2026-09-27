@@ -308,7 +308,9 @@ async function bakeOrientation(
   lastModified: number,
 ): Promise<File | null> {
   if (typeof document === "undefined" || typeof createImageBitmap !== "function") return null;
-  const blob = new Blob([bytes], { type: mimeType });
+  const copy = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(copy).set(bytes);
+  const blob = new Blob([copy], { type: mimeType });
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(blob, { imageOrientation: "none" });
