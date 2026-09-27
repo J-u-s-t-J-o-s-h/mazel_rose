@@ -212,7 +212,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
       return;
     }
     if (turnstileSiteKey && !turnstileToken) {
-      setFormError("Please complete the check below, then press Send my photo.");
+      setFormError("Please complete the check below, then press Send my photo or video.");
       return;
     }
 
@@ -324,10 +324,10 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
           <div>
             <p className="font-script text-3xl text-burgundy">With love</p>
             <h2 id={titleId} className="mt-1 font-serif text-3xl">
-              Add a photo
+              Add a photo or video
             </h2>
             <p className="mt-3 max-w-md text-base leading-relaxed text-charcoal/80">
-              Choose a photo, type your name, then press Send my photo. It will show on this page.
+              Choose a photo or a short video, type your name, then press Send my photo or video. It will show on this page.
             </p>
           </div>
           <button
@@ -343,7 +343,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
 
         {succeeded ? (
           <div className="mt-8 space-y-3" role="status">
-            <p className="font-serif text-2xl">Thank you. Your photo is in the gallery.</p>
+            <p className="font-serif text-2xl">Thank you. Your photo or video is in the gallery.</p>
             <p className="text-lg leading-relaxed text-charcoal/80">
               You can close this window. Friends and family can see it on this page.
             </p>
@@ -385,7 +385,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
             </div>
 
             <div>
-              <p className="text-lg text-wine-black">Your photo</p>
+              <p className="text-lg text-wine-black">Your photo or video</p>
               <div
                 className={`mt-2 rounded-sm border-2 border-dashed px-4 py-6 text-center ${
                   dragOver ? "border-burgundy bg-burgundy/5" : "border-sterling/80"
@@ -419,10 +419,10 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                   disabled={uploading || preparing}
                   className="inline-flex min-h-14 w-full items-center justify-center rounded-sm bg-burgundy px-6 text-lg text-ivory disabled:opacity-60"
                 >
-                  Choose a photo
+                  Choose a photo or video
                 </button>
                 <p className="mt-3 text-base leading-relaxed text-charcoal/75">
-                  Tap the button, then pick a photo from your phone. You can choose more than one. A short video is fine too.
+                  Tap the button, then pick a photo or a short video from your phone. You can choose more than one.
                 </p>
               </div>
             </div>
@@ -471,7 +471,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                       className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-burgundy text-base text-burgundy disabled:opacity-40"
                       aria-label={`Remove ${item.name}`}
                     >
-                      Remove this photo
+                      {item.mediaType === "video" ? "Remove this video" : "Remove this photo"}
                     </button>
                   </li>
                 ))}
@@ -495,7 +495,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
 
             {preparing ? (
               <p role="status" className="text-lg text-charcoal">
-                Getting your photo ready. Please wait a moment.
+                Getting your photo or video ready. Please wait a moment.
               </p>
             ) : null}
 
@@ -519,7 +519,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
               aria-busy={uploading || preparing}
               className="w-full normal-case tracking-normal text-lg"
             >
-              {uploading ? "Sending…" : "Send my photo"}
+              {uploading ? "Sending…" : "Send my photo or video"}
             </Button>
           </div>
         )}

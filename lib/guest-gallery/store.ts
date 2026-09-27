@@ -221,6 +221,23 @@ export async function createSignedReadUrl(path: string): Promise<string | null> 
     : `${configUrl}/storage/v1${relative.startsWith("/") ? "" : "/"}${relative}`;
 }
 
+const STORED_PATH = /^submissions\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp|mp4|mov)$/i;
+
+export function isStoredGalleryPath(path: string): boolean {
+  return STORED_PATH.test(path);
+}
+
+export async function openStoredObject(path: string): Promise<Response> {
+  if (!isStoredGalleryPath(path)) {
+    throw new GuestGalleryError("That upload is no longer in the gallery.", 404);
+  }
+  const response = await storageFetch(`object/${GUEST_GALLERY_BUCKET}/${encodePath(path)}`);
+  if (!response.ok || !response.body) {
+    throw new GuestGalleryError("That upload is no longer in the gallery.", 404);
+  }
+  return response;
+}
+
 export async function inspectStoredObject(path: string): Promise<{
   size: number;
   bytes: Uint8Array;

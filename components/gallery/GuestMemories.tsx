@@ -7,6 +7,7 @@ import {
   memoryAlt,
   type GuestSlide,
 } from "@/components/gallery/GuestMemoryLightbox";
+import { SaveAllUploadsLink, SaveUploadLink } from "@/components/gallery/SaveUpload";
 import { ThreeDCarousel } from "@/components/gallery/ThreeDCarousel";
 import type { GuestGalleryStatus, PublicMemory } from "@/lib/guest-gallery/types";
 
@@ -52,11 +53,17 @@ export function GuestMemories({
       ) : null}
       {status === "empty" ? (
         <p className="mx-auto mt-8 max-w-xl text-center text-lg leading-relaxed text-ivory/85">
-          No photos yet. Use Add a photo above when you are ready.
+          No photos or videos yet. Use Add a photo or video above when you are ready.
         </p>
       ) : null}
       {status === "ready" ? (
         <div className="mt-10">
+          <div className="mb-8 flex justify-center">
+            <SaveAllUploadsLink
+              hasImage={slides.some((slide) => slide.mediaType === "image")}
+              hasVideo={slides.some((slide) => slide.mediaType === "video")}
+            />
+          </div>
           <ThreeDCarousel
             items={slides}
             label="Guest memories"
@@ -84,6 +91,7 @@ export function GuestMemories({
                 {slide.message ? (
                   <p className="mt-1 text-sm leading-relaxed text-ivory/75">{slide.message}</p>
                 ) : null}
+                <SaveUploadLink id={slide.id} mediaType={slide.mediaType} />
               </>
             )}
           />

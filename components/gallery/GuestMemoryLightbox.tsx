@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from "react";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
+import { SaveUploadLink } from "@/components/gallery/SaveUpload";
 import type { PublicMemoryMedia } from "@/lib/guest-gallery/types";
 
 export type GuestSlide = PublicMemoryMedia & {
@@ -124,6 +125,9 @@ export function GuestMemoryLightbox({
         <p className="mt-2 text-center text-xs uppercase tracking-[0.18em] text-ivory/55">
           {(index ?? 0) + 1} / {slides.length}
         </p>
+        <div className="mt-4 flex justify-center">
+          <SaveUploadLink id={slide.id} mediaType={slide.mediaType} />
+        </div>
       </div>
     </div>
   );

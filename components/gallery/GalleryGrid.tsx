@@ -32,7 +32,7 @@ export function GalleryGrid({
   if (!images.length) {
     return (
       <p className="border border-ivory/15 bg-wine-black/40 px-6 py-16 text-center font-serif text-lg text-ivory/70">
-        Photos will appear here after they are added in Studio and published.
+        Photographs from the wedding will be added here. To share your own, add a photo or a short video above.
       </p>
     );
   }
