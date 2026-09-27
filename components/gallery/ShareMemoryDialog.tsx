@@ -12,6 +12,7 @@ import {
   validateGuestText,
   type GuestMediaType,
 } from "@/lib/guest-gallery/limits";
+import { HEIC_CONVERT_ERROR, normalizeGuestFile } from "@/lib/guest-gallery/convert-heic";
 import { stripImageFile } from "@/lib/guest-gallery/strip-metadata";
 
 type Attachment = {
@@ -47,6 +48,9 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
   const [succeeded, setSucceeded] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [preparing, setPreparing] = useState(false);
+  const ingestRef = useRef(Promise.resolve());
+  const preparingCount = useRef(0);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -92,11 +96,12 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
     });
     setFormError(null);
     setProgress(null);
+    setPreparing(false);
     setTurnstileToken(null);
   }
 
   function closeDialog() {
-    if (uploading) return;
+    if (uploading || preparing) return;
     setSucceeded(false);
     resetForm();
     onClose();
@@ -104,38 +109,76 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
 
   function addFiles(list: FileList | File[]) {
     const incoming = Array.from(list);
-    const next = [...attachments];
+    if (!incoming.length || uploading) return;
+    preparingCount.current += 1;
+    setPreparing(true);
+    setFormError(null);
+    ingestRef.current = ingestRef.current
+      .then(() => ingestFiles(incoming))
+      .finally(() => {
+        preparingCount.current -= 1;
+        if (preparingCount.current === 0) setPreparing(false);
+      });
+  }
+
+  async function ingestFiles(incoming: File[]) {
+    const prepared: File[] = [];
     let error: string | null = null;
+
     for (const file of incoming) {
-      const classified = classifyGuestFile({
+      try {
+        prepared.push(await normalizeGuestFile(file));
+      } catch (caught) {
+        error =
+          caught instanceof Error && caught.message
+            ? caught.message
+            : HEIC_CONVERT_ERROR;
+      }
+    }
+
+    const classified: Attachment[] = [];
+    for (const file of prepared) {
+      const result = classifyGuestFile({
         name: file.name,
         mimeType: file.type,
         size: file.size,
       });
-      if (!classified.ok) {
-        error = classified.error;
+      if (!result.ok) {
+        error = result.error;
         continue;
       }
-      const previewUrl = URL.createObjectURL(file);
-      next.push({
+      classified.push({
         id: crypto.randomUUID(),
         file,
         name: displayFileName(file.name),
-        mimeType: classified.file.mimeType,
-        mediaType: classified.file.mediaType,
-        previewUrl,
+        mimeType: result.file.mimeType,
+        mediaType: result.file.mediaType,
+        previewUrl: URL.createObjectURL(file),
         duration: null,
       });
     }
-    const group = validateGuestFiles(
-      next.map((item) => ({ name: item.name, mimeType: item.mimeType, size: item.file.size })),
-    );
-    if (!group.ok) {
-      next.slice(attachments.length).forEach((item) => URL.revokeObjectURL(item.previewUrl));
-      setFormError(group.error);
+
+    if (!classified.length) {
+      setFormError(error);
       return;
     }
-    setAttachments(next);
+
+    let rejected = false;
+    setAttachments((current) => {
+      const next = [...current, ...classified];
+      const group = validateGuestFiles(
+        next.map((item) => ({ name: item.name, mimeType: item.mimeType, size: item.file.size })),
+      );
+      if (!group.ok) {
+        rejected = true;
+        error = group.error;
+        return current;
+      }
+      return next;
+    });
+    if (rejected) {
+      classified.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+    }
     setFormError(error);
   }
 
@@ -161,7 +204,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (uploading) return;
+    if (uploading || preparing) return;
     const text = validateGuestText({ guestName, message });
     if (!text.ok) {
       setFormError(text.error);
@@ -277,12 +320,12 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
       className="w-[min(100%,40rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto border border-sterling/60 bg-ivory p-0 text-wine-black shadow-[var(--shadow-lift)] backdrop:bg-wine-black/75"
       onClose={closeDialog}
       onCancel={(event) => {
-        if (uploading) event.preventDefault();
+        if (uploading || preparing) event.preventDefault();
       }}
       onKeyDown={(event) => {
         if (event.key !== "Escape") return;
         event.preventDefault();
-        if (!uploading) closeDialog();
+        if (!uploading && !preparing) closeDialog();
       }}
     >
       <form onSubmit={onSubmit} className="paper-texture p-6 sm:p-8" noValidate>
@@ -296,7 +339,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
           <button
             type="button"
             onClick={closeDialog}
-            disabled={uploading}
+            disabled={uploading || preparing}
             className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-sterling/70 text-wine-black hover:border-burgundy disabled:opacity-50"
             aria-label="Close share a memory"
           >
@@ -380,7 +423,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                   ref={fileInputRef}
                   id="guest-gallery-files"
                   type="file"
-                  accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,.jpg,.jpeg,.png,.webp,.mp4,.mov"
+                  accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/heic-sequence,video/mp4,video/quicktime,.jpg,.jpeg,.png,.webp,.heic,.heif,.mp4,.mov"
                   multiple
                   className="sr-only"
                   onChange={(event) => {
@@ -391,12 +434,13 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading || preparing}
                   className="font-serif text-xl text-burgundy underline-offset-4 hover:underline"
                 >
                   Choose photos or videos
                 </button>
                 <p className="mt-2 text-sm text-charcoal/70">
-                  Or drop them here. Up to 8 files, including 2 short videos. Photos up to 15 MB, videos up to 50 MB.
+                  Or drop them here. JPEG, PNG, WebP, and HEIC/HEIF photos, or short MP4 and MOV videos. Up to 8 files, including 2 short videos. Photos up to 15 MB, videos up to 50 MB.
                 </p>
               </div>
             </div>
@@ -442,7 +486,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                       <button
                         type="button"
                         onClick={() => moveAttachment(item.id, -1)}
-                        disabled={index === 0 || uploading}
+                        disabled={index === 0 || uploading || preparing}
                         className="text-xs uppercase tracking-[0.14em] text-burgundy disabled:opacity-40"
                       >
                         Move earlier
@@ -450,7 +494,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                       <button
                         type="button"
                         onClick={() => moveAttachment(item.id, 1)}
-                        disabled={index === attachments.length - 1 || uploading}
+                        disabled={index === attachments.length - 1 || uploading || preparing}
                         className="text-xs uppercase tracking-[0.14em] text-burgundy disabled:opacity-40"
                       >
                         Move later
@@ -458,7 +502,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                       <button
                         type="button"
                         onClick={() => removeAttachment(item.id)}
-                        disabled={uploading}
+                        disabled={uploading || preparing}
                         className="text-xs uppercase tracking-[0.14em] text-burgundy disabled:opacity-40"
                         aria-label={`Remove ${item.name}`}
                       >
@@ -468,6 +512,12 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                   </li>
                 ))}
               </ul>
+            ) : null}
+
+            {preparing ? (
+              <p role="status" className="text-sm text-charcoal">
+                Preparing photo…
+              </p>
             ) : null}
 
             {turnstileSiteKey ? <div id="guest-gallery-turnstile" /> : null}
@@ -483,7 +533,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
               </p>
             ) : null}
 
-            <Button type="submit" disabled={uploading} aria-busy={uploading}>
+            <Button type="submit" disabled={uploading || preparing} aria-busy={uploading || preparing}>
               {uploading ? "Uploading" : "Share this memory"}
             </Button>
           </div>

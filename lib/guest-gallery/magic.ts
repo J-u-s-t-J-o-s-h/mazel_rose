@@ -1,6 +1,6 @@
+import { isHeicContainer } from "@/lib/guest-gallery/heic";
 import type { GuestMediaType } from "@/lib/guest-gallery/limits";
 
-const HEIC_BRANDS = new Set(["heic", "heix", "hevc", "hevx", "mif1", "msf1", "heim", "heis"]);
 const MP4_BRANDS = new Set(["isom", "iso2", "mp41", "mp42", "avc1", "mp4v", "dash", "m4v ", "msnv"]);
 const MOV_BRANDS = new Set(["qt  ", "mov "]);
 
@@ -11,13 +11,12 @@ export function identifyMedia(
   if (isPng(bytes)) return { mediaType: "image", mimeType: "image/png" };
   if (isWebp(bytes)) return { mediaType: "image", mimeType: "image/webp" };
 
+  if (isHeicContainer(bytes)) {
+    return { error: "That file isn't a supported photo or short video." };
+  }
+
   const brand = ftypBrand(bytes);
   if (brand) {
-    if (HEIC_BRANDS.has(brand)) {
-      return {
-        error: "HEIC photos aren't supported. Please choose a JPEG, PNG, or WebP image.",
-      };
-    }
     if (MP4_BRANDS.has(brand)) return { mediaType: "video", mimeType: "video/mp4" };
     if (MOV_BRANDS.has(brand)) return { mediaType: "video", mimeType: "video/quicktime" };
   }

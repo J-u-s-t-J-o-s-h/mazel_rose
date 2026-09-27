@@ -23,9 +23,6 @@ const VIDEO_MIME = {
   "video/quicktime": ["mov"],
 } as const;
 
-const HEIC_EXTENSIONS = new Set(["heic", "heif"]);
-const HEIC_MIME = new Set(["image/heic", "image/heif", "image/heic-sequence"]);
-
 export type ClassifiedFile = {
   mediaType: GuestMediaType;
   mimeType: string;
@@ -56,13 +53,6 @@ export function classifyGuestFile(input: {
   const mimeType = input.mimeType.trim().toLowerCase();
   const label = displayFileName(input.name);
 
-  if (HEIC_EXTENSIONS.has(extension) || HEIC_MIME.has(mimeType)) {
-    return {
-      ok: false,
-      error: `${label} is a HEIC photo. Please choose a JPEG, PNG, or WebP image instead.`,
-    };
-  }
-
   if (!Number.isFinite(input.size) || input.size <= 0) {
     return { ok: false, error: `${label} is empty.` };
   }
@@ -91,7 +81,7 @@ export function classifyGuestFile(input: {
 
   return {
     ok: false,
-    error: `${label} isn't a supported file. Use a JPEG, PNG, or WebP photo, or a short MP4 or MOV video.`,
+    error: `${label} isn't a supported file. Use a JPEG, PNG, WebP, or HEIC/HEIF photo, or a short MP4 or MOV video.`,
   };
 }
 
