@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { guestGalleryError } from "@/lib/guest-gallery/http";
 import { listModerationQueue, moderateSubmission } from "@/lib/guest-gallery/service";
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
       );
     }
     await moderateSubmission(String(body.id ?? ""), action);
+    if (action === "delete") revalidatePath("/gallery");
     const queue = await listModerationQueue();
     return NextResponse.json({ success: true, ...queue });
   } catch (error) {

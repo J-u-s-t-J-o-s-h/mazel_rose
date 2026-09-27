@@ -166,14 +166,17 @@ export async function listPublicMemories(): Promise<PublicMemory[]> {
 }
 
 export async function listModerationQueue(): Promise<{
+  published: PublicMemory[];
   pending: PublicMemory[];
   rejected: PublicMemory[];
 }> {
-  const [pending, rejected] = await Promise.all([
+  const [published, pending, rejected] = await Promise.all([
+    listSubmissions("approved"),
     listSubmissions("pending"),
     listSubmissions("rejected"),
   ]);
   return {
+    published: await signMemories(published),
     pending: await signMemories(pending),
     rejected: await signMemories(rejected),
   };
@@ -184,6 +187,10 @@ export async function moderateSubmission(
   action: "approve" | "reject" | "delete",
 ): Promise<void> {
   if (action === "delete") {
+    const submission = await getSubmission(id);
+    if (!submission) {
+      throw new GuestGalleryError("That memory is no longer in the gallery.");
+    }
     await deleteStoredPrefix(id);
     await deleteSubmission(id);
     return;

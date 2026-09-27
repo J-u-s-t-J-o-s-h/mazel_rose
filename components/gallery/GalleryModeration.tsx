@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import type { PublicMemory } from "@/lib/guest-gallery/types";
 
 type Queue = {
+  published: PublicMemory[];
   pending: PublicMemory[];
   rejected: PublicMemory[];
 };
@@ -37,7 +38,11 @@ export function GalleryModeration({
       if (!response.ok || !data.success) {
         throw new Error(data.error || "That update didn't save. Please try again.");
       }
-      setQueue({ pending: data.pending ?? [], rejected: data.rejected ?? [] });
+      setQueue({
+        published: data.published ?? [],
+        pending: data.pending ?? [],
+        rejected: data.rejected ?? [],
+      });
       setConfirmDeleteId(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "That update didn't save. Please try again.");
@@ -52,6 +57,9 @@ export function GalleryModeration({
         <p className="font-script text-3xl text-burgundy">Review</p>
         <h1 className="mt-1 font-serif text-4xl">Guest memories</h1>
         <p className="mt-3 text-sm text-charcoal/70">Signed in as {reviewer}</p>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-charcoal/75">
+          These uploads are on the Gallery page. Delete one to remove it.
+        </p>
 
         {error ? (
           <p className="mt-6 text-sm text-burgundy" role="alert">
@@ -59,14 +67,31 @@ export function GalleryModeration({
           </p>
         ) : null}
 
-        {queue && queue.pending.length === 0 ? (
+        {queue && queue.published.length === 0 ? (
           <p className="mt-10 border border-sterling/60 bg-ivory px-6 py-10 text-center font-serif text-xl">
-            No memories are waiting for review.
+            No guest uploads are in the gallery.
           </p>
         ) : null}
 
         <div className="mt-8 space-y-8">
-          {queue?.pending.map((memory) => (
+          {queue?.published.map((memory) => (
+            <SubmissionCard
+              key={memory.id}
+              memory={memory}
+              busy={busyId === memory.id}
+              confirmingDelete={confirmDeleteId === memory.id}
+              onAskDelete={() => setConfirmDeleteId(memory.id)}
+              onCancelDelete={() => setConfirmDeleteId(null)}
+              onDelete={() => act(memory.id, "delete")}
+            />
+          ))}
+        </div>
+
+        {queue && queue.pending.length ? (
+          <section className="mt-16">
+            <h2 className="font-serif text-2xl">Still uploading</h2>
+            <div className="mt-6 space-y-8">
+              {queue.pending.map((memory) => (
             <SubmissionCard
               key={memory.id}
               memory={memory}
@@ -78,8 +103,10 @@ export function GalleryModeration({
               onCancelDelete={() => setConfirmDeleteId(null)}
               onDelete={() => act(memory.id, "delete")}
             />
-          ))}
-        </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {queue && queue.rejected.length ? (
           <section className="mt-16">

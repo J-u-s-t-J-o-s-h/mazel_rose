@@ -42,7 +42,7 @@ export function GalleryAdminLogin({ configured }: { configured: boolean }) {
           <p className="font-script text-3xl text-burgundy">Review</p>
           <h1 className="mt-1 font-serif text-3xl text-wine-black">Guest memories</h1>
           <p className="mt-3 text-sm leading-relaxed text-charcoal/75">
-            Sign in with your studio account to approve or reject guest uploads.
+            Sign in to remove a guest upload from the gallery.
           </p>
         </div>
         {!configured ? (
