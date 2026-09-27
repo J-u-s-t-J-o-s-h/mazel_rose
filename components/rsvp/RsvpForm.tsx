@@ -37,9 +37,8 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
   const site = useSite();
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const eventOptions = settings.eventOptions?.length
-    ? settings.eventOptions
-    : defaultEventOptions;
+  const eventOptions: Array<{ key: string; label: string; when?: string }> =
+    settings.eventOptions?.length ? settings.eventOptions : [...defaultEventOptions];
   const deadline = site.rsvpDeadlineDisplay;
 
   const {
