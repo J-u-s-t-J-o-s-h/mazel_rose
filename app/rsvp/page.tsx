@@ -4,8 +4,10 @@ import { FadeIn } from "@/components/motion/FadeIn";
 import { createPageMetadata } from "@/lib/metadata";
 import {
   getRsvpFormSettings,
+  getScheduleEvents,
   getWeddingDetails,
 } from "@/sanity/lib/getContent";
+import { withEventDates } from "@/lib/rsvp/event-dates";
 
 export async function generateMetadata() {
   const [site, settings] = await Promise.all([
@@ -26,10 +28,21 @@ export async function generateMetadata() {
 export const revalidate = 30;
 
 export default async function RsvpPage() {
-  const [site, settings] = await Promise.all([
+  const [site, settings, events] = await Promise.all([
     getWeddingDetails(),
     getRsvpFormSettings(),
+    getScheduleEvents(),
   ]);
+  const eventOptions = withEventDates(
+    settings.eventOptions?.length
+      ? settings.eventOptions
+      : [
+          { key: "ceremony", label: "Ceremony" },
+          { key: "reception", label: "Reception" },
+          { key: "welcome", label: "Welcome gathering" },
+        ],
+    events,
+  );
 
   return (
     <>
@@ -41,7 +54,7 @@ export default async function RsvpPage() {
       />
       <section className="bg-parchment px-6 py-16 sm:px-8 sm:py-20">
         <FadeIn className="relative mx-auto max-w-3xl">
-          <RsvpForm {...settings} />
+          <RsvpForm {...settings} eventOptions={eventOptions} />
         </FadeIn>
       </section>
     </>

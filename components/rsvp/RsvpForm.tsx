@@ -23,7 +23,7 @@ export type RsvpFormSettingsProps = {
   closedMessage?: string;
   confirmationHeading?: string;
   confirmationMessage?: string;
-  eventOptions?: Array<{ key: string; label: string }>;
+  eventOptions?: Array<{ key: string; label: string; when?: string }>;
   showDietaryField?: boolean;
   showSongRequestField?: boolean;
   showPhoneField?: boolean;
@@ -280,15 +280,18 @@ export function RsvpForm(settings: RsvpFormSettingsProps = {}) {
                 {eventOptions.map((option) => (
                   <label
                     key={option.key}
-                    className="flex min-h-12 cursor-pointer items-center gap-3 border border-sterling/70 bg-parchment/30 px-4 py-3 has-[:checked]:border-peacock has-[:checked]:bg-peacock/5"
+                    className="flex min-h-12 cursor-pointer items-start gap-3 border border-sterling/70 bg-parchment/30 px-4 py-3 has-[:checked]:border-peacock has-[:checked]:bg-peacock/5"
                   >
                     <input
                       type="checkbox"
-                      className="h-4 w-4 accent-burgundy"
+                      className="mt-0.5 h-4 w-4 accent-burgundy"
                       {...register(`events.${option.key}` as `events.${string}`)}
                     />
-                    <span className="text-sm text-wine-black">
-                      {option.label}
+                    <span className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                      <span className="text-sm text-wine-black">{option.label}</span>
+                      {option.when ? (
+                        <span className="text-sm text-charcoal/70">{option.when}</span>
+                      ) : null}
                     </span>
                   </label>
                 ))}
