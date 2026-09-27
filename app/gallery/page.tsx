@@ -36,12 +36,14 @@ export default async function GalleryPage() {
         <GuestGalleryShell>
           <div className="mx-auto max-w-6xl">
             <ShareMemoryBanner />
-            <div className="mt-16">
-              <GalleryGrid
-                images={gallery.images}
-                showCaptions={gallery.showCaptions}
-              />
-            </div>
+            {gallery.images.length ? (
+              <div className="mt-16">
+                <GalleryGrid
+                  images={gallery.images}
+                  showCaptions={gallery.showCaptions}
+                />
+              </div>
+            ) : null}
             <Suspense
               fallback={
                 <p className="mt-20 text-center text-base text-ivory/75" role="status">
