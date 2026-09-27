@@ -437,7 +437,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                       <img
                         src={item.previewUrl}
                         alt=""
-                        className="aspect-[4/3] w-full object-cover"
+                        className="max-h-[28rem] w-full bg-parchment object-contain"
                       />
                     ) : (
                       <video
