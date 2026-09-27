@@ -32,16 +32,16 @@ export default async function RegistryPage() {
         tone="parchment"
       />
       <section className="bg-ivory px-6 py-16 paper-texture sm:px-8 sm:py-20">
-        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
+        <FadeIn className="mx-auto w-full max-w-3xl">
+          <PayItForwardNote />
+        </FadeIn>
+        <div className="mx-auto mt-20 grid max-w-5xl gap-6 md:grid-cols-2">
           {registry.items.map((item, index) => (
             <FadeIn key={item.id} delay={0.08 + index * 0.06}>
               <RegistryCard item={item} />
             </FadeIn>
           ))}
         </div>
-        <FadeIn className="mx-auto mt-20 w-full max-w-3xl">
-          <PayItForwardNote />
-        </FadeIn>
       </section>
     </>
   );
