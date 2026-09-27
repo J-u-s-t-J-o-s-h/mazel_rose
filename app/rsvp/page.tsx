@@ -37,7 +37,7 @@ export default async function RsvpPage() {
     settings.eventOptions?.length
       ? settings.eventOptions
       : [
-          { key: "welcome", label: "Welcome gathering" },
+          { key: "welcome", label: "Welcome Gathering" },
           { key: "ceremony", label: "Ceremony" },
           { key: "reception", label: "Reception" },
         ],
