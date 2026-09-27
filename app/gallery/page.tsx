@@ -1,5 +1,8 @@
+import { Suspense } from "react";
 import { PageHero } from "@/components/ui/PageHero";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
+import { GuestGalleryShell, ShareMemoryBanner } from "@/components/gallery/GuestGalleryShell";
+import { GuestMemoriesSection } from "@/components/gallery/GuestMemoriesSection";
 import { createPageMetadata } from "@/lib/metadata";
 import { getGalleryPage, getWeddingDetails } from "@/sanity/lib/getContent";
 
@@ -30,12 +33,26 @@ export default async function GalleryPage() {
         tone="wine"
       />
       <section className="bg-wine-black px-6 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto max-w-6xl">
-          <GalleryGrid
-            images={gallery.images}
-            showCaptions={gallery.showCaptions}
-          />
-        </div>
+        <GuestGalleryShell>
+          <div className="mx-auto max-w-6xl">
+            <ShareMemoryBanner />
+            <div className="mt-16">
+              <GalleryGrid
+                images={gallery.images}
+                showCaptions={gallery.showCaptions}
+              />
+            </div>
+            <Suspense
+              fallback={
+                <p className="mt-20 text-center text-base text-ivory/75" role="status">
+                  Loading guest memories…
+                </p>
+              }
+            >
+              <GuestMemoriesSection />
+            </Suspense>
+          </div>
+        </GuestGalleryShell>
       </section>
     </>
   );

@@ -37,6 +37,9 @@ yarn-error.log*
 # local RSVP fallback storage
 .data/
 
+# supabase cli
+supabase/.temp/
+
 # vercel
 .vercel
 
