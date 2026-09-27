@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { FormField, fieldClassName } from "@/components/rsvp/FormField";
+import { fieldClassName } from "@/components/rsvp/FormField";
 import {
   classifyGuestFile,
   displayFileName,
@@ -150,7 +150,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
         continue;
       }
       classified.push({
-        id: crypto.randomUUID(),
+        id: newAttachmentId(),
         file,
         name: displayFileName(file.name),
         mimeType: result.file.mimeType,
@@ -192,18 +192,6 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
     });
   }
 
-  function moveAttachment(id: string, direction: -1 | 1) {
-    setAttachments((current) => {
-      const index = current.findIndex((item) => item.id === id);
-      const target = index + direction;
-      if (index < 0 || target < 0 || target >= current.length) return current;
-      const next = [...current];
-      const [item] = next.splice(index, 1);
-      next.splice(target, 0, item);
-      return next;
-    });
-  }
-
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (uploading || preparing) return;
@@ -224,7 +212,7 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
       return;
     }
     if (turnstileSiteKey && !turnstileToken) {
-      setFormError("Please confirm you are a guest and try again.");
+      setFormError("Please complete the check below, then press Send my photo.");
       return;
     }
 
@@ -336,8 +324,11 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
           <div>
             <p className="font-script text-3xl text-burgundy">With love</p>
             <h2 id={titleId} className="mt-1 font-serif text-3xl">
-              Share a Memory
+              Add a photo
             </h2>
+            <p className="mt-3 max-w-md text-base leading-relaxed text-charcoal/80">
+              Choose a photo, type your name, then press Send my photo. It will show on this page.
+            </p>
           </div>
           <button
             type="button"
@@ -352,9 +343,9 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
 
         {succeeded ? (
           <div className="mt-8 space-y-3" role="status">
-            <p className="font-serif text-2xl">Thank you for sharing a memory with us.</p>
-            <p className="text-base leading-relaxed text-charcoal/80">
-              Your memory is in the gallery.
+            <p className="font-serif text-2xl">Thank you. Your photo is in the gallery.</p>
+            <p className="text-lg leading-relaxed text-charcoal/80">
+              You can close this window. Friends and family can see it on this page.
             </p>
             <div className="pt-4">
               <Button type="button" onClick={closeDialog}>
@@ -375,7 +366,11 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
               />
             </div>
 
-            <FormField label="Your name" htmlFor="guest-gallery-name" required error={undefined}>
+            <div>
+              <label htmlFor="guest-gallery-name" className="block text-lg text-wine-black">
+                Your name
+              </label>
+              <p className="mt-1 text-base text-charcoal/70">So Tiffany and Cary know who sent it.</p>
               <input
                 ref={nameRef}
                 id="guest-gallery-name"
@@ -384,31 +379,15 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                 autoComplete="name"
                 maxLength={GUEST_GALLERY_LIMITS.nameMax}
                 required
-                className={fieldClassName}
+                placeholder="Your name"
+                className={`${fieldClassName} mt-2 text-lg`}
               />
-            </FormField>
-
-            <FormField
-              label="Leave us a message"
-              htmlFor="guest-gallery-message"
-              hint="Optional"
-            >
-              <textarea
-                id="guest-gallery-message"
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-                maxLength={GUEST_GALLERY_LIMITS.messageMax}
-                rows={4}
-                className={fieldClassName}
-              />
-            </FormField>
+            </div>
 
             <div>
-              <label htmlFor="guest-gallery-files" className="block text-xs uppercase tracking-[0.16em] text-charcoal/70">
-                Add photos or short videos
-              </label>
+              <p className="text-lg text-wine-black">Your photo</p>
               <div
-                className={`mt-2 rounded-sm border border-dashed px-4 py-8 text-center ${
+                className={`mt-2 rounded-sm border-2 border-dashed px-4 py-6 text-center ${
                   dragOver ? "border-burgundy bg-burgundy/5" : "border-sterling/80"
                 }`}
                 onDragOver={(event) => {
@@ -438,19 +417,19 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading || preparing}
-                  className="font-serif text-xl text-burgundy underline-offset-4 hover:underline"
+                  className="inline-flex min-h-14 w-full items-center justify-center rounded-sm bg-burgundy px-6 text-lg text-ivory disabled:opacity-60"
                 >
-                  Choose photos or videos
+                  Choose a photo
                 </button>
-                <p className="mt-2 text-sm text-charcoal/70">
-                  Or drop them here. JPEG, PNG, WebP, and HEIC/HEIF photos, or short MP4 and MOV videos. Up to 8 files, including 2 short videos. Photos up to 15 MB, videos up to 50 MB.
+                <p className="mt-3 text-base leading-relaxed text-charcoal/75">
+                  Tap the button, then pick a photo from your phone. You can choose more than one. A short video is fine too.
                 </p>
               </div>
             </div>
 
             {attachments.length ? (
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {attachments.map((item, index) => (
+              <ul className="grid gap-4 sm:grid-cols-2">
+                {attachments.map((item) => (
                   <li key={item.id} className="border border-sterling/60 bg-ivory p-3">
                     {item.mediaType === "image" ? (
                       // Guest previews are local object URLs, so the image optimizer cannot fetch them.
@@ -479,65 +458,68 @@ export function ShareMemoryDialog({ open, onClose }: ShareMemoryDialogProps) {
                         }}
                       />
                     )}
-                    <p className="mt-2 truncate text-sm text-charcoal">{item.name}</p>
+                    <p className="mt-2 truncate text-base text-charcoal">{item.name}</p>
                     {item.mediaType === "video" ? (
-                      <p className="text-xs uppercase tracking-[0.14em] text-charcoal/60">
-                        {item.duration ? formatDuration(item.duration) : "Video"}
+                      <p className="text-base text-charcoal/70">
+                        {item.duration ? `Video, ${formatDuration(item.duration)}` : "Video"}
                       </p>
                     ) : null}
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={() => moveAttachment(item.id, -1)}
-                        disabled={index === 0 || uploading || preparing}
-                        className="text-xs uppercase tracking-[0.14em] text-burgundy disabled:opacity-40"
-                      >
-                        Move earlier
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => moveAttachment(item.id, 1)}
-                        disabled={index === attachments.length - 1 || uploading || preparing}
-                        className="text-xs uppercase tracking-[0.14em] text-burgundy disabled:opacity-40"
-                      >
-                        Move later
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removeAttachment(item.id)}
-                        disabled={uploading || preparing}
-                        className="text-xs uppercase tracking-[0.14em] text-burgundy disabled:opacity-40"
-                        aria-label={`Remove ${item.name}`}
-                      >
-                        Remove
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeAttachment(item.id)}
+                      disabled={uploading || preparing}
+                      className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-burgundy text-base text-burgundy disabled:opacity-40"
+                      aria-label={`Remove ${item.name}`}
+                    >
+                      Remove this photo
+                    </button>
                   </li>
                 ))}
               </ul>
             ) : null}
 
+            <div>
+              <label htmlFor="guest-gallery-message" className="block text-lg text-wine-black">
+                A note, if you like
+              </label>
+              <p className="mt-1 text-base text-charcoal/70">This is optional. You can leave it blank.</p>
+              <textarea
+                id="guest-gallery-message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                maxLength={GUEST_GALLERY_LIMITS.messageMax}
+                rows={3}
+                className={`${fieldClassName} mt-2 text-lg`}
+              />
+            </div>
+
             {preparing ? (
-              <p role="status" className="text-sm text-charcoal">
-                Preparing photo…
+              <p role="status" className="text-lg text-charcoal">
+                Getting your photo ready. Please wait a moment.
               </p>
             ) : null}
 
             {turnstileSiteKey ? <div id="guest-gallery-turnstile" /> : null}
 
             {progress ? (
-              <p id={progressId} role="status" className="text-sm text-charcoal">
-                Uploading your memories... {progress.done} of {progress.total} files uploaded
+              <p id={progressId} role="status" className="text-lg text-charcoal">
+                Sending {progress.done} of {progress.total}. Please keep this page open.
               </p>
             ) : null}
             {formError ? (
-              <p role="alert" className="text-sm text-burgundy">
+              <p role="alert" className="text-lg text-burgundy">
                 {formError}
               </p>
             ) : null}
 
-            <Button type="submit" disabled={uploading || preparing} aria-busy={uploading || preparing}>
-              {uploading ? "Uploading" : "Share this memory"}
+            <Button
+              type="submit"
+              size="lg"
+              disabled={uploading || preparing}
+              aria-busy={uploading || preparing}
+              className="w-full normal-case tracking-normal text-lg"
+            >
+              {uploading ? "Sending…" : "Send my photo"}
             </Button>
           </div>
         )}
@@ -559,6 +541,13 @@ function uploadFile(url: string, file: File, mimeType: string): Promise<void> {
     xhr.onerror = () => reject(new Error("One file didn't upload. Please check your connection and try again."));
     xhr.send(file);
   });
+}
+
+function newAttachmentId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `photo-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function formatDuration(seconds: number): string {
