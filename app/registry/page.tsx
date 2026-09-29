@@ -1,5 +1,6 @@
 import { PageHero } from "@/components/ui/PageHero";
 import { RegistryCard } from "@/components/registry/RegistryCard";
+import { HangingSloth } from "@/components/registry/HangingSloth";
 import { PayItForwardNote } from "@/components/registry/PayItForwardNote";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { createPageMetadata } from "@/lib/metadata";
@@ -31,8 +32,11 @@ export default async function RegistryPage() {
         description={registry.intro.body}
         tone="parchment"
       />
-      <section className="bg-ivory px-6 py-16 paper-texture sm:px-8 sm:py-20">
-        <FadeIn className="mx-auto w-full max-w-3xl">
+      <section className="bg-ivory px-6 pb-16 paper-texture sm:px-8 sm:pb-20">
+        <FadeIn className="mx-auto -mt-6 w-full max-w-2xl sm:-mt-10">
+          <HangingSloth />
+        </FadeIn>
+        <FadeIn className="mx-auto -mt-4 w-full max-w-3xl sm:-mt-8">
           <PayItForwardNote />
         </FadeIn>
         <div className="mx-auto mt-20 grid max-w-5xl gap-6 md:grid-cols-2">
