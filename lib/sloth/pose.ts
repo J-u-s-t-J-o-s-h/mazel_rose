@@ -103,10 +103,11 @@ export function applyPoseFrame(pose: SlothPose, elapsed: number, camera: THREE.C
   if (animate) {
     const sway = Math.sin((elapsed / config.bodySwaySeconds) * Math.PI * 2);
     pose.spine.rotateX(sway * THREE.MathUtils.degToRad(config.bodySwayDegrees));
-    const cycle = config.waveDurationSeconds + config.wavePauseSeconds;
+    const active = config.waveLiftSeconds + config.waveHelloSeconds + config.waveLowerSeconds;
+    const cycle = active + config.wavePauseSeconds;
     const local = elapsed % cycle;
-    if (local < config.waveDurationSeconds) {
-      const u = local / config.waveDurationSeconds;
+    if (local < active) {
+      const u = local / active;
       const envelope = Math.min(smooth(u / 0.18), smooth((1 - u) / 0.22));
       const swayWave = Math.sin(u * Math.PI * 4) * 0.5 + 0.5;
       wave = 0.34 + envelope * swayWave * 0.58;
@@ -165,55 +166,98 @@ function applyLimited(target: THREE.Object3D, turn: THREE.Quaternion) {
 export type FreeArmWave = {
   arm: THREE.Bone;
   fore: THREE.Bone;
-  armRest: THREE.Euler;
-  foreRest: THREE.Euler;
+  wrist: THREE.Bone;
+  rest: ArmSample;
+  clearance: ArmSample;
+  greeting: ArmSample;
+  foreDelta: THREE.Quaternion;
+  wristDelta: THREE.Quaternion;
 };
+
+const FREE_ARM_WAVE_AXIS = new THREE.Vector3(0, 0, 1);
+
+/**
+ * Local quaternion offsets for the sideways hang.
+ * Clearance eases the paw forward. Greeting lifts it beside the head.
+ * Sampled forearm and paw vertices stay at least 4cm from the head and torso
+ * through the lift and both flicks. Recheck if the baked pose changes.
+ */
+const FREE_ARM_OFFSETS = {
+  clearance: {
+    arm: [-0.0953156639, 0.0835914251, -0.0673730226, 0.9896404770],
+    fore: [0.1038652558, 0.0197619456, 0.0692867517, 0.9919782357],
+  },
+  greeting: {
+    arm: [-0.1986887408, 0.1524484798, -0.1453435673, 0.9571611634],
+    fore: [0.2080130519, 0.0302443589, 0.1364876253, 0.9680841787],
+  },
+} as const;
 
 /** Reads the baked curl. Nothing from the jump clip is sampled. */
 export function createFreeArmWave(sloth: THREE.Object3D): FreeArmWave {
   const arm = named(sloth, "RightArm");
   const fore = named(sloth, "RightForeArm");
+  const wrist = named(sloth, "RightHand");
+  const rest = sampleArm(sloth, "Right");
+  const offset = (key: typeof FREE_ARM_OFFSETS.clearance | typeof FREE_ARM_OFFSETS.greeting): ArmSample => ({
+    arm: rest.arm.clone().multiply(new THREE.Quaternion(...key.arm)).normalize(),
+    fore: rest.fore.clone().multiply(new THREE.Quaternion(...key.fore)).normalize(),
+    hand: rest.hand.clone(),
+  });
   return {
     arm,
     fore,
-    armRest: new THREE.Euler().setFromQuaternion(arm.quaternion, "XYZ"),
-    foreRest: new THREE.Euler().setFromQuaternion(fore.quaternion, "XYZ"),
+    wrist,
+    rest,
+    clearance: offset(FREE_ARM_OFFSETS.clearance),
+    greeting: offset(FREE_ARM_OFFSETS.greeting),
+    foreDelta: new THREE.Quaternion(),
+    wristDelta: new THREE.Quaternion(),
   };
 }
 
+function placeFreeArm(wave: FreeArmWave, from: ArmSample, to: ArmSample, amount: number) {
+  wave.arm.quaternion.copy(from.arm).slerp(to.arm, amount);
+  wave.fore.quaternion.copy(from.fore).slerp(to.fore, amount);
+  wave.wrist.quaternion.copy(from.hand).slerp(to.hand, amount);
+}
+
 /**
- * Lifts the free arm toward the visitor and sets it back down.
- * The supporting feet and hand are not written.
+ * Follows rest -> clearance -> greeting, then retraces that same path.
+ * Only the right arm chain is written. Both feet and LeftHand stay fixed.
+ * No physics engine or per-frame collision solver is required for this
+ * fixed, checked animation. The caller still owns pause/reduced motion.
  */
 export function applyFreeArmWave(wave: FreeArmWave, elapsed: number, animate: boolean) {
-  let envelope = 0;
-  let hello = 0;
+  const lift = config.waveLiftSeconds;
+  const hello = config.waveHelloSeconds;
+  const lower = config.waveLowerSeconds;
+  let progress = 0;
+  let sway = 0;
   if (animate) {
-    const cycle = config.waveDurationSeconds + config.wavePauseSeconds;
-    const local = elapsed % cycle;
-    if (local < config.waveDurationSeconds) {
-      const u = local / config.waveDurationSeconds;
-      envelope = Math.sin(u * Math.PI);
-      hello = Math.sin(u * Math.PI * 2) * envelope;
+    const active = lift + hello + lower;
+    const local = Math.max(0, elapsed) % (active + config.wavePauseSeconds);
+    if (local < lift) progress = local / lift;
+    else if (local < lift + hello) {
+      progress = 1;
+      const u = (local - lift) / hello;
+      const envelope = smooth(u / 0.15) * smooth((1 - u) / 0.15);
+      sway = Math.sin(u * Math.PI * 4) * envelope;
+    } else if (local < active) {
+      progress = 1 - (local - lift - hello) / lower;
     }
   }
-  const arm = wave.armRest;
-  const fore = wave.foreRest;
-  wave.arm.quaternion.setFromEuler(
-    new THREE.Euler(
-      arm.x + THREE.MathUtils.degToRad(20 * envelope + 10 * hello),
-      arm.y,
-      arm.z + THREE.MathUtils.degToRad(-70 * envelope),
-      "XYZ",
-    ),
-  );
-  wave.fore.quaternion.setFromEuler(
-    new THREE.Euler(
-      fore.x + THREE.MathUtils.degToRad(-60 * envelope),
-      fore.y,
-      fore.z + THREE.MathUtils.degToRad(-40 * envelope),
-      "XYZ",
-    ),
-  );
+
+  const clearancePoint = 0.45;
+  if (progress < clearancePoint) {
+    placeFreeArm(wave, wave.rest, wave.clearance, smooth(progress / clearancePoint));
+  } else {
+    placeFreeArm(wave, wave.clearance, wave.greeting, smooth((progress - clearancePoint) / (1 - clearancePoint)));
+  }
+
+  wave.foreDelta.setFromAxisAngle(FREE_ARM_WAVE_AXIS, THREE.MathUtils.degToRad(10 * sway));
+  wave.wristDelta.setFromAxisAngle(FREE_ARM_WAVE_AXIS, THREE.MathUtils.degToRad(-12 * sway));
+  wave.fore.quaternion.multiply(wave.foreDelta);
+  wave.wrist.quaternion.multiply(wave.wristDelta);
   wave.arm.updateMatrixWorld(true);
 }

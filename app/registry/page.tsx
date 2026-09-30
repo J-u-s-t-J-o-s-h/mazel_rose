@@ -29,11 +29,25 @@ export default async function RegistryPage() {
       <PageHero
         script={registry.intro.scriptIntro}
         title={registry.intro.title}
-        description={registry.intro.body}
         tone="parchment"
-      />
+      >
+        <p
+          lang="he"
+          dir="rtl"
+          className="mt-6 font-serif tracking-wide text-peacock"
+          style={{ fontSize: "2.0625rem", lineHeight: "2.475rem" }}
+        >
+          הכרת הטוב
+        </p>
+        <p
+          className="mt-2 font-serif italic text-peacock"
+          style={{ fontSize: "1.2375rem", lineHeight: "1.925rem" }}
+        >
+          Hakarat HaTov — Recognizing the Good
+        </p>
+      </PageHero>
       <section className="bg-ivory px-6 pb-16 paper-texture sm:px-8 sm:pb-20">
-        <FadeIn className="mx-auto -mt-6 w-full max-w-2xl sm:-mt-10">
+        <FadeIn className="mx-auto -mt-6 w-full max-w-3xl sm:-mt-10">
           <HangingSloth />
         </FadeIn>
         <FadeIn className="mx-auto -mt-4 w-full max-w-3xl sm:-mt-8">

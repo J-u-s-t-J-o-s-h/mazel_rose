@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { DecorativeDivider } from "@/components/ui/DecorativeDivider";
 
@@ -7,6 +8,7 @@ type PageHeroProps = {
   description?: string;
   tone?: "teal" | "burgundy" | "sage" | "wine" | "parchment";
   className?: string;
+  children?: ReactNode;
 };
 
 const tones = {
@@ -23,6 +25,7 @@ export function PageHero({
   description,
   tone = "teal",
   className,
+  children,
 }: PageHeroProps) {
   const lightText = tone === "teal" || tone === "burgundy" || tone === "wine";
 
@@ -63,6 +66,7 @@ export function PageHero({
             {description}
           </p>
         ) : null}
+        {children}
       </div>
     </section>
   );

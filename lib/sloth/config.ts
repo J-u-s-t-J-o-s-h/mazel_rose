@@ -16,7 +16,7 @@ export const hangingSlothConfig = {
   /** Local knee flexion added after the invert. Zero keeps the authored leg shape. */
   kneeBendDegrees: 0,
 
-  /** The right arm waves. Both feet and the left hand stay on the branch. */
+  /** The right arm waves. The left hand and left foot stay on the branch. */
   gripSide: "left" as "left" | "right",
 
   /** Uniform scale applied to the sloth before the claws are seated. */
@@ -26,7 +26,7 @@ export const hangingSlothConfig = {
    * Point on the exposed right-hand limb where the claws should meet.
    * Measured from the tree model before presentation yaw.
    */
-  branchAnchor: { x: 0.6, y: 0.02, z: -0.14 },
+  branchAnchor: { x: 0.26, y: 0.14, z: -0.14 },
 
   /** Direction of that limb. The swing axis is the line through the claws after seating. */
   branchAxis: { x: 0.97, y: 0, z: -0.24 },
@@ -34,14 +34,26 @@ export const hangingSlothConfig = {
   /** Trunk center, used to keep the body on the outer side of the limb. */
   trunk: { x: -0.14, z: 0.06 },
 
-  /** Slide along the branch (x) and lift the grip (y) after seating. */
-  gripOffset: { x: 0, y: -0.02, z: 0.06 },
+  /** Midpoint of the two grips. The hand lands on the outer limb and the foot toward the trunk. */
+  gripOffset: { x: 0, y: 0, z: 0 },
 
-  /** How long the free arm takes to wave out and back. The jump clip is not used. */
-  waveDurationSeconds: 2.8,
+  /**
+   * Holds the free arm on the baked pose while that pose is being adjusted.
+   * The wave timing below stays in place for when this is turned off.
+   */
+  wavePaused: true,
 
-  /** Stillness after each wave. */
-  wavePauseSeconds: 1.8,
+  /** Lift the free hand out beside the face. The jump clip is not used. */
+  waveLiftSeconds: 0.9,
+
+  /** Two sideways wrist waves while the arm stays raised. */
+  waveHelloSeconds: 1.7,
+
+  /** Return the free arm to its rest. */
+  waveLowerSeconds: 0.85,
+
+  /** Stillness after the arm is lowered. */
+  wavePauseSeconds: 1.6,
 
   /** Shoulder lift during the wave, in degrees. */
   waveLiftDegrees: 28,
@@ -58,10 +70,10 @@ export const hangingSlothConfig = {
   headLimitDegrees: 26,
 
   /** Push the seated sloth outward, away from the trunk. Keep this small so the claws stay on the limb. */
-  trunkClearance: 0.12,
+  trunkClearance: 0,
 
   /** Turns the planted tree so the limb and the sloth face the camera. */
-  presentationYawDegrees: 28,
+  presentationYawDegrees: 0,
 
   cameraFov: 32,
   cameraPadding: 1.28,

@@ -156,10 +156,29 @@ export function SlothCanvas({ reducedMotion, paused, onReady, onError }: SlothCa
         shadow.position.set(0, bounds.min.y + 0.012, 0);
         rig.add(shadow);
 
-        framed.box = slothFocusBox(mesh);
-        frameCamera(camera, framed.box, host.clientWidth / Math.max(host.clientHeight, 1));
         const wave = createFreeArmWave(sloth);
+        framed.box = posedBounds(rig, mesh);
+        const wristPoint = new THREE.Vector3();
+        const waveMarks = [
+          config.waveLiftSeconds * 0.2,
+          config.waveLiftSeconds * 0.55,
+          config.waveLiftSeconds,
+          config.waveLiftSeconds + config.waveHelloSeconds * 0.125,
+          config.waveLiftSeconds + config.waveHelloSeconds * 0.375,
+        ];
+        for (const mark of waveMarks) {
+          applyFreeArmWave(wave, mark, true);
+          framed.box.expandByPoint(wave.wrist.getWorldPosition(wristPoint));
+        }
         applyFreeArmWave(wave, 0, false);
+        framed.box.expandByScalar(0.16);
+        if (host.parentElement) {
+          const fitted = framed.box.getSize(new THREE.Vector3());
+          const ratio = THREE.MathUtils.clamp(fitted.x / Math.max(fitted.y, 0.001), 0.9, 1.45);
+          host.parentElement.style.aspectRatio = `${ratio}`;
+          void host.offsetHeight;
+        }
+        frameCamera(camera, framed.box, host.clientWidth / Math.max(host.clientHeight, 1));
         renderer.render(scene, camera);
         onReady();
 
@@ -170,8 +189,9 @@ export function SlothCanvas({ reducedMotion, paused, onReady, onError }: SlothCa
           const now = performance.now();
           const delta = Math.min((now - lastTick) / 1000, 0.05);
           lastTick = now;
-          if (!reducedRef.current) elapsed += delta;
-          applyFreeArmWave(wave, elapsed, !reducedRef.current);
+          const waving = !reducedRef.current && !config.wavePaused;
+          if (waving) elapsed += delta;
+          applyFreeArmWave(wave, waving ? elapsed : 0, waving);
           renderer.render(scene, camera);
         };
         const kick = () => {
@@ -259,10 +279,11 @@ function seatOnBranch(sloth: THREE.Object3D, mesh: THREE.SkinnedMesh) {
   branch.normalize();
 
   sloth.updateMatrixWorld(true);
-  let contacts = handContacts(mesh);
+  let contacts = branchGrips(mesh);
   if (!contacts) return null;
 
-  const clawAxis = contacts.right.clone().sub(contacts.left);
+  // Hand (near the head) points toward the branch tip. Foot (near the hips) points toward the trunk.
+  const clawAxis = contacts.hand.clone().sub(contacts.foot);
   clawAxis.y = 0;
   if (clawAxis.lengthSq() < 1e-8) clawAxis.set(1, 0, 0);
   clawAxis.normalize();
@@ -270,45 +291,35 @@ function seatOnBranch(sloth: THREE.Object3D, mesh: THREE.SkinnedMesh) {
   sloth.rotation.y += yaw;
   sloth.updateMatrixWorld(true);
 
-  contacts = handContacts(mesh);
+  contacts = branchGrips(mesh);
   if (!contacts) return null;
-  const mid = contacts.left.clone().add(contacts.right).multiplyScalar(0.5);
+  const mid = contacts.hand.clone().add(contacts.foot).multiplyScalar(0.5);
   sloth.position.add(anchor.clone().sub(mid));
   sloth.position.x += config.gripOffset.x;
   sloth.position.y += config.gripOffset.y;
   sloth.position.z += config.gripOffset.z;
   sloth.updateMatrixWorld(true);
 
-  const hips = sloth.getObjectByName("Hips");
-  const hipsPos = hips?.getWorldPosition(new THREE.Vector3()) ?? mid.clone().setY(mid.y - 0.2);
   const outward = anchor.clone().setY(0).sub(new THREE.Vector3(config.trunk.x, 0, config.trunk.z));
   if (outward.lengthSq() < 1e-8) outward.set(1, 0, 0);
   outward.normalize();
-  const bodySide = hipsPos.clone().sub(anchor);
-  bodySide.y = 0;
-  if (bodySide.dot(outward) < 0) {
-    sloth.rotation.y += Math.PI;
-    sloth.updateMatrixWorld(true);
-    contacts = handContacts(mesh);
-    if (!contacts) return null;
-    const reseat = contacts.left.clone().add(contacts.right).multiplyScalar(0.5);
-    sloth.position.add(anchor.clone().sub(reseat));
-    sloth.position.x += config.gripOffset.x;
-    sloth.position.y += config.gripOffset.y;
-    sloth.position.z += config.gripOffset.z;
-    sloth.updateMatrixWorld(true);
-  }
-
   sloth.position.add(outward.multiplyScalar(config.trunkClearance));
   sloth.updateMatrixWorld(true);
-  return handContacts(mesh);
+  return branchGrips(mesh);
 }
 
-function handContacts(mesh: THREE.SkinnedMesh) {
+/** The left hand and left foot hook the branch. The right arm and right leg hang. */
+function branchGrips(mesh: THREE.SkinnedMesh) {
+  const pair = gripPair(mesh, "LeftHand", "LeftFoot");
+  if (!pair) return null;
+  return { hand: pair[0], foot: pair[1] };
+}
+
+function gripPair(mesh: THREE.SkinnedMesh, firstName: string, secondName: string) {
   mesh.skeleton.update();
   const bones = mesh.skeleton.bones;
-  const leftBone = bones.findIndex((bone) => bone.name === "LeftFoot");
-  const rightBone = bones.findIndex((bone) => bone.name === "RightFoot");
+  const leftBone = bones.findIndex((bone) => bone.name === firstName);
+  const rightBone = bones.findIndex((bone) => bone.name === secondName);
   if (leftBone < 0 || rightBone < 0) return null;
 
   const position = mesh.geometry.attributes.position;
@@ -359,7 +370,7 @@ function handContacts(mesh: THREE.SkinnedMesh) {
   const leftContact = topCluster(left);
   const rightContact = topCluster(right);
   if (!leftContact || !rightContact) return null;
-  return { left: leftContact, right: rightContact };
+  return [leftContact, rightContact] as const;
 }
 
 function topCluster(points: THREE.Vector3[]) {
@@ -372,33 +383,10 @@ function topCluster(points: THREE.Vector3[]) {
     .multiplyScalar(1 / cluster.length);
 }
 
-function slothFocusBox(mesh: THREE.SkinnedMesh) {
-  const box = new THREE.Box3();
-  const included = new Set([
-    "Head",
-    "neck",
-    "Spine02",
-    "Hips",
-    "RightHand",
-    "LeftHand",
-    "LeftFoot",
-    "RightFoot",
-  ]);
-  for (const bone of mesh.skeleton.bones) {
-    if (!included.has(bone.name)) continue;
-    box.expandByPoint(bone.getWorldPosition(new THREE.Vector3()));
-  }
-  const head = mesh.skeleton.bones.find((bone) => bone.name === "Head");
-  if (head) box.expandByPoint(head.getWorldPosition(new THREE.Vector3()));
-  box.expandByScalar(0.28);
-  return box;
-}
-
 function frameCamera(camera: THREE.PerspectiveCamera, box: THREE.Box3, aspect: number) {
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
   const focus = center.clone();
-  focus.y += size.y * 0.06;
   const fov = THREE.MathUtils.degToRad(camera.fov);
   const fitHeight = size.y;
   const fitWidth = size.x;
@@ -406,9 +394,9 @@ function frameCamera(camera: THREE.PerspectiveCamera, box: THREE.Box3, aspect: n
     Math.max(
       fitHeight / (2 * Math.tan(fov / 2)),
       fitWidth / (2 * Math.tan(fov / 2) * Math.max(aspect, 0.45)),
-    ) * 1.16;
+    ) * 1.14;
   camera.aspect = Math.max(aspect, 0.4);
-  camera.position.set(focus.x, focus.y + size.y * 0.02, focus.z - distance);
+  camera.position.set(focus.x, focus.y - size.y * 0.03, focus.z - distance);
   camera.lookAt(focus);
   camera.updateProjectionMatrix();
 }

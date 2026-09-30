@@ -51,7 +51,7 @@ export function HangingSloth() {
   return (
     <div
       ref={frameRef}
-      className="relative mx-auto aspect-[5/4] w-full max-w-2xl [mask-image:radial-gradient(ellipse_78%_74%_at_50%_48%,black_58%,transparent_78%)]"
+      className="relative mx-auto aspect-[4/3] w-full max-w-3xl"
       role="img"
       aria-label="A cartoon sloth hanging from a tree branch."
     >
