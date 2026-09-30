@@ -63,7 +63,7 @@ export const faqs: FaqItem[] = [
     id: "accessible",
     question: "Is the venue accessible?",
     answer:
-      "Please note any accessibility needs in your RSVP, and we will follow up with you directly.",
+      "Yes, please share your accessibility needs.",
   },
   {
     id: "contact",
