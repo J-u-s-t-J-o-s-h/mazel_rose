@@ -49,7 +49,7 @@ export const faqs: FaqItem[] = [
     id: "indoors-outdoors",
     question: "Is the ceremony indoors or outdoors?",
     answer:
-      "Both. The ceremony is outdoors, beneath the oaks at the edge of the lake. Cocktail hour and the reception that follows are under a covered pavilion, so the evening stays comfortable whatever the sky decides to do.",
+      "Both. The ceremony is outdoors, beneath the oaks at the edge of the lake. Cocktail hour and Give Thanks and Come Celebrate are under a covered pavilion, so the evening stays comfortable whatever the sky decides to do.",
   },
   {
     id: "weather",

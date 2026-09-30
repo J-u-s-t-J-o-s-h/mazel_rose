@@ -124,7 +124,7 @@ async function publishSchedule() {
     "Welcome Gathering",
     "Ceremony",
     "Cocktail Hour",
-    "Reception",
+    "Give Thanks and Come Celebrate",
   ]) {
     if (!titles.includes(required)) {
       throw new Error(`Published schedule is missing ${required}`);

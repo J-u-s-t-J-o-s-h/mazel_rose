@@ -9,7 +9,7 @@ export async function generateMetadata() {
   const site = await getWeddingDetails({ stega: false });
   return createPageMetadata({
     title: "Schedule",
-    description: `Ceremony, reception, and celebration details for ${site.coupleNames.display}.`,
+    description: `Ceremony and celebration details for ${site.coupleNames.display}.`,
     path: "/schedule",
     site,
   });

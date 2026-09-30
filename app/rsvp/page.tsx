@@ -39,7 +39,7 @@ export default async function RsvpPage() {
       : [
           { key: "welcome", label: "Welcome Gathering" },
           { key: "ceremony", label: "Ceremony" },
-          { key: "reception", label: "Reception" },
+          { key: "reception", label: "Give Thanks and Come Celebrate" },
         ],
     events,
   );

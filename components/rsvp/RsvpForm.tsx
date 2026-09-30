@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 const defaultEventOptions = [
   { key: "welcome", label: "Welcome Gathering" },
   { key: "ceremony", label: "Ceremony" },
-  { key: "reception", label: "Reception" },
+  { key: "reception", label: "Give Thanks and Come Celebrate" },
 ] as const;
 
 export type RsvpFormSettingsProps = {

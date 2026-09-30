@@ -48,7 +48,7 @@ export const scheduleEvents: ScheduleEvent[] = [
   },
   {
     id: "reception",
-    title: "Reception",
+    title: "Give Thanks and Come Celebrate",
     date: "Sunday, November 8, 2026",
     startTime: "6:00 PM",
     endTime: "9:00 PM",
@@ -64,5 +64,5 @@ export const scheduleEvents: ScheduleEvent[] = [
 export const scheduleIntro = {
   title: "Schedule of Events",
   scriptIntro: "The Day",
-  body: "A carefully composed sequence of gatherings—from welcome moments through the reception.",
+  body: "A carefully composed sequence of gatherings—from welcome moments through Give Thanks and Come Celebrate.",
 };

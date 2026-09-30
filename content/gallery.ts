@@ -10,7 +10,7 @@ export const galleryImages: GalleryImage[] = [
   {
     id: "g1",
     src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=80",
-    alt: "Candlelit reception tablescape with burgundy florals",
+    alt: "Candlelit tablescape with burgundy florals",
     caption: "Candlelight and autumn blooms",
     width: 1600,
     height: 1067,

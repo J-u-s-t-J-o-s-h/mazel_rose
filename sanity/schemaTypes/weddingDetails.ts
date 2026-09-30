@@ -116,12 +116,12 @@ export const weddingDetails = defineType({
     }),
     defineField({
       name: "receptionVenueName",
-      title: "Reception venue name",
+      title: "Celebration venue name",
       type: "string",
     }),
     defineField({
       name: "receptionVenueAddress",
-      title: "Reception venue address",
+      title: "Celebration venue address",
       type: "string",
     }),
     defineField({

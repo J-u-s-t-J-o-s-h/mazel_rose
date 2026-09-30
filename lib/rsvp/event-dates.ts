@@ -9,7 +9,8 @@ const EVENT_ORDER = ["welcome", "ceremony", "reception"];
 
 const TITLE_MATCH: Record<string, (title: string) => boolean> = {
   ceremony: (title) => title === "ceremony",
-  reception: (title) => title === "reception",
+  reception: (title) =>
+    title === "reception" || title === "give thanks and come celebrate",
   welcome: (title) => title.startsWith("welcome"),
 };
 

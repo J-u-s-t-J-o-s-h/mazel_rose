@@ -238,7 +238,7 @@ async function main() {
     eventOptions: [
       { _key: "welcome", key: "welcome", label: "Welcome Gathering" },
       { _key: "ceremony", key: "ceremony", label: "Ceremony" },
-      { _key: "reception", key: "reception", label: "Reception" },
+      { _key: "reception", key: "reception", label: "Give Thanks and Come Celebrate" },
     ],
     showDietaryField: true,
     showSongRequestField: true,
