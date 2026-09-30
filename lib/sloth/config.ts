@@ -4,6 +4,8 @@
  * Change branchAnchor, branchAxis, slothScale, and the yaw values to reseat the grip.
  */
 export const hangingSlothConfig = {
+  /** Authored sloth and tree from assets/sloth-lively-v5.blend, already posed together. */
+  sceneUrl: "/models/sloth-lively.glb",
   treeUrl: "/models/tree.glb",
   slothUrl: "/models/sloth-curl.glb",
 

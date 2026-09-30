@@ -24,11 +24,16 @@ export function HangingSloth() {
     if (!node) return;
 
     const sync = () => setPaused(document.hidden || offscreenRef.current);
+    const mark = (visible: boolean) => {
+      offscreenRef.current = !visible;
+      if (visible) setStarted(true);
+      sync();
+    };
+    const rect = node.getBoundingClientRect();
+    mark(rect.bottom > -280 && rect.top < window.innerHeight + 280);
     const observer = new IntersectionObserver(
       ([entry]) => {
-        offscreenRef.current = !entry.isIntersecting;
-        if (entry.isIntersecting) setStarted(true);
-        sync();
+        mark(entry.isIntersecting);
       },
       { rootMargin: "280px" },
     );
@@ -52,7 +57,7 @@ export function HangingSloth() {
     <div
       ref={frameRef}
       className="relative mx-auto aspect-[4/3] w-full max-w-3xl"
-      role="img"
+      role="group"
       aria-label="A cartoon sloth hanging from a tree branch."
     >
       <SlothFallback visible={!ready} />
@@ -77,7 +82,7 @@ function SlothFallback({ visible }: { visible: boolean }) {
       quality={75}
       priority
       sizes="(max-width: 1024px) 100vw, 640px"
-      className={`object-contain transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}
+      className={`pointer-events-none object-contain transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}
     />
   );
 }
