@@ -3,7 +3,7 @@ import type { GalleryImage } from "@/types/content";
 export const galleryIntro = {
   title: "Gallery",
   scriptIntro: "In Light",
-  body: "A place for photographs from our day, including the ones you take. Add a photo, a short video, or a note whenever you like.",
+  body: "A place for photographs from our day, including the ones you take. Add a photo, a short video, with a note whenever you like.",
 };
 
 export const galleryImages: GalleryImage[] = [

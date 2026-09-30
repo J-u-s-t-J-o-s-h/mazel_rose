@@ -30,21 +30,15 @@ export function ShareMemoryBanner() {
 
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <h2 className="font-serif text-3xl text-ivory sm:text-4xl">From Our Guests</h2>
-      <p className="mt-4 text-lg leading-relaxed text-ivory/85">
-        Share a photo or a short video, and add your name. It will show here.
-      </p>
-      <div className="mt-6">
-        <Button
-          type="button"
-          variant="dark"
-          size="lg"
-          className="normal-case tracking-normal text-base"
-          onClick={openShare}
-        >
-          Add a photo or video
-        </Button>
-      </div>
+      <Button
+        type="button"
+        variant="dark"
+        size="lg"
+        className="normal-case tracking-normal text-base"
+        onClick={openShare}
+      >
+        Add a photo or video
+      </Button>
     </div>
   );
 }
