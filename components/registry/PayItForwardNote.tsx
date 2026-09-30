@@ -11,7 +11,7 @@ export function PayItForwardNote() {
         Your presence is truly the greatest gift.
       </p>
       <p className="mx-auto mt-6 max-w-md font-serif text-lg leading-relaxed text-charcoal/80">
-        As we began dating, Cary and Tiffany discovered that they share a special love for one
+        As they began dating, Cary and Tiffany discovered that they share a special love for one
         of nature’s sweetest little creatures…the sloth.
       </p>
       <p className="mx-auto mt-4 max-w-md font-serif text-lg leading-relaxed text-charcoal/80">
