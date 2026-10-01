@@ -65,12 +65,12 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
             ) : null}
           </dl>
 
-          <div className="mt-6 flex min-h-[3.5rem] flex-wrap items-start gap-4">
+          <div className="mt-6 flex justify-center">
             <a
               href={hotel.bookingUrl}
               target="_blank"
               rel={formatExternalRel(hotel.bookingUrl)}
-              className="inline-flex items-center gap-2 border border-burgundy bg-burgundy px-4 py-2 text-xs uppercase tracking-[0.16em] text-ivory transition hover:-translate-y-0.5"
+              className="flex w-full items-center justify-center gap-2 border border-burgundy bg-burgundy px-6 py-3 text-sm uppercase tracking-[0.16em] text-ivory transition hover:-translate-y-0.5"
               aria-label={`Book ${hotel.name} (opens in a new tab)`}
             >
               Book stay <ExternalLink className="h-3.5 w-3.5" />

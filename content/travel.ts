@@ -38,7 +38,6 @@ export const hotels: Hotel[] = [
     bookingUrl:
       "https://www.hyatt.com/events/en-US/group-booking/VISTA/G-WR26",
     groupCode: "G-WR26",
-    phone: "(407) 239-1234",
     amenities: ["Resort"],
   },
   {
@@ -51,11 +50,9 @@ export const hotels: Hotel[] = [
     distance: "Approximately 8 minutes from venue",
     description:
       "One village with three Marriott options: Courtyard, Fairfield Inn & Suites, and SpringHill Suites.",
-    bookingUrl: "https://marriott-village-florida.marriott.com/",
+    bookingUrl:
+      "https://www.marriott.com/en-us/hotels/mcoly-courtyard-orlando-lake-buena-vista-in-the-marriott-village/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0",
     groupCode: "Paradise Cove",
-    phone: "(407) 938-9001",
-    contactName: "Mary Nasarzewski",
-    contactEmail: "Mary.Nasarzewski@MarriottVillageOrlando.com",
     amenities: ["Three Marriott hotels"],
   },
   {
@@ -70,9 +67,6 @@ export const hotels: Hotel[] = [
       "A Lake Buena Vista resort just down the road from Paradise Cove.",
     bookingUrl: "https://lnk.bio/sheratonlbv",
     groupCode: "Paradise Cove",
-    phone: "(407) 550-1040",
-    contactName: "Danilla Henry",
-    contactEmail: "Danilla.Henry@SheratonLBV.com",
     amenities: ["Pool resort"],
   },
 ];
