@@ -10,6 +10,7 @@ import {
   deleteStoredPrefix,
   deleteSubmission,
   getSubmission,
+  insertApprovedNote,
   hashUploadToken,
   insertMedia,
   insertSubmission,
@@ -23,7 +24,7 @@ import {
 } from "@/lib/guest-gallery/store";
 import { GuestGalleryError } from "@/lib/guest-gallery/supabase";
 
-import type { PublicMemory, PublicMemoryMedia } from "@/lib/guest-gallery/types";
+import type { PublicAdvice, PublicMemory, PublicMemoryMedia } from "@/lib/guest-gallery/types";
 
 export type PreparedUpload = {
   clientId: string;
@@ -38,6 +39,35 @@ type IncomingFile = {
   mimeType?: string;
   size?: number;
 };
+
+export async function submitGuestAdvice(
+  request: Request,
+  body: {
+    guestName?: string;
+    message?: string;
+    website?: string;
+    turnstileToken?: string;
+  },
+): Promise<{ ignored: true } | { advice: true }> {
+  if (typeof body.website === "string" && body.website.trim()) {
+    return { ignored: true };
+  }
+
+  const text = validateGuestText({
+    guestName: String(body.guestName ?? ""),
+    message: String(body.message ?? ""),
+  });
+  if (!text.ok) throw new GuestGalleryError(text.error);
+  if (!text.message) {
+    throw new GuestGalleryError("Please write a note for Tiffany and Cary.");
+  }
+
+  await assertTurnstile(body.turnstileToken);
+  await assertGuestGalleryRateLimit(request);
+  await insertApprovedNote({ guestName: text.guestName, message: text.message });
+  await recordGuestGalleryAttempt(request);
+  return { advice: true };
+}
 
 export async function prepareGuestSubmission(
   request: Request,
@@ -161,8 +191,30 @@ export async function abandonGuestSubmission(input: {
 }
 
 export async function listPublicMemories(): Promise<PublicMemory[]> {
+  const gallery = await listPublicGallery();
+  return gallery.memories;
+}
+
+export async function listPublicGallery(): Promise<{
+  memories: PublicMemory[];
+  advice: PublicAdvice[];
+}> {
   const rows = await listSubmissions("approved");
-  return signMemories(rows);
+  return {
+    memories: await signMemories(rows),
+    advice: rows.flatMap((row) => {
+      const message = row.message?.trim();
+      if (!message || (row.guest_gallery_media?.length ?? 0) > 0) return [];
+      return [
+        {
+          id: row.id,
+          guestName: row.guest_name,
+          message,
+          createdAt: row.created_at,
+        },
+      ];
+    }),
+  };
 }
 
 export async function listModerationQueue(): Promise<{
@@ -176,9 +228,9 @@ export async function listModerationQueue(): Promise<{
     listSubmissions("rejected"),
   ]);
   return {
-    published: await signMemories(published),
+    published: await signMemories(published, { includeNotes: true }),
     pending: await signMemories(pending),
-    rejected: await signMemories(rejected),
+    rejected: await signMemories(rejected, { includeNotes: true }),
   };
 }
 
@@ -217,6 +269,7 @@ async function signMemories(
     created_at: string;
     guest_gallery_media?: MediaRow[];
   }>,
+  options?: { includeNotes?: boolean },
 ): Promise<PublicMemory[]> {
   const memories: PublicMemory[] = [];
   for (const row of rows) {
@@ -233,7 +286,19 @@ async function signMemories(
         sortOrder: item.sort_order,
       });
     }
-    if (!signed.length) continue;
+    if (!signed.length) {
+      const note = row.message?.trim();
+      if (options?.includeNotes && note && media.length === 0) {
+        memories.push({
+          id: row.id,
+          guestName: row.guest_name,
+          message: note,
+          createdAt: row.created_at,
+          media: [],
+        });
+      }
+      continue;
+    }
     memories.push({
       id: row.id,
       guestName: row.guest_name,

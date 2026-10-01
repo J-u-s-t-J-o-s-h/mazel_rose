@@ -57,6 +57,31 @@ export function newObjectPath(submissionId: string, extension: string): string {
   return `${submissionPrefix(submissionId)}/${randomUUID()}.${extension}`;
 }
 
+export async function insertApprovedNote(input: {
+  guestName: string;
+  message: string;
+}): Promise<SubmissionRow> {
+  const rows = await rest<SubmissionRow[]>("guest_gallery_submissions", {
+    method: "POST",
+    prefer: "return=representation",
+    body: JSON.stringify({
+      guest_name: input.guestName,
+      message: input.message,
+      status: "approved",
+      approved_at: new Date().toISOString(),
+      expected_media: [],
+    }),
+  });
+  const row = rows[0];
+  if (!row) {
+    throw new GuestGalleryError(
+      "Sharing is temporarily unavailable. Please try again later.",
+      503,
+    );
+  }
+  return row;
+}
+
 export async function insertSubmission(input: {
   guestName: string;
   message: string | null;

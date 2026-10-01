@@ -14,4 +14,11 @@ export type PublicMemory = {
   media: PublicMemoryMedia[];
 };
 
+export type PublicAdvice = {
+  id: string;
+  guestName: string;
+  message: string;
+  createdAt: string;
+};
+
 export type GuestGalleryStatus = "ready" | "empty" | "unavailable" | "unconfigured";

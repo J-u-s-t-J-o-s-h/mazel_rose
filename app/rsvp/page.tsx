@@ -37,7 +37,7 @@ export default async function RsvpPage() {
     settings.eventOptions?.length
       ? settings.eventOptions
       : [
-          { key: "welcome", label: "The Night Before Paradise" },
+          { key: "welcome", label: "Pre-Wedding Celebration" },
           { key: "ceremony", label: "Ceremony" },
           { key: "reception", label: "Give Thanks and Come Celebrate" },
         ],

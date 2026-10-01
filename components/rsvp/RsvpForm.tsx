@@ -13,7 +13,7 @@ import { useSite } from "@/components/providers/SiteProvider";
 import { cn } from "@/lib/utils";
 
 const defaultEventOptions = [
-  { key: "welcome", label: "The Night Before Paradise" },
+  { key: "welcome", label: "Pre-Wedding Celebration" },
   { key: "ceremony", label: "Ceremony" },
   { key: "reception", label: "Give Thanks and Come Celebrate" },
 ] as const;

@@ -160,7 +160,9 @@ function SubmissionCard({
     <article className="border border-sterling/60 bg-ivory p-5 shadow-[var(--shadow-soft)]">
       <header>
         <h2 className="font-serif text-2xl">{memory.guestName}</h2>
-        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-charcoal/60">{when}</p>
+        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-charcoal/60">
+          {memory.media.length ? when : `Unsolicited advice · ${when}`}
+        </p>
         {memory.message ? <p className="mt-3 text-base leading-relaxed text-charcoal/80">{memory.message}</p> : null}
       </header>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">

@@ -1,7 +1,8 @@
 import { GuestMemories } from "@/components/gallery/GuestMemories";
-import { listPublicMemories } from "@/lib/guest-gallery/service";
+import { UnsolicitedAdvice } from "@/components/gallery/UnsolicitedAdvice";
+import { listPublicGallery } from "@/lib/guest-gallery/service";
 import { getSupabaseConfig } from "@/lib/guest-gallery/supabase";
-import type { PublicMemory } from "@/lib/guest-gallery/types";
+import type { PublicAdvice, PublicMemory } from "@/lib/guest-gallery/types";
 
 export async function GuestMemoriesSection() {
   if (!getSupabaseConfig()) {
@@ -9,9 +10,12 @@ export async function GuestMemoriesSection() {
   }
 
   let memories: PublicMemory[] | null = null;
+  let advice: PublicAdvice[] = [];
   let failed = false;
   try {
-    memories = await listPublicMemories();
+    const gallery = await listPublicGallery();
+    memories = gallery.memories;
+    advice = gallery.advice;
   } catch (error) {
     console.error("Guest memories could not be loaded", error);
     failed = true;
@@ -22,9 +26,12 @@ export async function GuestMemoriesSection() {
   }
 
   return (
-    <GuestMemories
-      status={memories.length ? "ready" : "empty"}
-      memories={memories}
-    />
+    <>
+      <GuestMemories
+        status={memories.length ? "ready" : "empty"}
+        memories={memories}
+      />
+      <UnsolicitedAdvice notes={advice} />
+    </>
   );
 }
