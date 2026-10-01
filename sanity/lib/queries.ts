@@ -38,6 +38,8 @@ export const SCHEDULE_EVENTS_QUERY = defineQuery(`
     description,
     dressCode,
     mapUrl,
+    websiteUrl,
+    websiteLabel,
     transportation,
     parking,
     invitationOnly,

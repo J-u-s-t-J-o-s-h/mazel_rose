@@ -11,7 +11,8 @@ const TITLE_MATCH: Record<string, (title: string) => boolean> = {
   ceremony: (title) => title === "ceremony",
   reception: (title) =>
     title === "reception" || title === "give thanks and come celebrate",
-  welcome: (title) => title.startsWith("welcome"),
+  welcome: (title) =>
+    title.startsWith("welcome") || title.includes("night before paradise"),
 };
 
 export function withEventDates<T extends { key: string; label: string }>(
@@ -24,8 +25,9 @@ export function withEventDates<T extends { key: string; label: string }>(
       const label = option.label.trim().toLowerCase();
       const match = events.find((event) => {
         const title = event.title.trim().toLowerCase();
+        const id = event.id.trim().toLowerCase();
         const byKey = TITLE_MATCH[key];
-        return event.id === key || (byKey ? byKey(title) : title === label);
+        return id === key || id.endsWith(`.${key}`) || (byKey ? byKey(title) : title === label);
       });
       if (!match?.date) return option;
       const time = match.startTime.replace(/ /g, "\u00a0");

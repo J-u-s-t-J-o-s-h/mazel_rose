@@ -88,6 +88,8 @@ async function publishSchedule() {
       description: event.description,
       dressCode: event.dressCode,
       mapUrl: event.mapUrl,
+      websiteUrl: event.websiteUrl,
+      websiteLabel: event.websiteLabel,
       parking: event.parking,
       invitationOnly: false,
       isPrivate: false,
@@ -121,7 +123,7 @@ async function publishSchedule() {
 
   const titles = published.map((event) => event.title);
   for (const required of [
-    "Welcome Gathering",
+    "The Night Before Paradise ✨",
     "Ceremony",
     "Cocktail Hour",
     "Give Thanks and Come Celebrate",

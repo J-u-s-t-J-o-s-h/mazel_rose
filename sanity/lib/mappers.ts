@@ -240,6 +240,8 @@ export function mapScheduleEvents(
     description: String(doc.description || ""),
     dressCode: doc.dressCode ? String(doc.dressCode) : undefined,
     mapUrl: doc.mapUrl ? String(doc.mapUrl) : undefined,
+    websiteUrl: doc.websiteUrl ? String(doc.websiteUrl) : undefined,
+    websiteLabel: doc.websiteLabel ? String(doc.websiteLabel) : undefined,
     transportation: doc.transportation ? String(doc.transportation) : undefined,
     parking: doc.parking ? String(doc.parking) : undefined,
     invitationOnly: Boolean(doc.invitationOnly),
@@ -274,6 +276,7 @@ export function mapHotels(
       image: resolveImageUrl(image, 1400) || "",
       imageAlt:
         image?.alt || fallbackHotel?.imageAlt || String(doc.name || "Hotel"),
+      imageCredit: doc.imageCredit ? String(doc.imageCredit) : undefined,
       address: String(doc.address || ""),
       distance: String(doc.distance || ""),
       description: String(doc.description || ""),

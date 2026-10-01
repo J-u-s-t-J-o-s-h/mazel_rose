@@ -25,38 +25,21 @@ export const airports: Airport[] = [
 
 export const hotels: Hotel[] = [
   {
-    id: "grand-beach",
-    name: "Grand Beach by Hilton",
-    image: "/travel/hotels/grand-beach.jpg",
+    id: "hyatt-grand-cypress",
+    name: "Hyatt Regency Grand Cypress",
+    image: "/travel/hotels/hyatt-grand-cypress.jpg",
     imageAlt:
-      "White lakeside suites at Grand Beach by Hilton reflected in Lake Bryan",
-    address: "8317 Lake Bryan Beach Blvd, Orlando, FL 32821",
+      "Atrium lobby of Hyatt Regency Grand Cypress, with palms and guest-room balconies",
+    imageCredit: "Photograph by Josh Hallett, CC BY-SA 2.0",
+    address: "1 Grand Cypress Blvd, Orlando, FL 32836",
     distance: "Approximately 5 minutes from venue",
     description:
-      "Spacious 1–3 bedroom suites on Lake Bryan, a few minutes from Paradise Cove.",
+      "A Lake Buena Vista resort a short drive from Paradise Cove. Use the group booking link for the wedding block.",
     bookingUrl:
-      "https://www.hiltongrandvacations.com/en/resorts-and-destinations/florida/grand-beach-a-hilton-vacation-club",
-    groupCode: "Paradise Cove",
-    phone: "(407) 238-2500",
-    contactName: "Yamile Rivera",
-    contactEmail: "yamile.rivera@hgv.com",
-    amenities: ["1–3 bedroom suites"],
-  },
-  {
-    id: "holiday-inn",
-    name: "Holiday Inn",
-    image: "/travel/hotels/holiday-inn.jpg",
-    imageAlt:
-      "Heated resort pool at Holiday Inn Resort Orlando–Lake Buena Vista",
-    address: "13351 State Road 535, Orlando, FL 32821",
-    distance: "Walking distance from venue",
-    description:
-      "A Lake Buena Vista resort within walking distance of Paradise Cove.",
-    bookingUrl: "https://www.hiresortlbv.com/",
-    groupCode: "Paradise Cove",
-    phone: "(407) 239-4500",
-    contactEmail: "sales@hiresortlbv.com",
-    amenities: ["Walking distance"],
+      "https://www.hyatt.com/events/en-US/group-booking/VISTA/G-WR26",
+    groupCode: "G-WR26",
+    phone: "(407) 239-1234",
+    amenities: ["Resort"],
   },
   {
     id: "marriott-village",
@@ -74,22 +57,6 @@ export const hotels: Hotel[] = [
     contactName: "Mary Nasarzewski",
     contactEmail: "Mary.Nasarzewski@MarriottVillageOrlando.com",
     amenities: ["Three Marriott hotels"],
-  },
-  {
-    id: "caribe-royale",
-    name: "Caribe Royale",
-    image: "/travel/hotels/caribe-royale.jpg",
-    imageAlt: "Dusk view of the pink Caribe Royale facade and arched entrance",
-    address: "8101 World Center Drive, Orlando, FL 32821",
-    distance: "Approximately 10 minutes from venue",
-    description:
-      "A resort-style stay with suites, pools, and easy access to the celebration.",
-    bookingUrl: "https://www.cariberoyale.com",
-    groupCode: "Paradise Cove",
-    phone: "(407) 238-8000",
-    contactName: "Saudia Sookram",
-    contactEmail: "ssookram@cariberoyale.com",
-    amenities: ["Resort style"],
   },
   {
     id: "sheraton-lbv",
@@ -114,7 +81,7 @@ export const travelDetails = {
   driving:
     "Paradise Cove sits on Lake Bryan in Orlando, just south of I-4 near Apopka Vineland Road (SR 535). Use 13245 Lake Bryan Drive, Orlando, FL 32821 in your navigation app. Allow extra time on I-4 around theme-park rush hours.",
   shuttle:
-    "Recommended hotels are a short drive or rideshare from Paradise Cove. Holiday Inn is within walking distance of the venue.",
+    "Recommended hotels are a short drive or rideshare from Paradise Cove.",
   parking:
     "On-site parking is available at Paradise Cove. Overnight parking is at your hotel. Rideshare drop-off is at the Lake Bryan Drive entrance.",
   localContact: {

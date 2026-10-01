@@ -51,7 +51,7 @@ export const scheduleEvent = defineType({
       title: "Description",
       type: "text",
       rows: 4,
-      validation: (rule) => rule.required().max(600),
+      validation: (rule) => rule.required().max(1200),
     }),
     defineField({
       name: "dressCode",
@@ -63,6 +63,17 @@ export const scheduleEvent = defineType({
       title: "Map link",
       type: "url",
       validation: (rule) => rule.uri({ scheme: ["http", "https"] }),
+    }),
+    defineField({
+      name: "websiteUrl",
+      title: "Website",
+      type: "url",
+      validation: (rule) => rule.uri({ scheme: ["http", "https"] }),
+    }),
+    defineField({
+      name: "websiteLabel",
+      title: "Website link label",
+      type: "string",
     }),
     defineField({
       name: "transportation",

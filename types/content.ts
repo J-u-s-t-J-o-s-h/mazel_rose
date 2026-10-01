@@ -54,6 +54,8 @@ export type ScheduleEvent = {
   description: string;
   dressCode?: string;
   mapUrl?: string;
+  websiteUrl?: string;
+  websiteLabel?: string;
   transportation?: string;
   parking?: string;
   isPrivate?: boolean;
@@ -65,6 +67,7 @@ export type Hotel = {
   name: string;
   image: string;
   imageAlt: string;
+  imageCredit?: string;
   address: string;
   distance: string;
   description: string;

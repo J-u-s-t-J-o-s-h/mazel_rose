@@ -83,6 +83,11 @@ export const hotel = defineType({
       validation: (rule) => rule.email(),
     }),
     defineField({
+      name: "imageCredit",
+      title: "Photo credit",
+      type: "string",
+    }),
+    defineField({
       name: "amenities",
       title: "Amenities",
       type: "array",

@@ -68,7 +68,7 @@ export default async function TravelPage() {
           <FadeIn>
             <SectionHeading
               title="Where To Stay"
-              description="Mention Paradise Cove when booking for exclusive offers."
+              description="Use the booking link on each hotel for the wedding block."
               dividerTone="brass"
             />
           </FadeIn>

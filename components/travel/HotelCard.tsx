@@ -16,6 +16,11 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
             className="object-cover"
           />
         ) : null}
+        {hotel.imageCredit ? (
+          <p className="absolute inset-x-0 bottom-0 bg-wine-black/45 px-3 py-1 text-[10px] tracking-wide text-ivory/80">
+            {hotel.imageCredit}
+          </p>
+        ) : null}
       </div>
       <div className="flex flex-1 flex-col p-6">
         <p className="text-xs uppercase tracking-[0.18em] text-cinnamon">

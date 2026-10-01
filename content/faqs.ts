@@ -37,7 +37,7 @@ export const faqs: FaqItem[] = [
     id: "transportation",
     question: "Is transportation provided?",
     answer:
-      "Recommended hotels are a short drive or rideshare from Paradise Cove. Holiday Inn is within walking distance of the venue.",
+      "Recommended hotels are a short drive or rideshare from Paradise Cove.",
   },
   {
     id: "parking",

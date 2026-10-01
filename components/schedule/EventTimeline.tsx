@@ -31,9 +31,14 @@ export function EventTimeline({ events }: { events: ScheduleEvent[] }) {
               </div>
               <p className="mt-3 text-sm font-medium text-peacock">{event.venue}</p>
               <p className="mt-1 text-sm text-charcoal/70">{event.address}</p>
-              <p className="mt-4 text-sm leading-relaxed text-charcoal/80">
-                {event.description}
-              </p>
+              <div className="mt-4 space-y-3 text-sm leading-relaxed text-charcoal/80">
+                {event.description
+                  .split(/\n\n+/)
+                  .filter(Boolean)
+                  .map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+              </div>
               <dl className="mt-5 grid gap-3 text-sm">
                 {event.dressCode ? (
                   <div>
@@ -60,6 +65,17 @@ export function EventTimeline({ events }: { events: ScheduleEvent[] }) {
                   </div>
                 ) : null}
               </dl>
+              {event.websiteUrl ? (
+                <a
+                  href={event.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-2 text-sm text-burgundy transition hover:text-cinnamon"
+                >
+                  {event.websiteLabel || websiteLabel(event.websiteUrl)}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              ) : null}
               {event.mapUrl ? (
                 <a
                   href={event.mapUrl}
@@ -76,4 +92,12 @@ export function EventTimeline({ events }: { events: ScheduleEvent[] }) {
       ))}
     </ol>
   );
+}
+
+function websiteLabel(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
 }
