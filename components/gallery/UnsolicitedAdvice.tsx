@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
@@ -97,28 +97,28 @@ export function UnsolicitedAdvice({ notes }: { notes: PublicAdvice[] }) {
   }
 
   return (
-    <section className="mt-20 border-t border-ivory/15 pt-16" aria-labelledby={titleId}>
+    <section className="mt-14 border-t border-ivory/15 pt-10 sm:mt-20 sm:pt-16" aria-labelledby={titleId}>
       <div className="mx-auto max-w-2xl text-center">
-        <p className="font-script text-3xl text-champagne">For the couple</p>
-        <h2 id={titleId} className="mt-2 font-serif text-4xl text-ivory">
+        <p className="font-script text-2xl text-champagne sm:text-3xl">For the couple</p>
+        <h2 id={titleId} className="mt-1 font-serif text-3xl text-ivory sm:mt-2 sm:text-4xl">
           Unsolicited Advice
         </h2>
-        <p className="mt-4 text-base leading-relaxed text-ivory/80">
+        <p className="mt-3 text-base leading-relaxed text-ivory/80 sm:mt-4">
           This spot is just for words. Leave Tiffany and Cary something sweet, something silly, or the advice they definitely did not ask for.
         </p>
       </div>
 
       {notes.length ? (
-        <div className="relative mx-auto mt-12 max-w-5xl">
-          <ul className="grid gap-8 sm:grid-cols-2">
-            {notes.map((note) => (
-              <AdviceNote key={note.id} note={note} still={Boolean(reduceMotion)} />
+        <div className="relative mx-auto mt-8 max-w-5xl sm:mt-12">
+          <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8">
+            {notes.map((note, index) => (
+              <AdviceNote key={note.id} note={note} still={Boolean(reduceMotion)} align={index % 2 === 0 ? "start" : "end"} />
             ))}
           </ul>
         </div>
       ) : null}
 
-      <form onSubmit={onSubmit} className="relative mx-auto mt-10 max-w-xl border border-ivory/20 bg-ivory p-6 text-left text-wine-black sm:p-8" noValidate>
+      <form onSubmit={onSubmit} className="relative mx-auto mt-8 max-w-xl border border-ivory/20 bg-ivory p-5 text-left text-wine-black sm:mt-10 sm:p-8" noValidate>
         <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
           <label htmlFor="advice-website">Company</label>
           <input
@@ -192,24 +192,206 @@ export function UnsolicitedAdvice({ notes }: { notes: PublicAdvice[] }) {
 
 const NOTE_PAPERS = ["#f7f1e4", "#f6d9cc", "#f6e7b4", "#e5eddc", "#f8e6ea"] as const;
 
-const CONFETTI_COLORS = ["#fff6e4", "#f6e7b4", "#e7b15a", "#f6d9cc", "#d46a78", "#8f9b7a", "#6a1f33", "#f5eee6", "#c9a36a"];
+const CONFETTI_COLORS = ["#ffe14a", "#ff4f8b", "#ff7a29", "#3ee0ff", "#7dff6a", "#c77dff", "#ffffff", "#ff5d73", "#4d7cff"];
 
-function AdviceNote({ note, still }: { note: PublicAdvice; still: boolean }) {
+function useHoverWave() {
+  const [hover, setHover] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setHover(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return hover;
+}
+
+const WAVE_SECONDS = 1.15;
+
+function AdviceNote({ note, still, align }: { note: PublicAdvice; still: boolean; align: "start" | "end" }) {
   const tilt = still ? 0 : noteTilt(note.id);
+  const hoverWave = useHoverWave();
+  const filterId = useId().replace(/:/g, "");
+  const dxRef = useRef<SVGAnimateElement>(null);
+  const dyRef = useRef<SVGAnimateElement>(null);
+  const scaleRef = useRef<SVGAnimateElement>(null);
+  const pending = useRef<WavePath | null>(null);
+  const pointRef = useRef<{ x: number; y: number } | null>(null);
+  const moved = useRef(false);
+  const wavingRef = useRef(false);
+  const [waving, setWaving] = useState(false);
+  const paper = NOTE_PAPERS[noteTone(note.id)];
+
+  function play(corner: WavePath) {
+    const dx = dxRef.current;
+    const dy = dyRef.current;
+    const scale = scaleRef.current;
+    if (!dx || !dy || !scale) return;
+    dx.setAttribute("from", String(corner.fromX));
+    dx.setAttribute("to", String(corner.toX));
+    dy.setAttribute("from", String(corner.fromY));
+    dy.setAttribute("to", String(corner.toY));
+    dx.beginElement();
+    dy.beginElement();
+    scale.beginElement();
+  }
+
+  function startWave(el: HTMLDivElement, clientX: number, clientY: number) {
+    if (still) return;
+    const point = localPoint(el, clientX, clientY);
+    const corner = waveFromPoint(point.x, point.y, point.w, point.h);
+    if (wavingRef.current) {
+      play(corner);
+      return;
+    }
+    pending.current = corner;
+    setWaving(true);
+  }
+
+  useEffect(() => {
+    const scale = scaleRef.current;
+    if (!scale) return;
+    const finished = () => {
+      try {
+        scale.getStartTime();
+      } catch {
+        setWaving(false);
+      }
+    };
+    scale.addEventListener("endEvent", finished);
+    return () => scale.removeEventListener("endEvent", finished);
+  }, [hoverWave, waving]);
+
+  useEffect(() => {
+    wavingRef.current = waving;
+  }, [waving]);
+
+  useEffect(() => {
+    if (!waving || !pending.current) return;
+    const corner = pending.current;
+    pending.current = null;
+    play(corner);
+  }, [waving]);
+
+  useEffect(() => {
+    return () => {
+      pending.current = null;
+    };
+  }, []);
+
+  function onPointerEnter(event: React.PointerEvent<HTMLDivElement>) {
+    if (!hoverWave || event.pointerType !== "mouse") return;
+    startWave(event.currentTarget, event.clientX, event.clientY);
+  }
+
+  function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (hoverWave && event.pointerType === "mouse") return;
+    if (event.button !== 0) return;
+    pointRef.current = { x: event.clientX, y: event.clientY };
+    moved.current = false;
+  }
+
+  function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    const origin = pointRef.current;
+    if (!origin) return;
+    const dx = event.clientX - origin.x;
+    const dy = event.clientY - origin.y;
+    if (dx * dx + dy * dy > 64) moved.current = true;
+  }
+
+  function onPointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    const tapped = pointRef.current !== null && !moved.current;
+    pointRef.current = null;
+    if (!tapped || (hoverWave && event.pointerType === "mouse")) return;
+    startWave(event.currentTarget, event.clientX, event.clientY);
+  }
+
   return (
     <li
-      className="paper-texture relative px-6 pb-6 pt-9 text-left text-wine-black shadow-[0_16px_30px_rgba(0,0,0,0.28)]"
-      style={{ transform: `rotate(${tilt}deg)`, backgroundColor: NOTE_PAPERS[noteTone(note.id)] }}
+      className={`advice-note relative origin-center ${align === "end" ? "ml-auto" : "mr-auto"}`}
+      style={{ ["--tilt" as string]: `${tilt}deg` }}
     >
-      <span
-        className="absolute left-1/2 top-0 h-4 w-16 -translate-x-1/2 -translate-y-1/2 rotate-[-2deg] bg-ivory/80"
-        aria-hidden="true"
-      />
-      <NoteConfetti id={note.id} />
-      <p className="font-serif text-2xl leading-relaxed">{note.message}</p>
-      <p className="mt-5 text-right font-script text-3xl text-burgundy">{note.guestName}</p>
+      <svg className="pointer-events-none absolute h-0 w-0" aria-hidden="true">
+          <filter id={filterId} primitiveUnits="userSpaceOnUse" x="-12%" y="-28%" width="124%" height="156%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.008 0.018" numOctaves="1" seed="3" result="noise" />
+            <feOffset in="noise" dx="0" dy="0" result="moved">
+              <animate ref={dxRef} attributeName="dx" from="0" to="0" dur={`${WAVE_SECONDS}s`} begin="indefinite" fill="freeze" calcMode="linear" />
+              <animate ref={dyRef} attributeName="dy" from="0" to="0" dur={`${WAVE_SECONDS}s`} begin="indefinite" fill="freeze" calcMode="linear" />
+            </feOffset>
+            <feDisplacementMap in="SourceGraphic" in2="moved" scale="0" xChannelSelector="R" yChannelSelector="G">
+              <animate
+                ref={scaleRef}
+                attributeName="scale"
+                values="0;32;38;18;0"
+                keyTimes="0;0.24;0.52;0.78;1"
+                dur={`${WAVE_SECONDS}s`}
+                begin="indefinite"
+                fill="freeze"
+                calcMode="spline"
+                keySplines="0.2 0.8 0.2 1;0.4 0 0.6 1;0.3 0.7 0.2 1;0.4 0 0.2 1"
+              />
+            </feDisplacementMap>
+          </filter>
+        </svg>
+      <div
+        className="paper-texture relative select-none px-5 pb-4 pt-7 text-left text-wine-black shadow-[0_10px_22px_rgba(0,0,0,0.24)] sm:px-6 sm:pb-6 sm:pt-9 sm:shadow-[0_16px_30px_rgba(0,0,0,0.28)]"
+        style={{
+          backgroundColor: paper,
+          filter: waving ? `url(#${filterId})` : undefined,
+        }}
+        onPointerEnter={onPointerEnter}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => {
+          pointRef.current = null;
+        }}
+      >
+        <span
+          className="absolute left-1/2 top-0 h-4 w-16 -translate-x-1/2 -translate-y-1/2 rotate-[-2deg] bg-ivory/80"
+          aria-hidden="true"
+        />
+        <NoteConfetti id={note.id} />
+        <p className="font-serif text-xl leading-snug sm:text-2xl sm:leading-relaxed">{note.message}</p>
+        <p className="mt-3 text-right font-script text-2xl text-burgundy sm:mt-5 sm:text-3xl">{note.guestName}</p>
+      </div>
     </li>
   );
+}
+
+type WavePath = {
+  fromX: number;
+  toX: number;
+  fromY: number;
+  toY: number;
+};
+
+function localPoint(el: HTMLElement, clientX: number, clientY: number) {
+  const parent = el.parentElement ?? el;
+  const matrix = new DOMMatrix(getComputedStyle(parent).transform);
+  const bounds = parent.getBoundingClientRect();
+  const local = new DOMPoint(clientX - bounds.left - bounds.width / 2, clientY - bounds.top - bounds.height / 2).matrixTransform(
+    matrix.inverse(),
+  );
+  return {
+    x: local.x + parent.clientWidth / 2,
+    y: local.y + parent.clientHeight / 2,
+    w: el.clientWidth,
+    h: el.clientHeight,
+  };
+}
+
+function waveFromPoint(x: number, y: number, w: number, h: number): WavePath {
+  const fromLeft = x < w / 2;
+  const fromTop = y < h / 2;
+  const signX = fromLeft ? 1 : -1;
+  const signY = fromTop ? 1 : -1;
+  return {
+    fromX: -70 * signX,
+    toX: 160 * signX,
+    fromY: -48 * signY,
+    toY: 110 * signY,
+  };
 }
 
 function celebrateAdvice() {
@@ -225,7 +407,7 @@ function launchConfetti() {
 
   const flash = document.createElement("span");
   flash.style.cssText =
-    "position:absolute;left:50%;top:42%;width:min(70vw,520px);height:min(70vw,520px);border-radius:999px;background:radial-gradient(circle,rgba(246,231,180,0.85),rgba(246,231,180,0) 68%);animation:advice-flash 0.45s ease-out forwards";
+    "position:absolute;left:50%;top:42%;width:min(70vw,520px);height:min(70vw,520px);border-radius:999px;background:radial-gradient(circle,rgba(255,244,160,0.9),rgba(255,120,170,0) 68%);animation:advice-flash 0.45s ease-out forwards";
   layer.appendChild(flash);
 
   for (const piece of confettiPieces()) {
@@ -379,10 +561,10 @@ function ping(ctx: AudioContext, master: GainNode, when: number, frequency: numb
 function NoteConfetti({ id }: { id: string }) {
   const tone = hashNote(id);
   const bits = [
-    { className: "absolute -left-2 top-8 h-3 w-3 rotate-12 bg-burgundy", hide: tone % 2 === 0 },
-    { className: "absolute -right-1.5 bottom-6 h-3 w-3 rounded-full bg-brass", hide: tone % 3 === 0 },
-    { className: "absolute right-6 -top-1.5 h-2.5 w-5 -rotate-6 bg-sage", hide: false },
-    { className: "absolute -bottom-1.5 left-8 h-2.5 w-2.5 rotate-45 bg-cinnamon", hide: tone % 2 === 1 },
+    { className: "absolute left-2 top-7 h-2.5 w-2.5 rotate-12 bg-burgundy sm:-left-2 sm:top-8 sm:h-3 sm:w-3", hide: tone % 2 === 0 },
+    { className: "absolute right-2 bottom-4 h-2.5 w-2.5 rounded-full bg-brass sm:-right-1.5 sm:bottom-6 sm:h-3 sm:w-3", hide: tone % 3 === 0 },
+    { className: "absolute right-5 top-1 h-2 w-4 -rotate-6 bg-sage sm:right-6 sm:-top-1.5 sm:h-2.5 sm:w-5", hide: false },
+    { className: "absolute bottom-1 left-6 h-2 w-2 rotate-45 bg-cinnamon sm:-bottom-1.5 sm:left-8 sm:h-2.5 sm:w-2.5", hide: tone % 2 === 1 },
   ];
   return (
     <>

@@ -140,6 +140,18 @@
     background-image: var(--paper-grain);
   }
 
+  .advice-note {
+    width: 88%;
+    transform: rotate(calc(var(--tilt) * 0.4));
+  }
+
+  @media (min-width: 768px) {
+    .advice-note {
+      width: 100%;
+      transform: rotate(var(--tilt));
+    }
+  }
+
   .velvet-glow {
     background:
       radial-gradient(
