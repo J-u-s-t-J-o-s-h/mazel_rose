@@ -9,6 +9,7 @@ import { DecorativeDivider } from "@/components/ui/DecorativeDivider";
 import { Monogram } from "@/components/ui/Monogram";
 import { StarOfDavid } from "@/components/ui/StarOfDavid";
 import { useSite } from "@/components/providers/SiteProvider";
+import { CtaSloth } from "@/components/sections/CtaSloth";
 
 export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
   const site = useSite();
@@ -93,17 +94,19 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
           </motion.div>
 
           <motion.div
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mt-10"
             initial={reduceMotion ? false : { y: 10 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <Button href={hero.primaryCta.href} variant="primary" size="lg">
-              {hero.primaryCta.label}
-            </Button>
-            <Button href={hero.secondaryCta.href} variant="ghost" size="lg">
-              {hero.secondaryCta.label}
-            </Button>
+            <CtaSloth>
+              <Button href={hero.primaryCta.href} variant="primary" size="lg">
+                {hero.primaryCta.label}
+              </Button>
+              <Button href={hero.secondaryCta.href} variant="ghost" size="lg">
+                {hero.secondaryCta.label}
+              </Button>
+            </CtaSloth>
           </motion.div>
         </div>
       </div>
