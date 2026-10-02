@@ -7,6 +7,7 @@ import type { HomeContent } from "@/types/content";
 import { Button } from "@/components/ui/Button";
 import { DecorativeDivider } from "@/components/ui/DecorativeDivider";
 import { Monogram } from "@/components/ui/Monogram";
+import { StarOfDavid } from "@/components/ui/StarOfDavid";
 import { useSite } from "@/components/providers/SiteProvider";
 
 export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
@@ -56,7 +57,17 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
             {hero.heading}
           </motion.h1>
 
-          <DecorativeDivider className="mt-6" tone="ivory" />
+          <DecorativeDivider
+            className="mt-7"
+            tone="ivory"
+            flourish
+            ornament={
+              <StarOfDavid
+                animated
+                className="h-12 w-12 text-champagne drop-shadow-[0_1px_2px_rgba(20,12,14,0.55)] sm:h-16 sm:w-16"
+              />
+            }
+          />
 
           <motion.p
             className="mt-6 text-xs uppercase tracking-[0.28em] text-ivory/85 sm:text-sm"
