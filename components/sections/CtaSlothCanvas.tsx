@@ -77,7 +77,7 @@ export function CtaSlothCanvas({
     let walkTime = 0;
     let hopFrom: "wave" | "walk" = "wave";
     let hopWalkTime = 0;
-    let hopFacing = ctaSlothConfig.waveFacingDegrees;
+    let hopFacing: number = ctaSlothConfig.waveFacingDegrees;
     let facing: number = ctaSlothConfig.waveFacingDegrees;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
