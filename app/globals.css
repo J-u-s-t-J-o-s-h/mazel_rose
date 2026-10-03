@@ -203,11 +203,11 @@
     top: 0;
   }
 
-  /* One shared clock. The glow stays inside the star and the word
-     so it never washes onto the names below. */
+  /* The star draws, the word fades, and the glow rises on one linear
+     clock. Each one lands on its resting value, so the last frame does
+     not pop. The glow stays inside the star and the word. */
   :root {
-    --hero-mark-duration: 1.7s;
-    --hero-mark-ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+    --hero-mark-duration: 1.5s;
   }
 
   @keyframes star-draw {
@@ -215,18 +215,27 @@
       stroke-dashoffset: 1;
     }
     to {
-      stroke-dashoffset: 0;
+      stroke-dashoffset: -0.02;
     }
   }
 
-  .star-draw {
+  .star-draw,
+  .star-draw-hold {
     stroke-dasharray: 1;
-    stroke-dashoffset: 0;
-    animation: star-draw var(--hero-mark-duration) var(--hero-mark-ease) both;
+  }
+
+  .star-draw {
+    stroke-dashoffset: -0.02;
+    animation: star-draw var(--hero-mark-duration) linear both;
+  }
+
+  .star-draw-hold {
+    stroke-dashoffset: 1;
   }
 
   .hero-word-load {
-    animation: hero-word-load var(--hero-mark-duration) var(--hero-mark-ease) both;
+    -webkit-font-smoothing: antialiased;
+    animation: hero-word-load var(--hero-mark-duration) linear both;
   }
 
   @keyframes hero-word-load {
@@ -254,9 +263,9 @@
       rgba(196, 154, 84, 0.28) 58%,
       transparent 76%
     );
-    opacity: 0;
+    opacity: 0.55;
     pointer-events: none;
-    animation: gold-glow-load var(--hero-mark-duration) var(--hero-mark-ease) both;
+    animation: gold-glow-load var(--hero-mark-duration) linear both;
   }
 
   @keyframes gold-glow-load {

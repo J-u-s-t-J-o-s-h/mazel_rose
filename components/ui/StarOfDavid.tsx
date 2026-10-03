@@ -8,15 +8,22 @@ type StarOfDavidProps = {
   className?: string;
   /** Draw the strokes in time with the hero script line. */
   animated?: boolean;
+  /** False until the script font is ready, so the draw does not start early. */
+  cue?: boolean;
 };
 
-const up = "M32 7.5L53.2 44.2H10.8L32 7.5Z";
-const down = "M32 56.5L10.8 19.8H53.2L32 56.5Z";
+const up = "M32 7.5L53.2 44.2H10.8L32 7.5";
+const down = "M32 56.5L10.8 19.8H53.2L32 56.5";
 
-export function StarOfDavid({ className, animated = false }: StarOfDavidProps) {
+export function StarOfDavid({
+  className,
+  animated = false,
+  cue = true,
+}: StarOfDavidProps) {
   const reduceMotion = useReducedMotion();
   const isPreview = useIsPreview();
   const play = animated && !reduceMotion && !isPreview;
+  const draw = play && cue;
 
   const svg = (
     <svg
@@ -35,7 +42,7 @@ export function StarOfDavid({ className, animated = false }: StarOfDavidProps) {
           strokeWidth="1.7"
           strokeLinejoin="round"
           strokeLinecap="round"
-          className={play ? "star-draw" : undefined}
+          className={draw ? "star-draw" : play ? "star-draw-hold" : undefined}
         />
       ))}
     </svg>
@@ -46,7 +53,8 @@ export function StarOfDavid({ className, animated = false }: StarOfDavidProps) {
   return (
     <span
       className={cn(
-        "gold-glow-load relative inline-flex text-champagne",
+        draw && "gold-glow-load",
+        "relative inline-flex text-champagne",
         className,
       )}
     >

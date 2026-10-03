@@ -39,9 +39,20 @@ export function CtaSloth({ children }: CtaSlothProps) {
     const sync = () => setPaused(document.hidden || offscreenRef.current);
     const mark = (visible: boolean) => {
       offscreenRef.current = !visible;
-      if (visible) setStarted(true);
       sync();
     };
+    const section = node.closest("section");
+    const begin = () => setStarted(true);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const fallback = window.setTimeout(begin, reduced ? 0 : 4000);
+    const onEnd = (event: Event) => {
+      if (!(event instanceof AnimationEvent) || event.animationName !== "star-draw") {
+        return;
+      }
+      window.clearTimeout(fallback);
+      begin();
+    };
+    section?.addEventListener("animationend", onEnd);
     const rect = node.getBoundingClientRect();
     mark(rect.bottom > -160 && rect.top < window.innerHeight + 160);
     const observer = new IntersectionObserver(
@@ -51,6 +62,8 @@ export function CtaSloth({ children }: CtaSlothProps) {
     observer.observe(node);
     document.addEventListener("visibilitychange", sync);
     return () => {
+      window.clearTimeout(fallback);
+      section?.removeEventListener("animationend", onEnd);
       observer.disconnect();
       document.removeEventListener("visibilitychange", sync);
     };
