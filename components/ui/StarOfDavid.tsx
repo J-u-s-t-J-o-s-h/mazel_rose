@@ -8,22 +8,15 @@ type StarOfDavidProps = {
   className?: string;
   /** Draw the strokes in time with the hero script line. */
   animated?: boolean;
-  /** False until the script font is ready, so the draw does not start early. */
-  cue?: boolean;
 };
 
 const up = "M32 7.5L53.2 44.2H10.8L32 7.5";
 const down = "M32 56.5L10.8 19.8H53.2L32 56.5";
 
-export function StarOfDavid({
-  className,
-  animated = false,
-  cue = true,
-}: StarOfDavidProps) {
+export function StarOfDavid({ className, animated = false }: StarOfDavidProps) {
   const reduceMotion = useReducedMotion();
   const isPreview = useIsPreview();
   const play = animated && !reduceMotion && !isPreview;
-  const draw = play && cue;
 
   const svg = (
     <svg
@@ -33,16 +26,21 @@ export function StarOfDavid({
       className={play ? "h-full w-full" : cn("h-10 w-10", className)}
       aria-hidden="true"
     >
-      {[up, down].map((d) => (
+      {[up, down].map((d, index) => (
         <path
           key={d}
           d={d}
-          pathLength={play ? 1 : undefined}
           stroke="currentColor"
           strokeWidth="1.7"
           strokeLinejoin="round"
           strokeLinecap="round"
-          className={draw ? "star-draw" : play ? "star-draw-hold" : undefined}
+          className={
+            play
+              ? index === 0
+                ? "star-draw"
+                : "star-draw star-draw-late"
+              : undefined
+          }
         />
       ))}
     </svg>
@@ -53,8 +51,7 @@ export function StarOfDavid({
   return (
     <span
       className={cn(
-        draw && "gold-glow-load",
-        "relative inline-flex text-champagne",
+        "gold-glow-load relative inline-flex text-champagne",
         className,
       )}
     >

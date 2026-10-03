@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { HomeContent } from "@/types/content";
 import { Button } from "@/components/ui/Button";
@@ -18,18 +17,6 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
   const reduceMotion = useReducedMotion();
   const isPreview = useIsPreview();
   const glow = !reduceMotion && !isPreview;
-  const [fontsReady, setFontsReady] = useState(false);
-  const cue = glow && fontsReady;
-
-  useEffect(() => {
-    let active = true;
-    document.fonts.ready.then(() => {
-      if (active) setFontsReady(true);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-wine-black">
@@ -59,15 +46,13 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
           <div className="flex w-full flex-col items-center">
             <StarOfDavid
               animated
-              cue={cue}
-              className="mb-4 h-12 w-12 text-champagne sm:mb-5 sm:h-16 sm:w-16"
+              className="mb-4 h-14 w-14 text-champagne sm:mb-5 sm:h-16 sm:w-16"
             />
 
             <p
               className={cn(
                 "relative font-script text-4xl text-champagne sm:text-5xl",
-                cue && "gold-glow-load hero-word-load",
-                glow && !fontsReady && "opacity-0",
+                glow && "gold-glow-load hero-word-load",
               )}
             >
               {hero.scriptIntro}

@@ -212,25 +212,30 @@
 
   @keyframes star-draw {
     from {
-      stroke-dashoffset: 1;
+      stroke-dashoffset: 128;
     }
     to {
-      stroke-dashoffset: -0.02;
+      stroke-dashoffset: 0;
     }
-  }
-
-  .star-draw,
-  .star-draw-hold {
-    stroke-dasharray: 1;
   }
 
   .star-draw {
-    stroke-dashoffset: -0.02;
+    /* 128 matches the triangle length in viewBox units. A unitless dash
+       of 1 is what mobile browsers draw, which never reveals the star. */
+    stroke-dasharray: 128;
+    stroke-dashoffset: 0;
     animation: star-draw var(--hero-mark-duration) linear both;
   }
 
-  .star-draw-hold {
-    stroke-dashoffset: 1;
+  @media (max-width: 639px) {
+    .star-draw {
+      animation-duration: calc(var(--hero-mark-duration) / 2);
+    }
+
+    .star-draw-late {
+      stroke-dashoffset: 128;
+      animation-delay: calc(var(--hero-mark-duration) / 2);
+    }
   }
 
   .hero-word-load {

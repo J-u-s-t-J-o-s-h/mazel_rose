@@ -45,10 +45,13 @@ export function CtaSloth({ children }: CtaSlothProps) {
     const begin = () => setStarted(true);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fallback = window.setTimeout(begin, reduced ? 0 : 4000);
+    let strokesFinished = 0;
     const onEnd = (event: Event) => {
       if (!(event instanceof AnimationEvent) || event.animationName !== "star-draw") {
         return;
       }
+      strokesFinished += 1;
+      if (strokesFinished < 2) return;
       window.clearTimeout(fallback);
       begin();
     };
