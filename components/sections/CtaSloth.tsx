@@ -61,7 +61,7 @@ export function CtaSloth({ children }: CtaSlothProps) {
   return (
     <div
       ref={frameRef}
-      className="relative flex flex-col items-center justify-center gap-4 overflow-visible sm:flex-row"
+      className="relative flex flex-col items-center justify-center gap-4 overflow-visible pt-20 sm:flex-row sm:pt-0"
     >
       <div data-sloth-stop="start">{stops[0]}</div>
       <div data-sloth-stop="end">{stops[1]}</div>

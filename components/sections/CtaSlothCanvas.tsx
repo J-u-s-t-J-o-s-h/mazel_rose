@@ -30,6 +30,7 @@ export function CtaSlothCanvas({
   const pausedRef = useRef(paused);
   const reducedMotionRef = useRef(reducedMotion);
   const controlsRef = useRef<PlaybackControls>({ sync: () => {} });
+  const requestHopRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 639px)");
@@ -69,11 +70,14 @@ export function CtaSlothCanvas({
     let disposed = false;
     let frame = 0;
     let lastTick = performance.now();
-    let mode: "delay" | "wave" | "walk" = "delay";
+    let mode: "delay" | "wave" | "walk" | "hop" = "delay";
     let delayLeft = ctaSlothConfig.initialDelayMs / 1000;
     let atEnd = false;
     let headingToEnd = true;
     let walkTime = 0;
+    let hopFrom: "wave" | "walk" = "wave";
+    let hopWalkTime = 0;
+    let hopFacing = ctaSlothConfig.waveFacingDegrees;
     let facing: number = ctaSlothConfig.waveFacingDegrees;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -118,9 +122,14 @@ export function CtaSlothCanvas({
         camera.aspect = aspect;
         camera.updateProjectionMatrix();
       }
-      placeSloth(slothHost, slothTrack, mode === "walk", atEnd, headingToEnd, walkTime);
+      const shown = shownTravel();
+      placeSloth(slothHost, slothTrack, shown.walking, atEnd, headingToEnd, shown.time);
       renderer.render(scene, camera);
     };
+    const shownTravel = () => ({
+      walking: mode === "walk" || (mode === "hop" && hopFrom === "walk"),
+      time: mode === "hop" ? hopWalkTime : walkTime,
+    });
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(slothHost);
     resizeObserver.observe(slothTrack);
@@ -153,9 +162,18 @@ export function CtaSlothCanvas({
         const mixer = new THREE.AnimationMixer(root);
         const waveAction = mixer.clipAction(waveClip);
         const walkAction = mixer.clipAction(walkClip);
+        const hopClip = gltf.animations.find(
+          (animation) => animation.name === ctaSlothConfig.hopClip,
+        );
+        const hopAction = hopClip ? mixer.clipAction(hopClip) : null;
         waveAction.setLoop(THREE.LoopOnce, 1);
         waveAction.clampWhenFinished = true;
         walkAction.setLoop(THREE.LoopRepeat, Infinity);
+        if (hopAction) {
+          hopAction.setLoop(THREE.LoopOnce, 1);
+          hopAction.clampWhenFinished = true;
+          hopAction.stop();
+        }
         mixer.update(0);
         root.updateMatrixWorld(true);
 
@@ -185,6 +203,7 @@ export function CtaSlothCanvas({
         const startWave = () => {
           mode = "wave";
           walkAction.fadeOut(ctaSlothConfig.crossFadeSeconds);
+          hopAction?.fadeOut(ctaSlothConfig.crossFadeSeconds);
           waveAction
             .reset()
             .setEffectiveTimeScale(ctaSlothConfig.wavePlaybackRate)
@@ -198,6 +217,7 @@ export function CtaSlothCanvas({
           walkTime = 0;
           headingToEnd = !atEnd;
           waveAction.fadeOut(ctaSlothConfig.crossFadeSeconds);
+          hopAction?.fadeOut(ctaSlothConfig.crossFadeSeconds);
           walkAction
             .reset()
             .setEffectiveTimeScale(ctaSlothConfig.walkPlaybackRate)
@@ -206,6 +226,49 @@ export function CtaSlothCanvas({
             .play();
           ensureFrame();
         };
+        const startHop = () => {
+          if (!hopAction || !hopClip || mode === "hop" || reducedMotionRef.current) return;
+          hopFrom = mode === "walk" ? "walk" : "wave";
+          hopWalkTime = walkTime;
+          hopFacing = facing;
+          mode = "hop";
+          waveAction.fadeOut(ctaSlothConfig.crossFadeSeconds);
+          walkAction.fadeOut(ctaSlothConfig.crossFadeSeconds);
+          hopAction
+            .reset()
+            .setEffectiveTimeScale(ctaSlothConfig.hopPlaybackRate)
+            .setEffectiveWeight(1)
+            .fadeIn(ctaSlothConfig.crossFadeSeconds)
+            .play();
+          hopAction.time = hopClip.duration * ctaSlothConfig.hopActiveStart;
+          ensureFrame();
+        };
+        const restoreAfterHop = (action: THREE.AnimationAction) => {
+          // fadeOut turns enabled off once the weight hits zero, and play()
+          // does not turn it back on. Hold the hop on its raised pose so the
+          // blend does not play the clip's fall back into the bind pose.
+          if (hopAction) hopAction.paused = true;
+          action.enabled = true;
+          action.paused = false;
+          action.play();
+          if (hopAction) action.crossFadeFrom(hopAction, ctaSlothConfig.crossFadeSeconds);
+        };
+        const finishHop = () => {
+          if (hopAction) hopAction.paused = true;
+          if (hopFrom === "walk") {
+            mode = "walk";
+            restoreAfterHop(walkAction);
+            return;
+          }
+          const waveFinished = waveAction.time >= selectedWave.duration - 1 / 30;
+          if (waveAction.paused || waveFinished) {
+            startWave();
+            return;
+          }
+          mode = "wave";
+          restoreAfterHop(waveAction);
+        };
+        requestHopRef.current = startHop;
         function tick() {
           frame = 0;
           if (!slothHost || !slothTrack) return;
@@ -219,35 +282,61 @@ export function CtaSlothCanvas({
             if (delayLeft <= 0) startWave();
           } else {
             mixer.update(delta);
-            if (
-              mode === "wave" &&
-              waveAction.time >= selectedWave.duration - 1 / 30
-            ) {
-              startWalk();
-            } else if (mode === "walk") {
-              walkTime += delta;
-              if (
-                walkTime >=
-                ctaSlothConfig.departHoldSeconds + ctaSlothConfig.travelSeconds
-              ) {
-                atEnd = headingToEnd;
-                startWave();
-              }
-            }
           }
 
           const stops = measureStops(slothHost, slothTrack);
           const travelFromX = headingToEnd ? stops.start.x : stops.end.x;
           const travelToX = headingToEnd ? stops.end.x : stops.start.x;
-          const targetFacing =
-            mode === "walk"
-              ? travelToX >= travelFromX
-                ? ctaSlothConfig.walkFacingDegrees
-                : -ctaSlothConfig.walkFacingDegrees
-              : ctaSlothConfig.waveFacingDegrees;
-          facing = THREE.MathUtils.damp(facing, targetFacing, 4, delta);
-          root.rotation.y = THREE.MathUtils.degToRad(facing);
-          placeSloth(slothHost, slothTrack, mode === "walk", atEnd, headingToEnd, walkTime);
+          if (mode === "hop" && hopAction && hopClip) {
+            const start = hopClip.duration * ctaSlothConfig.hopActiveStart;
+            const end = hopClip.duration * ctaSlothConfig.hopActiveEnd;
+            const progress = THREE.MathUtils.clamp(
+              (hopAction.time - start) / Math.max(end - start, 0.001),
+              0,
+              1,
+            );
+            root.rotation.y = THREE.MathUtils.degToRad(
+              hopFacing + ctaSlothConfig.hopSpinDegrees * progress,
+            );
+          } else {
+            const targetFacing =
+              mode === "walk"
+                ? travelToX >= travelFromX
+                  ? ctaSlothConfig.walkFacingDegrees
+                  : -ctaSlothConfig.walkFacingDegrees
+                : ctaSlothConfig.waveFacingDegrees;
+            facing = THREE.MathUtils.damp(facing, targetFacing, 4, delta);
+            root.rotation.y = THREE.MathUtils.degToRad(facing);
+          }
+
+          if (mode === "wave" && waveAction.time >= selectedWave.duration - 1 / 30) {
+            startWalk();
+          } else if (mode === "walk") {
+            walkTime += delta;
+            if (
+              walkTime >=
+              ctaSlothConfig.departHoldSeconds + ctaSlothConfig.travelSeconds
+            ) {
+              atEnd = headingToEnd;
+              startWave();
+            }
+          } else if (
+            mode === "hop" &&
+            hopAction &&
+            hopClip &&
+            hopAction.time >= hopClip.duration * ctaSlothConfig.hopActiveEnd
+          ) {
+            finishHop();
+          }
+          const shown = shownTravel();
+          placeSloth(
+            slothHost,
+            slothTrack,
+            shown.walking,
+            atEnd,
+            headingToEnd,
+            shown.time,
+          );
           renderer.render(scene, camera);
           frame = requestAnimationFrame(tick);
         }
@@ -258,13 +347,14 @@ export function CtaSlothCanvas({
             if (pausedRef.current || reducedMotionRef.current) {
               cancelAnimationFrame(frame);
               frame = 0;
+              const shown = shownTravel();
               placeSloth(
                 slothHost,
                 slothTrack,
-                mode === "walk",
+                shown.walking,
                 atEnd,
                 headingToEnd,
-                walkTime,
+                shown.time,
               );
               renderer.render(scene, camera);
               return;
@@ -287,6 +377,7 @@ export function CtaSlothCanvas({
     return () => {
       disposed = true;
       controlsRef.current = { sync: () => {} };
+      requestHopRef.current = () => {};
       cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       canvas.removeEventListener("webglcontextlost", onContextLost);
@@ -299,15 +390,19 @@ export function CtaSlothCanvas({
   return (
     <div
       ref={slothHostRef}
-      aria-hidden="true"
       data-sloth-canvas="wave"
       className="cta-sloth-canvas pointer-events-none absolute drop-shadow-[0_8px_8px_rgba(36,23,27,0.28)]"
       style={
-        narrow
-          ? { width: "4rem", height: "4.25rem" }
-          : ctaSlothConfig.placement
+        narrow ? ctaSlothConfig.mobilePlacement : ctaSlothConfig.placement
       }
-    />
+    >
+      <button
+        type="button"
+        aria-label="Tap the sloth"
+        className="pointer-events-auto absolute inset-0 cursor-pointer border-0 bg-transparent p-0 touch-manipulation"
+        onClick={() => requestHopRef.current()}
+      />
+    </div>
   );
 }
 
