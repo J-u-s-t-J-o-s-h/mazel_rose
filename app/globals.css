@@ -202,4 +202,89 @@
     left: 0;
     top: 0;
   }
+
+  /* One shared clock. The glow stays inside the star and the word
+     so it never washes onto the names below. */
+  :root {
+    --hero-mark-duration: 1.7s;
+    --hero-mark-ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+  }
+
+  @keyframes star-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .star-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: star-draw var(--hero-mark-duration) var(--hero-mark-ease) both;
+  }
+
+  .hero-word-load {
+    animation: hero-word-load var(--hero-mark-duration) var(--hero-mark-ease) both;
+  }
+
+  @keyframes hero-word-load {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .gold-glow-load {
+    isolation: isolate;
+  }
+
+  .gold-glow-load::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 999px;
+    background: radial-gradient(
+      closest-side,
+      rgba(227, 202, 140, 0.9),
+      rgba(196, 154, 84, 0.28) 58%,
+      transparent 76%
+    );
+    opacity: 0;
+    pointer-events: none;
+    animation: gold-glow-load var(--hero-mark-duration) var(--hero-mark-ease) both;
+  }
+
+  @keyframes gold-glow-load {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 0.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .star-draw,
+    .hero-word-load,
+    .gold-glow-load::before {
+      animation: none;
+    }
+
+    .star-draw {
+      stroke-dashoffset: 0;
+    }
+
+    .hero-word-load {
+      opacity: 1;
+    }
+
+    .gold-glow-load::before {
+      opacity: 0.55;
+    }
+  }
 }

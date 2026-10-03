@@ -5,15 +5,18 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import type { HomeContent } from "@/types/content";
 import { Button } from "@/components/ui/Button";
-import { DecorativeDivider } from "@/components/ui/DecorativeDivider";
 import { Monogram } from "@/components/ui/Monogram";
 import { StarOfDavid } from "@/components/ui/StarOfDavid";
+import { useIsPreview } from "@/components/providers/PreviewModeProvider";
 import { useSite } from "@/components/providers/SiteProvider";
 import { CtaSloth } from "@/components/sections/CtaSloth";
+import { cn } from "@/lib/utils";
 
 export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
   const site = useSite();
   const reduceMotion = useReducedMotion();
+  const isPreview = useIsPreview();
+  const glow = !reduceMotion && !isPreview;
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-wine-black">
@@ -40,14 +43,21 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
 
       <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 py-28 sm:px-8">
         <div className="mx-auto max-w-4xl text-center text-ivory">
-          <motion.p
-            className="font-script text-4xl text-champagne sm:text-5xl"
-            initial={reduceMotion ? false : { y: 12 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-          >
-            {hero.scriptIntro}
-          </motion.p>
+          <div className="flex w-full flex-col items-center">
+            <StarOfDavid
+              animated
+              className="mb-4 h-12 w-12 text-champagne sm:mb-5 sm:h-16 sm:w-16"
+            />
+
+            <p
+              className={cn(
+                "relative font-script text-4xl text-champagne sm:text-5xl",
+                glow && "gold-glow-load hero-word-load",
+              )}
+            >
+              {hero.scriptIntro}
+            </p>
+          </div>
 
           <motion.h1
             className="mt-4 font-serif text-5xl tracking-[0.12em] sm:text-6xl md:text-7xl lg:text-8xl"
@@ -57,18 +67,6 @@ export function InvitationHero({ hero }: { hero: HomeContent["hero"] }) {
           >
             {hero.heading}
           </motion.h1>
-
-          <DecorativeDivider
-            className="mt-7"
-            tone="ivory"
-            flourish
-            ornament={
-              <StarOfDavid
-                animated
-                className="h-12 w-12 text-champagne drop-shadow-[0_1px_2px_rgba(20,12,14,0.55)] sm:h-16 sm:w-16"
-              />
-            }
-          />
 
           <motion.p
             className="mt-6 text-xs uppercase tracking-[0.28em] text-ivory/85 sm:text-sm"
