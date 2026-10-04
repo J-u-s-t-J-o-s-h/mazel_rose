@@ -1,4 +1,16 @@
+import { formatGuestNames, formatSelectedEvents } from "../format-airtable";
 import type { RsvpProvider, RsvpResult, RsvpSubmission } from "../types";
+
+async function eventOptions(): Promise<Array<{ key: string; label: string }>> {
+  try {
+    const { getRsvpFormSettings } = await import("@/sanity/lib/getContent");
+    const settings = await getRsvpFormSettings();
+    if (settings.eventOptions?.length) return settings.eventOptions;
+  } catch (error) {
+    console.error("[rsvp] could not load event labels for Airtable", error);
+  }
+  return [];
+}
 
 /**
  * Airtable adapter — requires AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME.
@@ -18,6 +30,9 @@ export const airtableProvider: RsvpProvider = {
       };
     }
 
+    const attending = data.attendance === "attending";
+    const labels = attending ? await eventOptions() : [];
+
     const response = await fetch(
       `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`,
       {
@@ -32,8 +47,8 @@ export const airtableProvider: RsvpProvider = {
             Email: data.email,
             Phone: data.phone ?? "",
             Attendance: data.attendance,
-            Guests: JSON.stringify(data.guests),
-            Events: JSON.stringify(data.events),
+            Guests: attending ? formatGuestNames(data.guests) : "",
+            Events: attending ? formatSelectedEvents(data.events, labels) : "",
             "Dietary Restrictions": data.dietaryRestrictions ?? "",
             "Song Request": data.songRequest ?? "",
             Message: data.message ?? "",
