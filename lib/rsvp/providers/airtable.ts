@@ -1,4 +1,9 @@
-import { formatGuestNames, formatSelectedEvents } from "../format-airtable";
+import {
+  AIRTABLE_EVENT_COLUMNS,
+  formatEventColumns,
+  formatGuestNames,
+  formatSelectedEvents,
+} from "../format-airtable";
 import type { RsvpProvider, RsvpResult, RsvpSubmission } from "../types";
 
 async function eventOptions(): Promise<Array<{ key: string; label: string }>> {
@@ -32,6 +37,12 @@ export const airtableProvider: RsvpProvider = {
 
     const attending = data.attendance === "attending";
     const labels = attending ? await eventOptions() : [];
+    const knownEventKeys = new Set<string>(
+      AIRTABLE_EVENT_COLUMNS.map((column) => column.key),
+    );
+    const extraEvents = Object.fromEntries(
+      Object.entries(data.events).filter(([key]) => !knownEventKeys.has(key)),
+    );
 
     const response = await fetch(
       `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`,
@@ -48,7 +59,8 @@ export const airtableProvider: RsvpProvider = {
             Phone: data.phone ?? "",
             Attendance: data.attendance,
             Guests: attending ? formatGuestNames(data.guests) : "",
-            Events: attending ? formatSelectedEvents(data.events, labels) : "",
+            ...formatEventColumns(data.events, attending),
+            Events: attending ? formatSelectedEvents(extraEvents, labels) : "",
             "Dietary Restrictions": data.dietaryRestrictions ?? "",
             "Song Request": data.songRequest ?? "",
             Message: data.message ?? "",

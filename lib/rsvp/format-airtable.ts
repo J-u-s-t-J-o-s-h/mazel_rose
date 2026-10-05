@@ -7,6 +7,36 @@ const DEFAULT_EVENT_OPTIONS = [
   { key: "reception", label: "Give Thanks and Come Celebrate" },
 ] as const;
 
+/**
+ * Airtable column names for the three RSVP events. Keys stay stable so a
+ * Studio label rename does not point the submission at a missing column.
+ */
+export const AIRTABLE_EVENT_COLUMNS = [
+  { key: "welcome", field: "Pre-Wedding Celebration" },
+  { key: "ceremony", field: "Ceremony" },
+  { key: "reception", field: "Give Thanks and Come Celebrate" },
+] as const;
+
+export function formatEventColumns(
+  events: RsvpEventAttendance,
+  attending: boolean,
+): Record<string, "Yes" | "No"> {
+  const selected = new Set(
+    attending
+      ? Object.entries(events)
+          .filter(([, coming]) => coming)
+          .map(([key]) => key)
+      : [],
+  );
+
+  return Object.fromEntries(
+    AIRTABLE_EVENT_COLUMNS.map((column) => [
+      column.field,
+      selected.has(column.key) ? "Yes" : "No",
+    ]),
+  );
+}
+
 export function formatGuestNames(guests: RsvpGuest[]): string {
   return guests
     .map((guest) => guest.name.trim())
@@ -20,7 +50,7 @@ export function formatSelectedEvents(
 ): string {
   const selected = new Set(
     Object.entries(events)
-      .filter(([, attending]) => attending)
+      .filter(([, coming]) => coming)
       .map(([key]) => key),
   );
 
